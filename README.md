@@ -30,7 +30,7 @@ Filters can be chained after the placeholder like so.
 > [!NOTE]
 > Filters are processed in the order they are specified.
 
-Filters can be [native Ruby formatting](https://docs.ruby-lang.org/en/master/format_specifications_rdoc.html) as well as String methods like `upcase`, `reverse`, `strip`, etc.
+Filters can be [native Ruby formatting](https://docs.ruby-lang.org/en/master/format_specifications_rdoc.html) as well as String methods like `capitalize`, `downcase`, `strip`, etc.
 Also, you can use Rainbow filters like `bold`, `cyan`, `underline`, et al. if you have the [Rainbow GEM](https://github.com/ku1ik/rainbow) installed.
 
 **You can even [register your own filters](#filters).**

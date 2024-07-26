@@ -17,7 +17,6 @@ module Fmt
       downcase
       lstrip
       reverse
-      rjust
       rstrip
       shellescape
       strip
@@ -38,7 +37,7 @@ module Fmt
 
       if defined? Rainbow
         Rainbow::Presenter.public_instance_methods(false).each do |name|
-          next unless Rainbow::Presenter.instance_method(name).arity == 0
+          next unless Rainbow::Presenter.public_instance_method(name).arity == 0
           add(name) { |str| Rainbow(str).public_send(name) }
         end
 

@@ -69,7 +69,7 @@ class TestFmt < Minitest::Test
       message: "This is neat!     ",
       redacted: "This is redacted!",
       tail: "-")
-    puts actual
+    # puts actual
 
     expected = <<~RESULT
       \e[2m--------------------------------------------------------------------------------\e[0m
