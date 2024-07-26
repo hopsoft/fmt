@@ -62,6 +62,8 @@ result = Fmt(template, date: Time.now)
 Multiline example:
 
 ```ruby
+require "fmt"
+
 template = <<~T
   Date: %{date}.10s|underline
 
@@ -82,6 +84,8 @@ You can also add your own filters to Fmt by calling `Fmt.add_filter(:name, &bloc
 The block accepts a string and should return a replacement string.
 
 ```ruby
+require "fmt"
+
 Fmt.add_filter(:repeat20) { |str| str * 20 }
 
 template = <<~T
