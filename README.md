@@ -16,13 +16,22 @@ bundle add rainbow # optional
 ## Usage
 
 Simply create a string with embedded formatting syntax as you'd normally do with `sprintf` or `format`.
-i.e. `"%{...}"`
 
-Filters can be chained after the placeholder like so `"%{...}FILTER|FILTER|FILTER"`
-Filters are processed in the order they are specified.
+```ruby
+"%{...}"
+```
 
-You can use native Ruby formatting as well as String methods like `upcase`, `reverse`, `strip`, etc.
-If you have the Rainbow GEM installed, you can also use Rainbow formatting like `red`, `bold`, etc.
+Filters can be chained after the placeholder like so.
+
+```ruby
+"%{...}FILTER|FILTER|FILTER"
+```
+
+> [!NOTE]
+> Filters are processed in the order they are specified.
+
+You can use [native Ruby formatting](https://docs.ruby-lang.org/en/master/format_specifications_rdoc.html) as well as String methods like `upcase`, `reverse`, `strip`, etc.
+If you have the [Rainbow GEM](https://github.com/ku1ik/rainbow) installed, you can also use Rainbow formatting like `red`, `bold`, etc.
 
 ### Rendering
 
