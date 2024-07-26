@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require "amazing_print"
+require "rainbow"
+require "pry-byebug"
+require "pry-doc"
+require_relative "../lib/fmt"
+
+Pry.start

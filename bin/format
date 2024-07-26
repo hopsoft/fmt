@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+system "bundle exec magic_frozen_string_literal ."
+system "bundle exec standardrb --fix ."
