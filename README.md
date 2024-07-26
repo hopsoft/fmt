@@ -38,6 +38,7 @@ If you have the [Rainbow GEM](https://github.com/ku1ik/rainbow) installed, you c
 Basic example:
 
 ```ruby
+require "rainbow"
 require "fmt"
 
 template = "Hello %{name}cyan|bold"
@@ -50,6 +51,7 @@ result = Fmt(template, name: "World")
 Mix and match native formatting with Rainbow formatting:
 
 ```ruby
+require "rainbow"
 require "fmt"
 
 template = "Date: %{date}.10s|magenta"
@@ -62,6 +64,7 @@ result = Fmt(template, date: Time.now)
 Multiline example:
 
 ```ruby
+require "rainbow"
 require "fmt"
 
 template = <<~T
@@ -84,6 +87,7 @@ You can also add your own filters to Fmt by calling `Fmt.add_filter(:name, &bloc
 The block accepts a string and should return a replacement string.
 
 ```ruby
+require "rainbow"
 require "fmt"
 
 Fmt.add_filter(:repeat20) { |str| str * 20 }
