@@ -9,8 +9,8 @@ I'm currenly using this to help build beautiful CLI applications with Ruby. Plus
 ## Setup
 
 ```
-bundle add fmt
 bundle add rainbow # optional
+bundle add fmt
 ```
 
 ## Usage
