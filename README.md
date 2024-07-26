@@ -57,6 +57,7 @@ require "fmt"
 
 template = "Hello %{name}cyan|bold"
 result = Fmt(template, name: "World")
+
 #=> "Hello \e[36m\e[1mWorld\e[0m"
 ```
 
@@ -70,6 +71,7 @@ require "fmt"
 
 template = "Date: %{date}.10s|magenta"
 result = Fmt(template, date: Time.now)
+
 #=> "Date: \e[35m2024-07-26\e[0m"
 ```
 
@@ -90,6 +92,7 @@ template = <<~T
 T
 
 result = Fmt(template, date: Time.now, name: "Hopsoft", message: "This is neat!")
+
 #=> "Date: \e[4m2024-07-26\e[0m\n\nGreetings, \e[1mHOPSOFT\e[0m\n\n\e[32mThis is neat!\e[0m\n"
 ```
 
@@ -113,6 +116,7 @@ template = <<~T
 T
 
 result = Fmt(template, head: "#", message: "Give it a try!", tail: "#")
+
 #=> "\e[2m####################\e[0m\n\e[1mGive it a try!\e[0m\n\e[2m####################\e[0m\n"
 ```
 
