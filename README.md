@@ -1,6 +1,18 @@
 # Fmt
 
-Fmt is a simple template engine based on native Ruby String formatting mechanics.
+#### A simple template engine based on native Ruby String formatting mechanics
+
+<!-- Tocer[start]: Auto-generated, don't remove. -->
+
+## Table of Contents
+
+  - [Why?](#why)
+  - [Setup](#setup)
+  - [Usage](#usage)
+    - [Rendering](#rendering)
+    - [Filters](#filters)
+
+<!-- Tocer[finish]: Auto-generated, don't remove. -->
 
 ## Why?
 
