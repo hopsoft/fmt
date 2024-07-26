@@ -11,6 +11,7 @@
   - [Usage](#usage)
     - [Rendering](#rendering)
     - [Filters](#filters)
+  - [Sponsors](#sponsors)
 
 <!-- Tocer[finish]: Auto-generated, don't remove. -->
 
@@ -121,3 +122,14 @@ result = Fmt(template, head: "#", message: "Give it a try!", tail: "#")
 ```
 
 ![CleanShot 2024-07-26 at 01 46 26@2x](https://github.com/user-attachments/assets/bd1d67c6-1182-428b-be05-756f3d330f67)
+
+## Sponsors
+
+<p align="center">
+  <em>Proudly sponsored by</em>
+</p>
+<p align="center">
+  <a href="https://www.clickfunnels.com?utm_source=hopsoft&utm_medium=open-source&utm_campaign=fmt">
+    <img src="https://images.clickfunnel.com/uploads/digital_asset/file/176632/clickfunnels-dark-logo.svg" width="575" />
+  </a>
+</p>
