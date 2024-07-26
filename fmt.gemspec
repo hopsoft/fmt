@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors = ["Nate Hopkins (hopsoft)"]
   s.email = ["natehop@gmail.com"]
 
-  s.summary = "Simple template engine based on native Ruby String formatting"
+  s.summary = "A simple template engine based on native Ruby String formatting mechanics"
   s.description = s.summary
   s.homepage = "https://github.com/hopsoft/fmt"
   s.license = "MIT"
