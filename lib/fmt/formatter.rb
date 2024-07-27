@@ -11,7 +11,6 @@ module Fmt
     OPEN = /%\{/
     CLOSE = /\}/
     KEY = /\w+(?=\})/
-    # FILTERS = /\A[^\s]+(?=%|\s|$)/
     FILTERS = /([^\s%])+/
 
     attr_reader :filters
@@ -48,9 +47,9 @@ module Fmt
       scanner.skip_until(CLOSE) if key
 
       # 4. scan for the filters
-      filter_string = scanner.scan(FILTERS) || "" # if key
+      filter_string = scanner.scan(FILTERS) || ""
 
-      return nil if key.nil? # || filter_string.nil?
+      return nil if key.nil?
 
       mapped_filters = filter_string.split(Fmt::Filters::DELIMITER).map do |name|
         filters.fetch name.to_sym, Fmt::Filter.new(name, name)
