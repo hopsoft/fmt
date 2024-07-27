@@ -7,7 +7,7 @@ require_relative "../lib/fmt"
 
 class TestFmt < Minitest::Test
   def setup
-    Fmt.add_filter(:repeat80) { |str| str * 80 }
+    Fmt.add_filter(:"ljust-80") { |val| "".ljust 80, val.to_s }
   end
 
   def test_that_it_has_a_version_number
@@ -32,9 +32,9 @@ class TestFmt < Minitest::Test
 
   def test_format_three
     template = <<~TEMPLATE
-      %{head}repeat80|faint
+      %{head}ljust-80|faint
       %{name}upcase|red|bold is %{age}#B|yellow years old in binary!
-      %{tail}repeat80|faint
+      %{tail}ljust-80|faint
     TEMPLATE
 
     actual = Fmt(template, head: "-", name: "the parthenon", age: 2_470, tail: "-")
@@ -51,7 +51,7 @@ class TestFmt < Minitest::Test
 
   def test_format_four
     template = <<~TEMPLATE
-      %{head}repeat80|faint
+      %{head}ljust-80|faint
       Date: %{date}.10s|reverse|red|bold|underline
 
       Greetings, %{name}upcase|green|bold
@@ -59,7 +59,7 @@ class TestFmt < Minitest::Test
       %{message}strip|bold
 
       %{redacted}cross_out|faint
-      %{head}repeat80|faint
+      %{head}ljust-80|faint
     TEMPLATE
 
     actual = Fmt(template,

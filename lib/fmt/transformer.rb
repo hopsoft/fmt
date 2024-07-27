@@ -11,28 +11,40 @@ module Fmt
     attr_reader :key, :filters, :placeholder, :proc_filters, :string_filters
 
     def transform(string, **locals)
-      return string if filters.none?
-
       raise Fmt::Error, "Missing key :#{key} in #{locals.inspect}" unless locals.key?(key)
+
       replacement = locals[key]
 
       filters.each do |filter|
         if filter.string?
           begin
-            replacement = format("%#{filter.value}", replacement)
+            replacement = sprintf("%#{filter.value}", replacement)
           rescue => error
-            raise Fmt::Error, "Invalid filter! #{filter.inspect} Check the spelling and verify that it's registered `Fmt.add_filter(:#{filter.name}, &block)`; #{error.message}"
+            message = <<~MSG
+              Invalid filter!
+              #{filter.inspect}
+              Verify it's either a valid native filter or is registered with Fmt.
+              Example: Fmt.add_filter(:#{filter.name}, &block)
+              #{error.message}
+            MSG
+            raise Fmt::Error, message
           end
         elsif filter.proc?
           begin
             replacement = filter.value.call(replacement)
           rescue => error
-            raise Fmt::Error, "Error in filter! #{filter.inspect} #{error.message}"
+            message = <<~MSG
+              Error in filter!
+              #{filter.inspect}
+              #{error.message}
+            MSG
+            raise Fmt::Error, message
           end
         end
       end
 
-      string.sub placeholder, replacement
+      result = string.sub placeholder, replacement
+      defined?(Rainbow) ? Rainbow(result) : result
     end
   end
 end

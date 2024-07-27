@@ -11,9 +11,15 @@ module Fmt
       Formatter.instance
     end
 
+    def filters
+      formatter.filters
+    end
+
     def add_filter(...)
       formatter.filters.add(...)
     end
+
+    alias_method :add, :add_filter
   end
 end
 

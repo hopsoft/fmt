@@ -12,7 +12,7 @@ module Fmt
 
     def apply(string)
       case value
-      when String then sprintf("%#{filter.value}", string)
+      when String then format("%#{filter.value}", string)
       when Proc then filter.value.call(string)
       end
     end
