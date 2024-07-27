@@ -43,7 +43,7 @@ module Fmt
         end
       end
 
-      result = string.sub placeholder, replacement
+      result = string.sub(placeholder, replacement)
       defined?(Rainbow) ? Rainbow(result) : result
     end
   end
