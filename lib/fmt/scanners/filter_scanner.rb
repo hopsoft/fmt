@@ -21,7 +21,7 @@ module Fmt
 
     def perform
       scanner.reset
-      @value = scanner.scan(%r{[^\s%]+}) # <- extract value
+      @value = scanner.scan(/[^\s%]+/) # <- extract value
       return unless scanner.matched?
 
       @members = value.split(DELIMITER)&.map do |name|

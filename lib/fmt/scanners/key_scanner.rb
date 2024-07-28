@@ -8,9 +8,9 @@ module Fmt
 
     def perform
       scanner.reset
-      scanner.scan_until(%r{%\{}) # <------------------------ advance to start
-      @value = scanner.scan(%r{\w+}) if scanner.matched? # <- extract value
-      scanner.scan(%r{\}}) # <------------------------------- advance to end
+      scanner.skip_until %r(%{) # <------------------------ advance to start
+      @value = scanner.scan(/\w+/) if scanner.matched? # <- extract value
+      scanner.skip_until %r(}) # <------------------------- advance to end
       value
     end
   end

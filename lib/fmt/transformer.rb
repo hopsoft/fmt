@@ -10,9 +10,6 @@ module Fmt
 
     attr_reader :key, :filters, :placeholder, :proc_filters, :string_filters
 
-    template = "%{value}blue|red <=%{value}red|underline more...:embed}/>"
-    puts template
-
     def transform(string, **locals)
       raise Fmt::Error, "Missing key! :#{key} <string=#{string.inspect} locals=#{locals.inspect}>" unless locals.key?(key)
 
