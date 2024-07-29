@@ -2,16 +2,12 @@
 
 require "singleton"
 require_relative "filters"
+require_relative "scanners"
 require_relative "transformer"
 
 module Fmt
   class Formatter
     include Singleton
-
-    OPEN = /%\{/
-    CLOSE = /\}/
-    KEY = /\w+(?=\})/
-    FILTERS = /[^\s]+(?=\s|$)/
 
     attr_reader :filters
 
@@ -35,27 +31,20 @@ module Fmt
     end
 
     def next_transformer(string)
-      scanner = StringScanner.new(string)
+      embed_scanner = Fmt::EmbedScanner.new(string)
+      embed_scanner.scan
 
-      # 1. advance to the opening delimiter
-      scanner.skip_until(OPEN)
+      key_scanner = Fmt::KeyScanner.new(string)
+      key = key_scanner.scan
+      return nil unless key
 
-      # 2. extract the key to be transformed
-      key = scanner.scan(KEY)
+      filter_scanner = Fmt::FilterScanner.new(key_scanner.rest, registered_filters: filters)
+      filter_string = filter_scanner.scan
 
-      # 3. advance to the closing delimiter
-      scanner.skip_until(CLOSE) if key
-
-      # 4. scan for the filters
-      filter_string = scanner.scan(FILTERS) if key
-
-      return nil if key.nil? || filter_string.nil?
-
-      mapped_filters = filter_string.split(Fmt::Filters::DELIMITER).map do |name|
-        filters.fetch name.to_sym, Fmt::Filter.new(name, name)
-      end
-
-      Fmt::Transformer.new(key.to_sym, *mapped_filters, placeholder: "%{#{key}}#{filter_string}".strip)
+      Fmt::Transformer.new key.to_sym,
+        embeds: embed_scanner.embeds,
+        filters: filter_scanner.filters,
+        placeholder: "%{#{key}}#{filter_string}".strip
     end
   end
 end

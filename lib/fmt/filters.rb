@@ -8,8 +8,6 @@ module Fmt
     include Enumerable
     include MonitorMixin
 
-    DELIMITER = "|"
-
     NATIVE_FILTERS = %i[
       capitalize
       chomp
@@ -36,17 +34,19 @@ module Fmt
       end
 
       if defined? Rainbow
-        Rainbow::Presenter.public_instance_methods(false).each do |name|
-          next unless Rainbow::Presenter.public_instance_method(name).arity == 0
-          add(name) { |str| Rainbow(str).public_send(name) }
-        end
+        begin
+          Rainbow::Presenter.public_instance_methods(false).each do |name|
+            next unless Rainbow::Presenter.public_instance_method(name).arity == 0
+            add(name) { |str| Rainbow(str).public_send(name) }
+          end
 
-        Rainbow::X11ColorNames::NAMES.keys.each do |name|
-          add(name) { |str| Rainbow(str).public_send(name) }
+          Rainbow::X11ColorNames::NAMES.keys.each do |name|
+            add(name) { |str| Rainbow(str).public_send(name) }
+          end
+        rescue => error
+          puts "Error adding Rainbow filters! #{error.inspect}"
         end
       end
-    rescue
-      # noop
     end
 
     def each(&block)

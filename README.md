@@ -1,3 +1,18 @@
+<p align="center">
+  <a href="http://blog.codinghorror.com/the-best-code-is-no-code-at-all/">
+    <img alt="Lines of Code" src="https://img.shields.io/badge/loc-316-47d299.svg" />
+  </a>
+  <a href="https://github.com/testdouble/standard">
+    <img alt="Ruby Style" src="https://img.shields.io/badge/style-standard-168AFE?logo=ruby&logoColor=FE1616" />
+  </a>
+  <a href="https://github.com/sponsors/hopsoft">
+    <img alt="Sponsors" src="https://img.shields.io/github/sponsors/hopsoft?color=eb4aaa&logo=GitHub%20Sponsors" />
+  </a>
+  <a href="https://twitter.com/hopsoft">
+    <img alt="Twitter Follow" src="https://img.shields.io/twitter/url?label=%40hopsoft&style=social&url=https%3A%2F%2Ftwitter.com%2Fhopsoft">
+  </a>
+</p>
+
 # Fmt
 
 #### A simple template engine based on native Ruby String formatting mechanics
@@ -9,8 +24,9 @@
   - [Why?](#why)
   - [Setup](#setup)
   - [Usage](#usage)
-    - [Rendering](#rendering)
+    - [Formatting](#formatting)
     - [Filters](#filters)
+    - [Embeds](#embeds)
   - [Sponsors](#sponsors)
 
 <!-- Tocer[finish]: Auto-generated, don't remove. -->
@@ -48,7 +64,7 @@ Also, you can use Rainbow filters like `bold`, `cyan`, `underline`, et al. if yo
 
 **You can even [register your own filters](#filters).**
 
-### Rendering
+### Formatting
 
 Basic example:
 
@@ -57,7 +73,7 @@ require "rainbow"
 require "fmt"
 
 template = "Hello %{name}cyan|bold"
-result = Fmt(template, name: "World")
+Fmt template, name: "World"
 
 #=> "Hello \e[36m\e[1mWorld\e[0m"
 ```
@@ -71,7 +87,7 @@ require "rainbow"
 require "fmt"
 
 template = "Date: %{date}.10s|magenta"
-result = Fmt(template, date: Time.now)
+Fmt template, date: Time.now
 
 #=> "Date: \e[35m2024-07-26\e[0m"
 ```
@@ -92,7 +108,7 @@ template = <<~T
   %{message}strip|green
 T
 
-result = Fmt(template, date: Time.now, name: "Hopsoft", message: "This is neat!")
+Fmt template, date: Time.now, name: "Hopsoft", message: "This is neat!"
 
 #=> "Date: \e[4m2024-07-26\e[0m\n\nGreetings, \e[1mHOPSOFT\e[0m\n\n\e[32mThis is neat!\e[0m\n"
 ```
@@ -108,20 +124,48 @@ The block accepts a string and should return a replacement string.
 require "rainbow"
 require "fmt"
 
-Fmt.add_filter(:repeat20) { |str| str * 20 }
+Fmt.add_filter(:ljust) { |val| "".ljust 14, val.to_s }
 
 template = <<~T
-  %{head}repeat20|faint
+  %{head}ljust|faint
   %{message}bold
-  %{tail}repeat20|faint
+  %{tail}ljust|faint
 T
 
-result = Fmt(template, head: "#", message: "Give it a try!", tail: "#")
+Fmt template, head: "#", message: "Give it a try!", tail: "#"
 
-#=> "\e[2m####################\e[0m\n\e[1mGive it a try!\e[0m\n\e[2m####################\e[0m\n"
+#=> "\e[2m##############\e[0m\n\e[1mGive it a try!\e[0m\n\e[2m##############\e[0m\n"
 ```
 
 ![CleanShot 2024-07-26 at 01 46 26@2x](https://github.com/user-attachments/assets/bd1d67c6-1182-428b-be05-756f3d330f67)
+
+### Embeds
+
+Templates can be embedded or nested within other templates... as deep as needed!
+Just wrap the embedded template in double curly braces: `{{EMBEDDED TEMPLATE HERE}}`
+
+```ruby
+require "rainbow"
+require "fmt"
+
+template = "%{value}lime {{%{embed_value}red|bold|underline}}"
+Fmt template, value: "Outer", embed_value: "Inner"
+
+#=> "\e[38;5;46mOuter\e[0m \e[31m\e[1m\e[4mInner\e[0m"
+```
+
+```ruby
+template = <<~T
+  |--%{value}yellow|bold|underline
+  |  |--{{%{inner_value}green|bold|underline
+  |  |  |--{{%{deep_value}blue|bold|underline
+  |  |  |  |-- We're in deep!}}}}
+T
+
+Fmt template, value: "Outer", inner_value: "Inner", deep_value: "Deep"
+
+#=> "|--\e[33m\e[1m\e[4mOuter\e[0m\n|  |--\e[32m\e[1m\e[4mInner\e[0m\n|  |  |--\e[34m\e[1m\e[4mDeep\e[0m\n|  |  |  |-- We're in deep!\n"
+```
 
 ## Sponsors
 
