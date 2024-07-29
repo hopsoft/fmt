@@ -2,15 +2,18 @@
 
 module Fmt
   class Transformer
-    def initialize(key, filters:, placeholder:)
+    def initialize(key, embeds:, filters:, placeholder:)
       @key = key
+      @embeds = embeds
       @filters = filters
       @placeholder = placeholder
     end
 
-    attr_reader :key, :filters, :placeholder, :proc_filters, :string_filters
+    attr_reader :key, :embeds, :filters, :placeholder, :proc_filters, :string_filters
 
     def transform(string, **locals)
+      string = transform_embeds(string, **locals)
+
       raise Fmt::Error, "Missing key! :#{key} <string=#{string.inspect} locals=#{locals.inspect}>" unless locals.key?(key)
 
       replacement = locals[key]
@@ -45,6 +48,16 @@ module Fmt
 
       result = string.sub(placeholder, replacement)
       defined?(Rainbow) ? Rainbow(result) : result
+    end
+
+    private
+
+    def transform_embeds(string, **locals)
+      while embeds.any?
+        embed = embeds.shift
+        string = string.sub(embed.placeholder, embed.format(**locals))
+      end
+      string
     end
   end
 end

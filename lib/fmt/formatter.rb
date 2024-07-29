@@ -31,14 +31,20 @@ module Fmt
     end
 
     def next_transformer(string)
-      scanner = Fmt::KeyScanner.new(string)
-      key = scanner.scan
+      embed_scanner = Fmt::EmbedScanner.new(string)
+      embed_scanner.scan
+
+      key_scanner = Fmt::KeyScanner.new(string)
+      key = key_scanner.scan
       return nil unless key
 
-      scanner = Fmt::FilterScanner.new(scanner.rest, filters: filters)
-      scanner.scan
+      filter_scanner = Fmt::FilterScanner.new(key_scanner.rest, registered_filters: filters)
+      filter_string = filter_scanner.scan
 
-      Fmt::Transformer.new(key.to_sym, filters: scanner.members, placeholder: "%{#{key}}#{scanner.value}".strip)
+      Fmt::Transformer.new key.to_sym,
+        embeds: embed_scanner.embeds,
+        filters: filter_scanner.filters,
+        placeholder: "%{#{key}}#{filter_string}".strip
     end
   end
 end

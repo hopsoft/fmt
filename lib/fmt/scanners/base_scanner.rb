@@ -8,46 +8,31 @@ module Fmt
     extend Forwardable
 
     def initialize(string)
-      @scanner = StringScanner.new(string)
+      @string_scanner = StringScanner.new(string)
     end
 
-    def_delegators :scanner, :string, :rest
+    def_delegators :string_scanner, :string, :rest
     attr_reader :value
 
-    def scan
-      scanner.reset
-      perform
+    def performed?
+      !!@performed
     end
 
-    # def substring
-    # return nil unless match?
-    # string[index..rindex]
-    # end
+    def reset
+      @performed = false
+      string_scanner.reset
+    end
 
-    # def position
-    # raise NotImplementedError
-    # end
-
-    # alias_method :pos, :position
-
-    # def remainder
-    # match? ? string[pos..] : string
-    # end
-
-    # def match?
-    # index && rindex
-    # end
-
-    # private
-
-    # def scan
-    # @index = string.index(head)
-    # @rindex = string.rindex(tail)
-    # end
+    def scan
+      return if performed?
+      @performed = true
+      perform
+      value
+    end
 
     protected
 
-    attr_reader :scanner
+    attr_reader :string_scanner
 
     def perform
       raise NotImplementedError

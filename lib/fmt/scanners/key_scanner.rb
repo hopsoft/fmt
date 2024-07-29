@@ -7,11 +7,9 @@ module Fmt
     protected
 
     def perform
-      scanner.reset
-      scanner.skip_until %r(%{) # <------------------------ advance to start
-      @value = scanner.scan(/\w+/) if scanner.matched? # <- extract value
-      scanner.skip_until %r(}) # <------------------------- advance to end
-      value
+      string_scanner.skip_until(/%[{]/) # <------------------------------ advance to start
+      @value = string_scanner.scan(/\w+/) if string_scanner.matched? # <- extract value
+      string_scanner.scan(/[}]/) if string_scanner.matched? # <---------- advance to end
     end
   end
 end
