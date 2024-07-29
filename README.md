@@ -154,6 +154,8 @@ Fmt template, value: "Outer", embed_value: "Inner"
 #=> "\e[38;5;46mOuter\e[0m \e[31m\e[1m\e[4mInner\e[0m"
 ```
 
+![CleanShot 2024-07-29 at 02 42 19@2x](https://github.com/user-attachments/assets/f67dd215-b848-4a23-bd73-72822cb7d970)
+
 ```ruby
 template = <<~T
   |--%{value}yellow|bold|underline
@@ -166,6 +168,8 @@ Fmt template, value: "Outer", inner_value: "Inner", deep_value: "Deep"
 
 #=> "|--\e[33m\e[1m\e[4mOuter\e[0m\n|  |--\e[32m\e[1m\e[4mInner\e[0m\n|  |  |--\e[34m\e[1m\e[4mDeep\e[0m\n|  |  |  |-- We're in deep!\n"
 ```
+
+![CleanShot 2024-07-29 at 02 45 27@2x](https://github.com/user-attachments/assets/1b933bf4-a62d-4913-b817-d6c69b0e7028)
 
 ## Sponsors
 
