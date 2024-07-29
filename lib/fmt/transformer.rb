@@ -22,26 +22,20 @@ module Fmt
         if filter.string?
           begin
             replacement = sprintf("%#{filter.value}", replacement)
-          rescue => error
-            message = <<~MSG
-              Invalid filter!
-              #{filter.inspect}
-              Verify it's either a valid native filter or is registered with Fmt.
-              Example: Fmt.add_filter(:#{filter.name}, &block)
-              #{error.message}
+          rescue
+            raise Fmt::Error, <<~MSG
+              Invalid filter! #{filter.inspect}
+              Verify it has been properly registered. SEE: Fmt.add_filter(:#{filter.name}, &block)
             MSG
-            raise Fmt::Error, message
           end
         elsif filter.proc?
           begin
             replacement = filter.value.call(replacement)
           rescue => error
-            message = <<~MSG
-              Error in filter!
-              #{filter.inspect}
+            raise Fmt::Error, <<~MSG
+              Error in filter! #{filter.inspect}
               #{error.message}
             MSG
-            raise Fmt::Error, message
           end
         end
       end

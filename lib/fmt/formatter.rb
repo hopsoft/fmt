@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 require "singleton"
-require_relative "filters"
+require_relative "filter_groups/filter_group"
+require_relative "filter_groups/rainbow_filter_group"
+require_relative "filter_groups/string_filter_group"
 require_relative "scanners"
 require_relative "transformer"
 
@@ -10,6 +12,14 @@ module Fmt
     include Singleton
 
     attr_reader :filters
+
+    def add_rainbow_filters
+      filters.merge! Fmt::RainbowFilterGroup.new.to_h
+    end
+
+    def add_filter(...)
+      filters.add(...)
+    end
 
     def format(string, **locals)
       result = string.to_s
@@ -27,7 +37,7 @@ module Fmt
 
     def initialize
       super
-      @filters = Fmt::Filters.new
+      @filters = Fmt::FilterGroup.new.merge!(Fmt::StringFilterGroup.new)
     end
 
     def next_transformer(string)

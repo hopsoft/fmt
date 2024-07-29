@@ -1,6 +1,6 @@
 <p align="center">
   <a href="http://blog.codinghorror.com/the-best-code-is-no-code-at-all/">
-    <img alt="Lines of Code" src="https://img.shields.io/badge/loc-316-47d299.svg" />
+    <img alt="Lines of Code" src="https://img.shields.io/badge/loc-347-47d299.svg" />
   </a>
   <a href="https://github.com/testdouble/standard">
     <img alt="Ruby Style" src="https://img.shields.io/badge/style-standard-168AFE?logo=ruby&logoColor=FE1616" />
@@ -38,7 +38,7 @@ I'm currenly using this to help build beautiful CLI applications with Ruby. Plus
 ## Setup
 
 ```
-bundle add rainbow # optional
+bundle add rainbow # <- optional
 bundle add fmt
 ```
 
@@ -72,6 +72,8 @@ Basic example:
 require "rainbow"
 require "fmt"
 
+Fmt.add_rainbow_filters
+
 template = "Hello %{name}cyan|bold"
 Fmt template, name: "World"
 
@@ -86,6 +88,8 @@ Mix and match native formatting with Rainbow formatting:
 require "rainbow"
 require "fmt"
 
+Fmt.add_rainbow_filters
+
 template = "Date: %{date}.10s|magenta"
 Fmt template, date: Time.now
 
@@ -99,6 +103,8 @@ Multiline example:
 ```ruby
 require "rainbow"
 require "fmt"
+
+Fmt.add_rainbow_filters
 
 template = <<~T
   Date: %{date}.10s|underline
@@ -124,6 +130,7 @@ The block accepts a string and should return a replacement string.
 require "rainbow"
 require "fmt"
 
+Fmt.add_rainbow_filters
 Fmt.add_filter(:ljust) { |val| "".ljust 14, val.to_s }
 
 template = <<~T
@@ -147,6 +154,8 @@ Just wrap the embedded template in double curly braces: `{{EMBEDDED TEMPLATE HER
 ```ruby
 require "rainbow"
 require "fmt"
+
+Fmt.add_rainbow_filters
 
 template = "%{value}lime {{%{embed_value}red|bold|underline}}"
 Fmt template, value: "Outer", embed_value: "Inner"
