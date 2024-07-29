@@ -9,8 +9,9 @@
   - [Why?](#why)
   - [Setup](#setup)
   - [Usage](#usage)
-    - [Rendering](#rendering)
+    - [Formatting](#formatting)
     - [Filters](#filters)
+    - [Embeds](#embeds)
   - [Sponsors](#sponsors)
 
 <!-- Tocer[finish]: Auto-generated, don't remove. -->
@@ -48,7 +49,7 @@ Also, you can use Rainbow filters like `bold`, `cyan`, `underline`, et al. if yo
 
 **You can even [register your own filters](#filters).**
 
-### Rendering
+### Formatting
 
 Basic example:
 
@@ -122,6 +123,34 @@ Fmt template, head: "#", message: "Give it a try!", tail: "#"
 ```
 
 ![CleanShot 2024-07-26 at 01 46 26@2x](https://github.com/user-attachments/assets/bd1d67c6-1182-428b-be05-756f3d330f67)
+
+### Embeds
+
+Templates can be embedded or nested within other templates... as deep as needed!
+Just wrap the embedded template in double curly braces: `{{EMBEDDED TEMPLATE HERE}}`
+
+```ruby
+require "rainbow"
+require "fmt"
+
+template = "%{value}lime {{%{embed_value}red|bold|underline}}"
+Fmt template, value: "Outer", embed_value: "Inner"
+
+#=> "\e[38;5;46mOuter\e[0m \e[31m\e[1m\e[4mInner\e[0m"
+```
+
+```ruby
+template = <<~T
+  |--%{value}yellow|bold|underline
+  |  |--{{%{inner_value}green|bold|underline
+  |  |  |--{{%{deep_value}blue|bold|underline
+  |  |  |  |-- We're in deep!}}}}
+T
+
+Fmt template, value: "Outer", inner_value: "Inner", deep_value: "Deep"
+
+#=> "|--\e[33m\e[1m\e[4mOuter\e[0m\n|  |--\e[32m\e[1m\e[4mInner\e[0m\n|  |  |--\e[34m\e[1m\e[4mDeep\e[0m\n|  |  |  |-- We're in deep!\n"
+```
 
 ## Sponsors
 
