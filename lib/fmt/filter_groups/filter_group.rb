@@ -42,6 +42,7 @@ module Fmt
 
     def merge!(other)
       synchronize { data.merge! other.to_h }
+      self
     end
 
     def to_h

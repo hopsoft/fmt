@@ -5,11 +5,10 @@ require "rainbow"
 require "test_helper"
 require_relative "../lib/fmt"
 
-class TestFmt < Minitest::Test
-  def setup
-    Fmt.add_filter(:"ljust-80") { |val| "".ljust 80, val.to_s }
-  end
+Fmt.add_rainbow_filters
+Fmt.add_filter(:"ljust-80") { |val| "".ljust 80, val.to_s }
 
+class TestFmt < Minitest::Test
   def test_that_it_has_a_version_number
     refute_nil ::Fmt::VERSION
   end

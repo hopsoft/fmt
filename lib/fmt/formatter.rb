@@ -13,6 +13,14 @@ module Fmt
 
     attr_reader :filters
 
+    def add_rainbow_filters
+      filters.merge! Fmt::RainbowFilterGroup.new.to_h
+    end
+
+    def add_filter(...)
+      filters.add(...)
+    end
+
     def format(string, **locals)
       result = string.to_s
       transformer = next_transformer(result)
@@ -29,9 +37,7 @@ module Fmt
 
     def initialize
       super
-      @filters = Fmt::FilterGroup.new
-      filters.merge! Fmt::StringFilterGroup.new
-      filters.merge! Fmt::RainbowFilterGroup.new
+      @filters = Fmt::FilterGroup.new.merge!(Fmt::StringFilterGroup.new)
     end
 
     def next_transformer(string)

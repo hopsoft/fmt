@@ -15,11 +15,13 @@ module Fmt
       formatter.filters
     end
 
-    def add_filter(...)
-      formatter.filters.add(...)
+    def add_rainbow_filters
+      formatter.add_rainbow_filters
     end
 
-    alias_method :add, :add_filter
+    def add_filter(...)
+      formatter.add_filter(...)
+    end
   end
 end
 
