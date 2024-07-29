@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 require "singleton"
-require_relative "filters"
+require_relative "filter_groups/filter_group"
+require_relative "filter_groups/rainbow_filter_group"
+require_relative "filter_groups/string_filter_group"
 require_relative "scanners"
 require_relative "transformer"
 
@@ -27,7 +29,9 @@ module Fmt
 
     def initialize
       super
-      @filters = Fmt::Filters.new
+      @filters = Fmt::FilterGroup.new
+      filters.merge! Fmt::StringFilterGroup.new
+      filters.merge! Fmt::RainbowFilterGroup.new
     end
 
     def next_transformer(string)
