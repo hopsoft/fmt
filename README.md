@@ -1,3 +1,18 @@
+<p align="center">
+  <a href="http://blog.codinghorror.com/the-best-code-is-no-code-at-all/">
+    <img alt="Lines of Code" src="https://img.shields.io/badge/loc-316-47d299.svg" />
+  </a>
+  <a href="https://github.com/testdouble/standard">
+    <img alt="Ruby Style" src="https://img.shields.io/badge/style-standard-168AFE?logo=ruby&logoColor=FE1616" />
+  </a>
+  <a href="https://github.com/sponsors/hopsoft">
+    <img alt="Sponsors" src="https://img.shields.io/github/sponsors/hopsoft?color=eb4aaa&logo=GitHub%20Sponsors" />
+  </a>
+  <a href="https://twitter.com/hopsoft">
+    <img alt="Twitter Follow" src="https://img.shields.io/twitter/url?label=%40hopsoft&style=social&url=https%3A%2F%2Ftwitter.com%2Fhopsoft">
+  </a>
+</p>
+
 # Fmt
 
 #### A simple template engine based on native Ruby String formatting mechanics

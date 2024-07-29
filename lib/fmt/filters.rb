@@ -61,10 +61,6 @@ module Fmt
 
     alias_method :<<, :add
 
-    def include?(name)
-      entries.key? name.to_sym
-    end
-
     def [](name)
       synchronize { entries[name.to_sym] }
     end
