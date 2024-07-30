@@ -8,20 +8,20 @@ module Fmt
       super
 
       # rubocop:disable Layout/ExtraSpacing AllowForAlignment
-      add :capitalize,        ->(s) { s.capitalize }
-      add :chomp,             ->(s) { s.chomp }
-      add :chop,              ->(s) { s.chop }
-      add :downcase,          ->(s) { s.downcase }
-      add :lstrip,            ->(s) { s.lstrip }
-      add :reverse,           ->(s) { s.reverse }
-      add :rstrip,            ->(s) { s.rstrip }
-      add :shellescape,       ->(s) { s.shellescape }
-      add :strip,             ->(s) { s.strip }
-      add :succ,              ->(s) { s.succ }
-      add :swapcase,          ->(s) { s.swapcase }
-      add :undump,            ->(s) { s.undump }
-      add :unicode_normalize, ->(s) { s.unicode_normalize }
-      add :upcase,            ->(s) { s.upcase }
+      add :capitalize,        ->(obj) { obj.to_s.capitalize }
+      add :chomp,             ->(obj) { obj.to_s.chomp }
+      add :chop,              ->(obj) { obj.to_s.chop }
+      add :downcase,          ->(obj) { obj.to_s.downcase }
+      add :lstrip,            ->(obj) { obj.to_s.lstrip }
+      add :reverse,           ->(obj) { obj.to_s.reverse }
+      add :rstrip,            ->(obj) { obj.to_s.rstrip }
+      add :shellescape,       ->(obj) { obj.to_s.shellescape }
+      add :strip,             ->(obj) { obj.to_s.strip }
+      add :succ,              ->(obj) { obj.to_s.succ }
+      add :swapcase,          ->(obj) { obj.to_s.swapcase }
+      add :undump,            ->(obj) { obj.to_s.undump }
+      add :unicode_normalize, ->(obj) { obj.to_s.unicode_normalize }
+      add :upcase,            ->(obj) { obj.to_s.upcase }
       # rubocop:enable Layout/ExtraSpacing AllowForAlignment
     end
   end

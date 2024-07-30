@@ -17,7 +17,7 @@ module Fmt
           .concat(Rainbow::X11ColorNames::NAMES.keys)
 
         method_names.each do |name|
-          add(name) { |string| Rainbow(string).public_send name }
+          add(name) { |obj| Rainbow(obj).public_send name }
         end
       end
     rescue => error

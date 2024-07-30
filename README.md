@@ -44,7 +44,7 @@ bundle add fmt
 
 ## Usage
 
-Simply create a string with embedded formatting syntax as you'd normally do with `sprintf` or `format`.
+Simply create a string with embedded formatting syntax as you'd normally do with `sprintf`.
 
 ```ruby
 "%{...}"
@@ -124,7 +124,7 @@ Fmt template, date: Time.now, name: "Hopsoft", message: "This is neat!"
 ### Filters
 
 You can also add your own filters to Fmt by calling `Fmt.add_filter(:name, &block)`.
-The block accepts a string and should return a replacement string.
+The block accepts an `Object` and returns a `String`.
 
 ```ruby
 require "rainbow"
