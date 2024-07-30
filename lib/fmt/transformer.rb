@@ -11,6 +11,14 @@ module Fmt
 
     attr_reader :key, :embeds, :filters, :placeholder, :proc_filters, :string_filters
 
+    def transform_embeds(string, **locals)
+      while embeds.any?
+        embed = embeds.shift
+        string = string.sub(embed.placeholder, embed.format(**locals))
+      end
+      string
+    end
+
     def transform(string, **locals)
       string = transform_embeds(string, **locals)
 
@@ -30,7 +38,8 @@ module Fmt
           end
         elsif filter.proc?
           begin
-            replacement = filter.value.call(replacement)
+            # replacement = filter.value.call(replacement)
+            replacement = string.instance_exec(replacement, &filter.value)
           rescue => error
             raise Fmt::Error, <<~MSG
               Error in filter! #{filter.inspect}
@@ -40,18 +49,7 @@ module Fmt
         end
       end
 
-      result = string.sub(placeholder, replacement)
-      defined?(Rainbow) ? Rainbow(result) : result
-    end
-
-    private
-
-    def transform_embeds(string, **locals)
-      while embeds.any?
-        embed = embeds.shift
-        string = string.sub(embed.placeholder, embed.format(**locals))
-      end
-      string
+      string.sub placeholder, replacement.to_s
     end
   end
 end

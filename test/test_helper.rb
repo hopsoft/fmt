@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 $LOAD_PATH.prepend File.expand_path("../lib", __dir__)
+require "active_support/all"
 require "amazing_print"
 require "fileutils"
 require "minitest/reporters"

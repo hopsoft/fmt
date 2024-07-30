@@ -1,4 +1,239 @@
 module Fmt
-  VERSION: String
-  # See the writing guide of rbs: https://github.com/ruby/rbs#guides
+  class Error < StandardError
+  end
+
+  def self.formatter: () -> untyped
+
+  def self.filters: () -> untyped
+
+  def self.add_rainbow_filters: () -> untyped
+
+  def self.add_filter: (*untyped) ?{ (?) -> untyped } -> untyped
+end
+
+module Fmt
+  class Embed
+    @string: untyped
+
+    def initialize: (untyped string) -> void
+
+    attr_reader string: untyped
+
+    def placeholder: () -> ::String
+
+    def format: (**untyped locals) -> untyped
+  end
+end
+
+module Fmt
+  class Filter
+    @name: untyped
+
+    @value: untyped
+
+    def initialize: (untyped name, untyped value) -> void
+
+    attr_reader name: untyped
+
+    attr_reader value: untyped
+
+    def apply: (untyped string) -> untyped
+
+    def string?: () -> untyped
+
+    def proc?: () -> untyped
+
+    def inspect: () -> ::String
+  end
+end
+
+module Fmt
+  class FilterGroup
+    @data: untyped
+
+    include Enumerable
+
+    include MonitorMixin
+
+    def initialize: () -> void
+
+    def []: (untyped name) -> untyped
+
+    def supported_method_names: (*untyped klasses) -> untyped
+
+    def add: (untyped name, ?untyped? filter_proc) ?{ (?) -> untyped } -> untyped
+
+    def safe_add: (untyped name, ?untyped? filter_proc) { (?) -> untyped } -> (nil | untyped)
+
+    def each: () { (?) -> untyped } -> untyped
+
+    def fetch: (untyped name, ?untyped? default) -> untyped
+
+    def key?: (untyped name) -> untyped
+
+    alias added? key?
+
+    alias include? key?
+
+    def merge!: (untyped other) -> self
+
+    def to_h: () -> untyped
+
+    attr_reader data: untyped
+  end
+end
+
+module Fmt
+  class NativeFilterGroup < FilterGroup
+    def initialize: () -> void
+  end
+end
+
+module Fmt
+  # @note Rainbow filters convert the Object to a String
+  class RainbowFilterGroup < FilterGroup
+    def initialize: () -> void
+  end
+end
+
+module Fmt
+  class Formatter
+    @filters: untyped
+
+    include Singleton
+
+    attr_reader filters: untyped
+
+    def add_rainbow_filters: () -> untyped
+
+    def add_filter: (*untyped) ?{ (?) -> untyped } -> untyped
+
+    def format: (untyped string, **untyped locals) -> untyped
+
+    private
+
+    def initialize: () -> void
+
+    def next_transformer: (untyped string) -> (nil | untyped)
+  end
+end
+
+module Fmt
+  class BaseScanner
+    @string_scanner: untyped
+
+    @performed: untyped
+
+    extend Forwardable
+
+    def initialize: (untyped string) -> void
+
+    attr_reader value: untyped
+
+    def performed?: () -> untyped
+
+    def reset: () -> untyped
+
+    def scan: () -> (nil | untyped)
+
+    attr_reader string_scanner: untyped
+
+    def perform: () -> untyped
+  end
+end
+
+module Fmt
+  class EmbedScanner < BaseScanner
+    @root: untyped
+
+    @embeds: untyped
+
+    @value: untyped
+
+    def initialize: (untyped string, ?root: untyped?) -> void
+
+    def embeds: () -> untyped
+
+    attr_reader root: untyped
+
+    def root?: () -> untyped
+
+    def includes_embed?: (untyped string) -> untyped
+
+    def next_scanner: (untyped string) -> untyped
+
+    def scan_embeds: (untyped string) -> (nil | untyped)
+
+    def perform?: () -> untyped
+
+    def perform: () -> (nil | untyped)
+  end
+end
+
+module Fmt
+  class FilterScanner < BaseScanner
+    @registered_filters: untyped
+
+    @filters: untyped
+
+    @value: untyped
+
+    DELIMITER: "|"
+
+    def initialize: (untyped string, registered_filters: untyped) -> void
+
+    alias filter_string value
+
+    attr_reader filters: untyped
+
+    attr_reader registered_filters: untyped
+
+    def perform: () -> (nil | untyped)
+  end
+end
+
+module Fmt
+  class KeyScanner < BaseScanner
+    @value: untyped
+
+    def perform: () -> untyped
+  end
+end
+
+module Fmt
+  class Transformer
+    @key: untyped
+
+    @embeds: untyped
+
+    @filters: untyped
+
+    @placeholder: untyped
+
+    def initialize: (untyped key, embeds: untyped, filters: untyped, placeholder: untyped) -> void
+
+    attr_reader key: untyped
+
+    attr_reader embeds: untyped
+
+    attr_reader filters: untyped
+
+    attr_reader placeholder: untyped
+
+    attr_reader proc_filters: untyped
+
+    attr_reader string_filters: untyped
+
+    def transform_embeds: (untyped string, **untyped locals) -> untyped
+
+    def transform: (untyped string, **untyped locals) -> untyped
+  end
+end
+
+module Fmt
+  VERSION: "0.1.3"
+end
+
+class Object
+  def Fmt: (*untyped) ?{ (?) -> untyped } -> untyped
 end

@@ -3,7 +3,7 @@
 require "singleton"
 require_relative "filter_groups/filter_group"
 require_relative "filter_groups/rainbow_filter_group"
-require_relative "filter_groups/string_filter_group"
+require_relative "filter_groups/native_filter_group"
 require_relative "scanners"
 require_relative "transformer"
 
@@ -26,7 +26,8 @@ module Fmt
       transformer = next_transformer(result)
 
       while transformer
-        result = transformer.transform(result, **locals)
+        result = transformer.transform_embeds(result, **locals) # 1) transform embeds (i.e. nested templates)
+        result = transformer.transform(result, **locals) # ...... 2) transform
         transformer = next_transformer(result)
       end
 
@@ -37,7 +38,7 @@ module Fmt
 
     def initialize
       super
-      @filters = Fmt::FilterGroup.new.merge!(Fmt::StringFilterGroup.new)
+      @filters = Fmt::FilterGroup.new.merge!(Fmt::NativeFilterGroup.new)
     end
 
     def next_transformer(string)

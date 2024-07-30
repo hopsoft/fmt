@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.files = Dir["{lib}/**/*", "MIT-LICENSE", "README.md"]
   s.require_paths = ["lib"]
 
+  s.add_development_dependency "activesupport"
   s.add_development_dependency "amazing_print"
   s.add_development_dependency "magic_frozen_string_literal"
   s.add_development_dependency "minitest"
@@ -28,6 +29,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "pry-doc"
   s.add_development_dependency "rainbow"
   s.add_development_dependency "rake"
+  s.add_development_dependency "rbs-inline"
   s.add_development_dependency "tocer"
   s.add_development_dependency "yard"
 end

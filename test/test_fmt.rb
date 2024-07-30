@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
-require "date"
-require "rainbow"
 require "test_helper"
-require_relative "../lib/fmt"
 
 Fmt.add_rainbow_filters
-Fmt.add_filter(:"ljust-80") { |val| "".ljust 80, val.to_s }
 
 class TestFmt < Minitest::Test
   def test_that_it_has_a_version_number
@@ -30,13 +26,15 @@ class TestFmt < Minitest::Test
   end
 
   def test_format_three
+    Fmt.add_filter(:ljust) { |obj| "".ljust 80, obj.to_s }
+
     template = <<~TEMPLATE
-      %{head}ljust-80|faint
+      %{prefix}ljust|faint
       %{name}upcase|red|bold is %{age}#B|yellow years old in binary!
-      %{tail}ljust-80|faint
+      %{suffix}ljust|faint
     TEMPLATE
 
-    actual = Fmt(template, head: "-", name: "the parthenon", age: 2_470, tail: "-")
+    actual = Fmt(template, prefix: "-", name: "the parthenon", age: 2_470, suffix: "-")
 
     expected = <<~RESULT
       \e[2m--------------------------------------------------------------------------------\e[0m
@@ -49,8 +47,10 @@ class TestFmt < Minitest::Test
   end
 
   def test_format_four
+    Fmt.add_filter(:ljust) { |val| "".ljust 80, val.to_s }
+
     template = <<~TEMPLATE
-      %{head}ljust-80|faint
+      %{prefix}ljust|faint
       Date: %{date}.10s|reverse|red|bold|underline
 
       Greetings, %{name}upcase|green|bold
@@ -58,16 +58,16 @@ class TestFmt < Minitest::Test
       %{message}strip|bold
 
       %{redacted}cross_out|faint
-      %{head}ljust-80|faint
+      %{suffix}ljust|faint
     TEMPLATE
 
     actual = Fmt(template,
-      head: "-",
+      prefix: "-",
       date: DateTime.parse("2024-07-26T01:18:59-06:00"),
       name: "Hopsoft",
       message: "This is neat!     ",
       redacted: "This is redacted!",
-      tail: "-")
+      suffix: "-")
 
     expected = <<~RESULT
       \e[2m--------------------------------------------------------------------------------\e[0m
@@ -94,25 +94,27 @@ class TestFmt < Minitest::Test
   end
 
   def test_deep_embeds
+    Fmt.add_filter(:ljust) { |obj| "".ljust 80, obj.to_s }
+
     template = <<~TEMPLATE
       %{value}yellow|bold
-      %{char}ljust-80|yellow|faint
+      %{char}ljust|yellow|faint
         {{
-          %{embed_value}green|bold
-          %{char}ljust-80|green|faint
-            {{
-              %{char}ljust-80|red|faint
-              %{deep_embed_value}red|bold
-              %{char}ljust-80|red|faint
-            }}
-          %{char}ljust-80|green|faint
+        %{embed_value}green|bold
+        %{char}ljust|green|faint
+          {{
+            %{char}ljust|red|faint
+            %{deep_embed_value}red|bold
+            %{char}ljust|red|faint
+          }}
+        %{char}ljust|green|faint
         }}
-      %{char}ljust-80|yellow|faint
+      %{char}ljust|yellow|faint
     TEMPLATE
 
-    actual = Fmt(template, value: "Outer", embed_value: "Embed", deep_embed_value: "Deep Embed", char: "-")
+    actual = Fmt(template, value: "Outer", embed_value: "Inner", deep_embed_value: "Deep", char: "-")
 
-    expected = "\e[33m\e[1mOuter\e[0m\n\e[33m\e[2m--------------------------------------------------------------------------------\e[0m\n  \n    \e[32m\e[1mEmbed\e[0m\n    \e[32m\e[2m--------------------------------------------------------------------------------\e[0m\n      \n        \e[31m\e[2m--------------------------------------------------------------------------------\e[0m\n        \e[31m\e[1mDeep Embed\e[0m\n        \e[31m\e[2m--------------------------------------------------------------------------------\e[0m\n      \n    \e[32m\e[2m--------------------------------------------------------------------------------\e[0m\n  \n\e[33m\e[2m--------------------------------------------------------------------------------\e[0m\n"
+    expected = "\e[33m\e[1mOuter\e[0m\n\e[33m\e[2m--------------------------------------------------------------------------------\e[0m\n  \n  \e[32m\e[1mInner\e[0m\n  \e[32m\e[2m--------------------------------------------------------------------------------\e[0m\n    \n      \e[31m\e[2m--------------------------------------------------------------------------------\e[0m\n      \e[31m\e[1mDeep\e[0m\n      \e[31m\e[2m--------------------------------------------------------------------------------\e[0m\n    \n  \e[32m\e[2m--------------------------------------------------------------------------------\e[0m\n  \n\e[33m\e[2m--------------------------------------------------------------------------------\e[0m\n"
 
     # puts actual
     assert_equal expected, actual

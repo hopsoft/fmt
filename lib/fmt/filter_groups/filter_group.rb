@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "monitor"
+require "set"
 require_relative "../filter"
 
 module Fmt
@@ -17,12 +18,28 @@ module Fmt
       synchronize { data[name.to_sym] }
     end
 
+    def supported_method_names(*klasses)
+      method_names = klasses.each_with_object(Set.new) do |klass, set|
+        klass.public_instance_methods.each do |method_name|
+          next if method_name.to_s.start_with?("_")
+          next if klass.public_instance_method(method_name).parameters.any? { |(type, *)| type == :req }
+          set << method_name
+        end
+      end
+      method_names.to_a.sort
+    end
+
     def add(name, filter_proc = nil, &block)
       raise ArgumentError, "filter_proc and block are mutually exclusive" if filter_proc && block
       raise ArgumentError, "filter_proc must be a Proc" unless block || filter_proc.is_a?(Proc)
       synchronize do
         data[name.to_sym] = Fmt::Filter.new(name.to_sym, filter_proc || block)
       end
+    end
+
+    def safe_add(name, filter_proc = nil, &block)
+      return if key?(name)
+      add(name, filter_proc, &block)
     end
 
     def each(&block)
