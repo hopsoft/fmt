@@ -20,18 +20,18 @@ module Fmt
 
     attr_accessor template: untyped
 
-    def placeholder_regexp: () -> untyped
+    # The placeholder regexp (i.e. /{{%{name}red\|bold}}/)
+    # @rbs return: Regexp
+    def placeholder_regexp: () -> Regexp
 
-    def template_string: () -> untyped
+    # The template string (i.e. %{name}red|bold)
+    # @rbs return: String
+    def template_string: () -> String
 
-    def format: (?locals: untyped) -> untyped
-
-    # Indicates if the embed is wrapped in a template
-    #
-    # @example
-    # %{{{%{embed_value}red|bold}}}underline
-    #
+    # Indicates if the embed is wrapped in a template (i.e. %{{{%{name}red|bold}}}underline)
     # @rbs return: bool
     def templated?: () -> bool
+
+    def format: (?locals: untyped) -> untyped
   end
 end
