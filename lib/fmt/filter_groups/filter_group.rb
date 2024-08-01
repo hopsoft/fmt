@@ -28,7 +28,7 @@ module Fmt
       yield
     ensure
       synchronize do
-        overrides&.each { |key, _| data.delete key }
+        overrides&.each { |key, _| delete key }
         originals&.each { |key, val| data[key] = val }
       end
     end

@@ -14,7 +14,7 @@ module Fmt
     attr_reader :filters
 
     def add_rainbow_filters
-      filters.merge! Fmt::RainbowFilterGroup.new.to_h
+      filters.merge! Fmt::RainbowFilterGroup.new
     end
 
     def add_filter(...)

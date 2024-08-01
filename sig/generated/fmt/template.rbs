@@ -22,27 +22,23 @@ module Fmt
 
     attr_reader string: untyped
 
-    # The filter string
-    #
-    # @example
-    # red|bold
-    #
+    # The filter string (i.e. red|bold)
     # @rbs return: String
     def filter_string: () -> String
 
-    # The template string
-    #
-    # @example
-    # %{name}red|bold
-    #
-    # @rbs return: String
-    def template_string: () -> String
+    # The filter regexp (i.e. /red\|bold/)
+    # @rbs return: Regexp
+    def filter_regexp: () -> Regexp
 
-    # The template placeholder string
+    # The placeholder string (i.e. %{name}red|bold)
     # @rbs return: String
-    def placeholder: () -> String
+    def placeholder_string: () -> String
 
-    def format: (?untyped string, ?locals: untyped) -> untyped
+    # The template/placeholder regexp (i.e. /%{name}red\|bold/)
+    # @rbs return: Regexp
+    def placeholder_regexp: () -> Regexp
+
+    def format: (untyped string, ?locals: untyped) -> untyped
 
     def format_embeds: (untyped string, ?locals: untyped) -> untyped
   end

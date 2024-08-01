@@ -27,41 +27,31 @@ module Fmt
     attr_reader :embeds # : Array[Fmt::Template] -- embedded templates
     attr_reader :string # : String -- string that contains template
 
-    # The filter string
-    #
-    # @example
-    # red|bold
-    #
+    # The filter string (i.e. red|bold)
     # @rbs return: String
     def filter_string
       filters.map(&:name).join Fmt::Filter::DELIMITER
     end
 
-    # The template string
-    #
-    # @example
-    # %{name}red|bold
-    #
+    # The filter regexp (i.e. /red\|bold/)
+    # @rbs return: Regexp
+    def filter_regexp
+      /#{filters.map(&:name).join "\\#{Fmt::Filter::DELIMITER}"}/
+    end
+
+    # The placeholder string (i.e. %{name}red|bold)
     # @rbs return: String
-    def template_string
+    def placeholder_string
       "#{HEAD}#{key}#{TAIL}#{filter_string}"
     end
 
-    # # The template regex
-    # # @rbs return: Regexp
-    # def regex
-    #   f = filters.map(&:name).join("\\#{Fmt::Filter::DELIMITER}")
-    #   Regexp.new "\\s*#{HEAD}#{key}#{TAIL}#{f}\\s*"
-    # end
-
-    # The template placeholder string
-    # @rbs return: String
-    def placeholder
-      "#{HEAD}#{key}#{TAIL}#{filter_string}"
+    # The template/placeholder regexp (i.e. /%{name}red\|bold/)
+    # @rbs return: Regexp
+    def placeholder_regexp
+      /#{HEAD}#{key}#{TAIL}#{filter_regexp}/
     end
 
-    def format(string = nil, locals: {})
-      string ||= self.string
+    def format(string, locals: {})
       raise Fmt::Error, "Missing local! :#{key} <string=#{string.inspect} locals=#{locals.inspect}>" unless locals.key?(key)
 
       string = format_embeds(string, locals: locals) # format embeds first (i.e. nested templates)
@@ -73,11 +63,13 @@ module Fmt
         raise Fmt::Error, "Error in filter! #{filter.inspect}\n#{error.message}"
       end
 
-      string.sub placeholder, replacement.to_s
+      string.sub placeholder_regexp, replacement.to_s
     end
 
     def format_embeds(string, locals: {})
-      embeds.each { |embed| string = embed.format(locals: locals) }
+      embeds.each do |embed|
+        string = embed.format(locals: locals)
+      end
       string
     end
   end

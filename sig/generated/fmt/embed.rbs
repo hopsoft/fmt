@@ -10,15 +10,17 @@ module Fmt
     # @rbs placeholder: String -- placeholder
     # @rbs string: String -- string that contains embed
     # @rbs return: Fmt::Embed
-    def initialize: (String placeholder, string: String) -> Fmt::Embed
+    def initialize: (untyped placeholder_string, string: String) -> Fmt::Embed
 
     attr_reader key: untyped
 
-    attr_reader placeholder: untyped
+    attr_reader placeholder_string: untyped
 
     attr_reader string: untyped
 
     attr_accessor template: untyped
+
+    def placeholder_regexp: () -> untyped
 
     def template_string: () -> untyped
 

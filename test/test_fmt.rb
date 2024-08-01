@@ -95,7 +95,7 @@ class TestFmt < Minitest::Test
     template = "%{value}lime %{{{%{embed_value}red|bold}}}underline"
     actual = Fmt(template, value: "Outer", embed_value: "Inner")
     expected = "\e[38;5;46mOuter\e[0m \e[31m\e[1m\e[4mInner\e[0m"
-    puts actual
+    # puts actual
     assert_equal expected, actual
   end
 
