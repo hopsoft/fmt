@@ -1,0 +1,21 @@
+# Generated from lib/fmt/formatter.rb with RBS::Inline
+
+module Fmt
+  class Formatter
+    include Singleton
+
+    attr_reader filters: untyped
+
+    def add_rainbow_filters: () -> untyped
+
+    def add_filter: () -> untyped
+
+    def delete_filter: () -> untyped
+
+    def format: (untyped string, ?fmt: untyped, **untyped locals) -> untyped
+
+    private
+
+    def initialize: () -> untyped
+  end
+end

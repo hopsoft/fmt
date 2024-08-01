@@ -1,0 +1,35 @@
+# Generated from lib/fmt/embed.rb with RBS::Inline
+
+module Fmt
+  class Embed
+    HEAD: ::String
+
+    TAIL: ::String
+
+    # Initializes a Fmt::Embed instance
+    # @rbs placeholder: String -- placeholder
+    # @rbs string: String -- string that contains embed
+    # @rbs return: Fmt::Embed
+    def initialize: (String placeholder, string: String) -> Fmt::Embed
+
+    attr_reader key: untyped
+
+    attr_reader placeholder: untyped
+
+    attr_reader string: untyped
+
+    attr_accessor template: untyped
+
+    def template_string: () -> untyped
+
+    def format: (?locals: untyped) -> untyped
+
+    # Indicates if the embed is wrapped in a template
+    #
+    # @example
+    # %{{{%{embed_value}red|bold}}}underline
+    #
+    # @rbs return: bool
+    def templated?: () -> bool
+  end
+end

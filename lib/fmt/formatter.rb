@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
+# rbs_inline: enabled
+
 require "singleton"
-require_relative "filter_groups/filter_group"
-require_relative "filter_groups/rainbow_filter_group"
 require_relative "filter_groups/native_filter_group"
-require_relative "scanners"
-require_relative "transformer"
+require_relative "filter_groups/rainbow_filter_group"
+require_relative "scanners/template_scanner"
 
 module Fmt
   class Formatter
@@ -21,41 +21,29 @@ module Fmt
       filters.add(...)
     end
 
-    def format(string, **locals)
-      result = string.to_s
-      transformer = next_transformer(result)
+    def delete_filter(...)
+      filters.delete(...)
+    end
 
-      while transformer
-        result = transformer.transform_embeds(result, **locals) # 1) transform embeds (i.e. nested templates)
-        result = transformer.transform(result, **locals) # ...... 2) transform
-        transformer = next_transformer(result)
+    def format(string, fmt: {}, **locals)
+      filters.with_overrides fmt do
+        result = string.to_s
+        template = Fmt::TemplateScanner.new(result).scan
+
+        while template
+          result = template.format(result, locals: locals)
+          template = Fmt::TemplateScanner.new(result).scan
+        end
+
+        result
       end
-
-      result
     end
 
     private
 
     def initialize
       super
-      @filters = Fmt::FilterGroup.new.merge!(Fmt::NativeFilterGroup.new)
-    end
-
-    def next_transformer(string)
-      embed_scanner = Fmt::EmbedScanner.new(string)
-      embed_scanner.scan
-
-      key_scanner = Fmt::KeyScanner.new(string)
-      key = key_scanner.scan
-      return nil unless key
-
-      filter_scanner = Fmt::FilterScanner.new(key_scanner.rest, registered_filters: filters)
-      filter_string = filter_scanner.scan
-
-      Fmt::Transformer.new key.to_sym,
-        embeds: embed_scanner.embeds,
-        filters: filter_scanner.filters,
-        placeholder: "%{#{key}}#{filter_string}".strip
+      @filters = Fmt::NativeFilterGroup.new
     end
   end
 end

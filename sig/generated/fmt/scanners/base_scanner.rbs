@@ -1,0 +1,42 @@
+# Generated from lib/fmt/scanners/base_scanner.rb with RBS::Inline
+
+module Fmt
+  class BaseScanner
+    extend Forwardable
+
+    # Initializes a scanner instance
+    # @rbs string: String -- string to scan
+    def initialize: (String string) -> untyped
+
+    # : String -- string that is being scanned
+    attr_reader value: untyped
+
+    # Current string that has not been scanned over yet
+    # @rbs return: String
+    def current_string: () -> String
+
+    # Current position of the string scanner
+    # @rbs return: Integer
+    def current_position: () -> Integer
+
+    # Indicates if scanning has been performed
+    # @rbs return: bool
+    def performed?: () -> bool
+
+    # Resets the scanner so it can be reused if needed
+    # @rbs return: void
+    def reset: () -> void
+
+    # Scans the string and returns the value
+    # @note Subclasses must implement the perform method to support scan
+    # @rbs return: Object?
+    def scan: () -> Object?
+
+    attr_reader string_scanner: untyped
+
+    # Peforms the scan
+    # @note Should set @value and return it
+    # @rbs return: Object?
+    def perform: () -> Object?
+  end
+end

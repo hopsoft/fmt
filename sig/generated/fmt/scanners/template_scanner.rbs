@@ -1,0 +1,11 @@
+# Generated from lib/fmt/scanners/template_scanner.rb with RBS::Inline
+
+module Fmt
+  class TemplateScanner < BaseScanner
+    # 1) Performs the scan
+    # 2) Extracts the template components (embeds, key, filters)
+    # 3) Builds a Fmt::Template instance
+    # @rbs return: Fmt::Template?
+    def perform: () -> Fmt::Template?
+  end
+end

@@ -1,0 +1,49 @@
+# Generated from lib/fmt/template.rb with RBS::Inline
+
+module Fmt
+  class Template
+    HEAD: ::String
+
+    TAIL: ::String
+
+    # Initializes a Fmt::Template instance
+    # @rbs key: Symbol -- unique key that identifies the template
+    # @rbs filters: Array[Fmt::Filter] -- filters to apply
+    # @rbs embeds: Array[Fmt::Embed] -- embeddings
+    # @rbs string: String -- string that contains template
+    # @rbs return: Fmt::Template
+    def initialize: (Symbol key, *untyped filters, ?embeds: Array[Fmt::Embed], ?string: String) -> Fmt::Template
+
+    attr_reader key: untyped
+
+    attr_reader filters: untyped
+
+    attr_reader embeds: untyped
+
+    attr_reader string: untyped
+
+    # The filter string
+    #
+    # @example
+    # red|bold
+    #
+    # @rbs return: String
+    def filter_string: () -> String
+
+    # The template string
+    #
+    # @example
+    # %{name}red|bold
+    #
+    # @rbs return: String
+    def template_string: () -> String
+
+    # The template placeholder string
+    # @rbs return: String
+    def placeholder: () -> String
+
+    def format: (?untyped string, ?locals: untyped) -> untyped
+
+    def format_embeds: (untyped string, ?locals: untyped) -> untyped
+  end
+end

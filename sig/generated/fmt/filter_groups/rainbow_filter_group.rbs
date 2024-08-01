@@ -1,0 +1,8 @@
+# Generated from lib/fmt/filter_groups/rainbow_filter_group.rb with RBS::Inline
+
+module Fmt
+  # @note Rainbow filters convert the Object to a String
+  class RainbowFilterGroup < FilterGroup
+    def initialize: () -> untyped
+  end
+end

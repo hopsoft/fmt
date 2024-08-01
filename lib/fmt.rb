@@ -11,6 +11,10 @@ module Fmt
       Formatter.instance
     end
 
+    def format(...)
+      formatter.format(...)
+    end
+
     def filters
       formatter.filters
     end
@@ -22,9 +26,13 @@ module Fmt
     def add_filter(...)
       formatter.add_filter(...)
     end
+
+    def delete_filter(...)
+      formatter.delete_filter(...)
+    end
   end
 end
 
 def Fmt(...)
-  Fmt.formatter.format(...)
+  Fmt.format(...)
 end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rbs_inline: enabled
+
 require "date"
 require "set"
 require_relative "filter_group"

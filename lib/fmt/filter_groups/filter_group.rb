@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
+# rbs_inline: enabled
+
 require "monitor"
 require "set"
-require_relative "../filter"
 
 module Fmt
   class FilterGroup
@@ -14,44 +15,66 @@ module Fmt
       @data = {}
     end
 
-    def [](name)
-      synchronize { data[name.to_sym] }
+    def with_overrides(overrides, &block)
+      return yield if overrides.nil? || overrides.empty?
+
+      overrides = overrides.each_with_object({}) do |(key, val), memo|
+        memo[key.to_sym] = val if val.is_a? Proc
+      end
+
+      originals = data.slice(*overrides.keys)
+      overrides.each { |key, val| add key, val }
+
+      yield
+    ensure
+      synchronize do
+        overrides&.each { |key, _| data.delete key }
+        originals&.each { |key, val| data[key] = val }
+      end
+    end
+
+    def [](key)
+      synchronize { data[key.to_sym] }
     end
 
     def supported_method_names(*klasses)
       method_names = klasses.each_with_object(Set.new) do |klass, set|
-        klass.public_instance_methods.each do |method_name|
-          next if method_name.to_s.start_with?("_")
-          next if klass.public_instance_method(method_name).parameters.any? { |(type, *)| type == :req }
-          set << method_name
+        klass.public_instance_methods.each do |name|
+          next if name.to_s.start_with?("_")
+          next if klass.public_instance_method(name).parameters.any? { |(type, *)| type == :req }
+          set << name
         end
       end
       method_names.to_a.sort
     end
 
-    def add(name, filter_proc = nil, &block)
+    def add(key, filter_proc = nil, &block)
       raise ArgumentError, "filter_proc and block are mutually exclusive" if filter_proc && block
       raise ArgumentError, "filter_proc must be a Proc" unless block || filter_proc.is_a?(Proc)
-      synchronize do
-        data[name.to_sym] = Fmt::Filter.new(name.to_sym, filter_proc || block)
-      end
+      key = key.to_sym
+      synchronize { data[key] = Fmt::Filter.new(key, filter_proc || block) }
     end
 
-    def safe_add(name, filter_proc = nil, &block)
-      return if key?(name)
-      add(name, filter_proc, &block)
+    def safe_add(key, filter_proc = nil, &block)
+      key = key.to_sym
+      return if key?(key)
+      add(key, filter_proc, &block)
+    end
+
+    def delete(key)
+      synchronize { data.delete key.to_sym }
     end
 
     def each(&block)
       synchronize { data.each(&block) }
     end
 
-    def fetch(name, default = nil)
-      synchronize { data.fetch name.to_sym, default }
+    def fetch(key, default = nil)
+      synchronize { data.fetch key.to_sym, default }
     end
 
-    def key?(name)
-      synchronize { data.key? name.to_sym }
+    def key?(key)
+      synchronize { data.key? key.to_sym }
     end
 
     alias_method :added?, :key?

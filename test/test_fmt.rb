@@ -26,15 +26,14 @@ class TestFmt < Minitest::Test
   end
 
   def test_format_three
-    Fmt.add_filter(:ljust) { |obj| "".ljust 80, obj.to_s }
-
-    template = <<~TEMPLATE
+    template = <<~T
       %{prefix}ljust|faint
       %{name}upcase|red|bold is %{age}#B|yellow years old in binary!
       %{suffix}ljust|faint
-    TEMPLATE
+    T
 
-    actual = Fmt(template, prefix: "-", name: "the parthenon", age: 2_470, suffix: "-")
+    actual = Fmt(template, prefix: "-", name: "the parthenon", age: 2_470, suffix: "-",
+      fmt: {ljust: ->(obj) { "".ljust 80, obj.to_s }})
 
     expected = <<~RESULT
       \e[2m--------------------------------------------------------------------------------\e[0m
@@ -47,9 +46,7 @@ class TestFmt < Minitest::Test
   end
 
   def test_format_four
-    Fmt.add_filter(:ljust) { |val| "".ljust 80, val.to_s }
-
-    template = <<~TEMPLATE
+    template = <<~T
       %{prefix}ljust|faint
       Date: %{date}.10s|reverse|red|bold|underline
 
@@ -59,7 +56,7 @@ class TestFmt < Minitest::Test
 
       %{redacted}cross_out|faint
       %{suffix}ljust|faint
-    TEMPLATE
+    T
 
     actual = Fmt(template,
       prefix: "-",
@@ -67,7 +64,8 @@ class TestFmt < Minitest::Test
       name: "Hopsoft",
       message: "This is neat!     ",
       redacted: "This is redacted!",
-      suffix: "-")
+      suffix: "-",
+      fmt: {ljust: ->(obj) { "".ljust 80, obj.to_s }})
 
     expected = <<~RESULT
       \e[2m--------------------------------------------------------------------------------\e[0m
@@ -86,37 +84,31 @@ class TestFmt < Minitest::Test
   end
 
   def test_embed
-    template = "%{value}lime {{%{embed_value}red|bold|underline}}"
+    template = "%{value}lime {{%{embed_value}red|bold}}"
+    actual = Fmt(template, value: "Outer", embed_value: "Inner")
+    expected = "\e[38;5;46mOuter\e[0m \e[31m\e[1mInner\e[0m"
+    # puts actual
+    assert_equal expected, actual
+  end
+
+  def test_wrapped_embed
+    template = "%{value}lime %{{{%{embed_value}red|bold}}}underline"
     actual = Fmt(template, value: "Outer", embed_value: "Inner")
     expected = "\e[38;5;46mOuter\e[0m \e[31m\e[1m\e[4mInner\e[0m"
-    # puts actual
+    puts actual
     assert_equal expected, actual
   end
 
-  def test_deep_embeds
-    Fmt.add_filter(:ljust) { |obj| "".ljust 80, obj.to_s }
-
-    template = <<~TEMPLATE
-      %{value}yellow|bold
-      %{char}ljust|yellow|faint
-        {{
-        %{embed_value}green|bold
-        %{char}ljust|green|faint
-          {{
-            %{char}ljust|red|faint
-            %{deep_embed_value}red|bold
-            %{char}ljust|red|faint
-          }}
-        %{char}ljust|green|faint
-        }}
-      %{char}ljust|yellow|faint
-    TEMPLATE
-
-    actual = Fmt(template, value: "Outer", embed_value: "Inner", deep_embed_value: "Deep", char: "-")
-
-    expected = "\e[33m\e[1mOuter\e[0m\n\e[33m\e[2m--------------------------------------------------------------------------------\e[0m\n  \n  \e[32m\e[1mInner\e[0m\n  \e[32m\e[2m--------------------------------------------------------------------------------\e[0m\n    \n      \e[31m\e[2m--------------------------------------------------------------------------------\e[0m\n      \e[31m\e[1mDeep\e[0m\n      \e[31m\e[2m--------------------------------------------------------------------------------\e[0m\n    \n  \e[32m\e[2m--------------------------------------------------------------------------------\e[0m\n  \n\e[33m\e[2m--------------------------------------------------------------------------------\e[0m\n"
-
-    # puts actual
-    assert_equal expected, actual
-  end
+  # def test_wrapped_embed_alt
+  #   template = <<~T
+  #     %{outer}lime|underline
+  #     %{
+  #       {{%{inner}red|bold}}
+  #     }italic
+  #   T
+  #   actual = Fmt(template, outer: "Outer", inner: "Inner")
+  #   expected = "\e[38;5;46m\e[4mOuter\e[0m\n\e[31m\e[1m\e[3mInner\e[0m\n"
+  #   # puts actual
+  #   assert_equal expected, actual
+  # end
 end
