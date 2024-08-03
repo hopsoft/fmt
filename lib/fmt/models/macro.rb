@@ -3,19 +3,19 @@
 # rbs_inline: enabled
 
 module Fmt
-  class Specifier
-    def initialize(value)
-      raise ArgumentError, "value must be a String or Proc" unless value.is_a?(String) || value.is_a?(Proc)
-      @value = value
-      @block = Fmt.registry.fetch(value, safe: false) { |*args| sprintf("%#{self}", *args) } # TODO: revisit performing
+  class Macro
+    def initialize(source)
+      raise ArgumentError, "source must be a String" unless source.is_a?(String)
+      @source = source
+      @block = Fmt.registry.fetch(source, safe: false) { |*args| sprintf("%#{self}", *args) } # TODO: revisit performing
 
       # TODO: parse arguments
       @arguments = []
     end
 
-    attr_reader :arguments # : Array[Object] -- arguments to pass to method
-    attr_reader :block # : Proc -- specifier proc
-    attr_reader :value # : String | Proc -- specifier value
+    attr_reader :arguments # : Array[Object] -- arguments to be passed the macro
+    attr_reader :block # : Proc -- macro proc
+    attr_reader :source # : String -- macro source
 
     # TODO: Revisit performing
     ## Calls the specifier method
@@ -28,7 +28,7 @@ module Fmt
 
     def to_h
       {
-        value: value,
+        source: source,
         block: block,
         arguments: arguments
       }

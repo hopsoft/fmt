@@ -12,8 +12,8 @@ module Parsers
 
       templates[0].tap do |t|
         assert_template t, source: source, key: nil, pipeline: "p"
-        assert_equal 1, t.specifiers.size
-        assert_specifier t.specifiers[0], value: "p", arguments: []
+        assert_equal 1, t.macros.size
+        assert_macro t.macros[0], source: "p", arguments: []
       end
     end
 
@@ -25,8 +25,8 @@ module Parsers
 
       templates[0].tap do |t|
         assert_template t, source: source, key: nil, pipeline: ".10f"
-        assert_equal 1, t.specifiers.size
-        assert_specifier t.specifiers[0], value: ".10f", arguments: []
+        assert_equal 1, t.macros.size
+        assert_macro t.macros[0], source: ".10f", arguments: []
       end
     end
 

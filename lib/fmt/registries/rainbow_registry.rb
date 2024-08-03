@@ -7,7 +7,7 @@ require_relative "registry"
 module Fmt
   # Extends native Ruby String format specifications with Rainbow methods
   # @see https://ruby-doc.org/3.3.4/format_specifications_rdoc.html
-  # @note Rainbow specifiers will convert the Object to a String
+  # @note Rainbow macros convert the Object to a String
   class RainbowRegistry < Registry
     def initialize
       super

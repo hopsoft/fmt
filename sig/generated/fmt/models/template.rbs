@@ -1,0 +1,19 @@
+# Generated from lib/fmt/models/template.rb with RBS::Inline
+
+module Fmt
+  class Template
+    def initialize: (untyped source, key: untyped, pipeline: untyped) -> untyped
+
+    attr_reader source: untyped
+
+    attr_reader key: untyped
+
+    attr_reader pipeline: untyped
+
+    attr_reader macros: untyped
+
+    def to_h: () -> untyped
+
+    def ==: (untyped other) -> untyped
+  end
+end

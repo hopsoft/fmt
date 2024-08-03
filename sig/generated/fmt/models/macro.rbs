@@ -1,0 +1,17 @@
+# Generated from lib/fmt/models/macro.rb with RBS::Inline
+
+module Fmt
+  class Macro
+    def initialize: (untyped source) -> untyped
+
+    attr_reader arguments: untyped
+
+    attr_reader block: untyped
+
+    attr_reader source: untyped
+
+    def to_h: () -> untyped
+
+    def ==: (untyped other) -> untyped
+  end
+end

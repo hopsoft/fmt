@@ -8,10 +8,10 @@ require_relative "../models/template"
 module Fmt
   class TemplateParser < Parser
     PREFIX = Pattern.build(Sigils::PREFIX, escape: true).freeze # :: Regexp -- template prefix
-    KEY_PREFIX = Pattern.build("[%s]", Sigils::KEY_PREFIXES.join) # :: Regexp -- named template key prefix
-    KEY_VALUE = /\w+/ # :: Regexp -- named template key value
-    KEY_SUFFIX = Pattern.build("[%s]", Sigils::KEY_SUFFIXES.join) # :: Regexp -- named template key suffix
-    SPECIFIERS_EXTRACTOR = Pattern.build("(?=\\s*%s|$)", Sigils::EMBED_PREFIX) # :: Regexp -- extract specifiers
+    KEY_PREFIX = Pattern.build("[%s]", Sigils::KEY_PREFIXES.join) # :: Regexp -- named-template key prefix
+    KEY_VALUE = /\w+/ # :: Regexp -- named-template key value
+    KEY_SUFFIX = Pattern.build("[%s]", Sigils::KEY_SUFFIXES.join) # :: Regexp -- named-template key suffix
+    MACROS = Pattern.build("(?=\\s*%s|$)", Sigils::EMBED_PREFIX) # :: Regexp -- macros
 
     # Creates a template parser
     # @rbs source: String -- string being parsed (default: "")
@@ -30,7 +30,7 @@ module Fmt
       key = scanner.scan(KEY_VALUE) if scanner.matched?
       scanner.skip_until KEY_SUFFIX if scanner.matched?
 
-      pipeline = scanner.scan_until(SPECIFIERS_EXTRACTOR)
+      pipeline = scanner.scan_until(MACROS)
 
       Template.new source, key: key, pipeline: pipeline
     end

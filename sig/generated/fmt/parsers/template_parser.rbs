@@ -2,36 +2,21 @@
 
 module Fmt
   class TemplateParser < Parser
-    class Match
-      def initialize: (prefix: untyped, name: untyped, specifiers: untyped) -> untyped
+    PREFIX: untyped
 
-      attr_reader prefix: untyped
+    KEY_PREFIX: untyped
 
-      attr_reader name: untyped
+    KEY_VALUE: ::Regexp
 
-      attr_reader specifiers: untyped
+    KEY_SUFFIX: untyped
 
-      def to_h: () -> untyped
-    end
-
-    # @note Using Fmt::Sigil constants that have been copied to the Fmt::BaseParser superclass
-    PREFIX_POINTER: untyped
-
-    PREFIX_EXTRACTOR: untyped
-
-    NAME_PREFIX_POINTER: untyped
-
-    NAME_EXTRACTOR: ::Regexp
-
-    NAME_SUFFIX_POINTER: untyped
-
-    SPECIFIERS_EXTRACTOR: untyped
+    MACROS: untyped
 
     # Creates a template parser
     # @rbs source: String -- string being parsed (default: "")
     def initialize: (?String source) -> untyped
 
-    def next_match: () -> untyped
+    def next_template: () -> untyped
 
     def perform: () -> untyped
   end

@@ -11,8 +11,8 @@ module Parsers
 
       templates[0].tap do |t|
         assert_template t, source: source, key: nil, pipeline: "cyan"
-        assert_equal 1, t.specifiers.size
-        assert_specifier t.specifiers[0], value: "cyan", arguments: []
+        assert_equal 1, t.macros.size
+        assert_macro t.macros[0], source: "cyan", arguments: []
       end
     end
 
@@ -23,10 +23,10 @@ module Parsers
 
       templates[0].tap do |t|
         assert_template t, source: source, key: :value, pipeline: "red|>bold|>underline"
-        assert_equal 3, t.specifiers.size
-        assert_specifier t.specifiers[0], value: "red", arguments: []
-        assert_specifier t.specifiers[1], value: "bold", arguments: []
-        assert_specifier t.specifiers[2], value: "underline", arguments: []
+        assert_equal 3, t.macros.size
+        assert_macro t.macros[0], source: "red", arguments: []
+        assert_macro t.macros[1], source: "bold", arguments: []
+        assert_macro t.macros[2], source: "underline", arguments: []
       end
     end
 

@@ -20,11 +20,11 @@ Minitest::Reporters.use! [
 
 class UnitTest < Minitest::Test
   def assert_template(template, **expected)
-    assert_equal expected, template.to_h.except(:specifiers)
+    assert_equal expected, template.to_h.except(:macros)
   end
 
-  def assert_specifier(specifier, **expected)
-    assert_instance_of Proc, specifier.block
-    assert_equal expected, specifier.to_h.except(:block)
+  def assert_macro(macro, **expected)
+    assert_instance_of Proc, macro.block
+    assert_equal expected, macro.to_h.except(:block)
   end
 end

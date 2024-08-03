@@ -2,7 +2,7 @@
 
 # rbs_inline: enabled
 
-require_relative "specifier"
+require_relative "macro"
 
 module Fmt
   class Template
@@ -10,20 +10,20 @@ module Fmt
       @source = source
       @key = key&.to_sym
       @pipeline = pipeline.to_s
-      @specifiers ||= begin
+      @macros ||= begin
         list = pipeline&.split(Sigils::PIPE_OPERATOR)&.reject(&:empty?) || []
-        list&.map { |value| Fmt::Specifier.new value }
+        list&.map { |value| Fmt::Macro.new value }
       end
     end
 
-    attr_reader :source, :key, :pipeline, :specifiers
+    attr_reader :source, :key, :pipeline, :macros
 
     def to_h
       {
         source: source,
         key: key,
         pipeline: pipeline,
-        specifiers: specifiers.map(&:to_h)
+        macros: macros.map(&:to_h)
       }
     end
 

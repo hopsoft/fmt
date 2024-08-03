@@ -22,7 +22,7 @@ module Fmt
 
     def delete: (untyped key) -> untyped
 
-    def fetch: (untyped key, ?untyped default, ?safe: untyped) -> untyped
+    def fetch: (untyped key, ?safe: untyped) ?{ (?) -> untyped } -> untyped
 
     def merge!: (untyped other) -> untyped
 

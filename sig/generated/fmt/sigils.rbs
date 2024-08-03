@@ -4,9 +4,9 @@ module Fmt
   module Sigils
     PREFIX: ::String
 
-    NAME_PREFIXES: untyped
+    KEY_PREFIXES: untyped
 
-    NAME_SUFFIXES: untyped
+    KEY_SUFFIXES: untyped
 
     ARGS_PREFIX: ::String
 
@@ -17,11 +17,5 @@ module Fmt
     EMBED_PREFIX: ::String
 
     EMBED_SUFFIX: ::String
-
-    # Copies constants from this module to other when included
-    # Also creates a Regexp escaped version of each constant with an `_ESC` suffix
-    # @rbs other: Class | Module-- including class or module
-    # @rbs return: void
-    def self.included: (Class | Module other) -> void
   end
 end

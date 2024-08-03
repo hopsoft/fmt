@@ -1,7 +1,0 @@
-# Generated from lib/fmt/filter_groups/native_filter_group.rb with RBS::Inline
-
-module Fmt
-  class NativeFilterGroup < FilterGroup
-    def initialize: () -> untyped
-  end
-end
