@@ -1,0 +1,35 @@
+# Generated from lib/fmt/parsers/embed_scanner.rb with RBS::Inline
+
+module Fmt
+  class EmbedScanner < BaseScanner
+    # Initializes a Fmt::EmbedScanner instance
+    # @rbs string: String -- string to scan
+    # @rbs root: Fmt::EmbedScanner -- root scanner
+    def initialize: (String string, ?root: Fmt::EmbedScanner) -> untyped
+
+    # All detected embeds
+    # @rbs return: Array[Fmt::Embed]
+    def embeds: () -> Array[Fmt::Embed]
+
+    attr_reader root: untyped
+
+    # Indicates if this is root scanner
+    # @rbs return: bool
+    def root?: () -> bool
+
+    # Regexp that matches the head/start of an embed
+    # @rbs return: Regexp
+    def head: () -> Regexp
+
+    # Regexp that matches the tail/end of an embed
+    # @rbs return: Regexp
+    def tail: () -> Regexp
+
+    # 1) Performs the scan
+    # 2) Extacts the embed value
+    # 3) Advances the scanner to the end of the embed
+    # 3) Builds a list of Fmt::Embed instances (stored on the root scanner)
+    # @rbs return: String -- embed string
+    def perform: () -> String
+  end
+end

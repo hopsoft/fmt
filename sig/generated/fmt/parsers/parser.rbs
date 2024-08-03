@@ -1,0 +1,35 @@
+# Generated from lib/fmt/parsers/parser.rb with RBS::Inline
+
+module Fmt
+  class Parser
+    include Sigils
+
+    # Creates a parser
+    # @rbs source: String -- string being parsed (default: "")
+    def initialize: (?String source) -> untyped
+
+    attr_reader source: untyped
+
+    attr_reader value: untyped
+
+    # Unparsed portion of the string
+    # @rbs return: String
+    def tail: () -> String
+
+    # Current parse position
+    # @rbs return: Integer
+    def position: () -> Integer
+
+    # Parses the string and returns the extracted value
+    # @note Subclasses must implement the perform method to support parsing
+    # @rbs return: String?
+    def parse: () -> String?
+
+    attr_reader scanner: untyped
+
+    # Peforms parsing
+    # @note Subclasses must implement this method and assign and reutrn @value
+    # @rbs return: String?
+    def perform: () -> String?
+  end
+end

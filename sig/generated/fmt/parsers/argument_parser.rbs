@@ -1,0 +1,7 @@
+# Generated from lib/fmt/parsers/argument_parser.rb with RBS::Inline
+
+module Fmt
+  class ArgumentParser < Parser
+    def perform: () -> untyped
+  end
+end

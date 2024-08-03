@@ -7,16 +7,11 @@ module Fmt
     TAIL: ::String
 
     # Initializes a Fmt::Embed instance
-    # @rbs placeholder: String -- placeholder
-    # @rbs string: String -- string that contains embed
+    # @rbs placeholder: String -- placeholder (i.e. {{%{name}red|bold}})
     # @rbs return: Fmt::Embed
-    def initialize: (untyped placeholder_string, string: String) -> Fmt::Embed
+    def initialize: (String placeholder) -> Fmt::Embed
 
-    attr_reader key: untyped
-
-    attr_reader placeholder_string: untyped
-
-    attr_reader string: untyped
+    attr_reader placeholder: untyped
 
     attr_accessor template: untyped
 
@@ -24,14 +19,8 @@ module Fmt
     # @rbs return: Regexp
     def placeholder_regexp: () -> Regexp
 
-    # The template string (i.e. %{name}red|bold)
+    # Template placeholder (i.e. %{name}red|bold)
     # @rbs return: String
-    def template_string: () -> String
-
-    # Indicates if the embed is wrapped in a template (i.e. %{{{%{name}red|bold}}}underline)
-    # @rbs return: bool
-    def templated?: () -> bool
-
-    def format: (?locals: untyped) -> untyped
+    def template_placeholder: () -> String
   end
 end

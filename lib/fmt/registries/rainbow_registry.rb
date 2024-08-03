@@ -2,16 +2,18 @@
 
 # rbs_inline: enabled
 
-require_relative "filter_group"
+require_relative "registry"
 
 module Fmt
-  # @note Rainbow filters convert the Object to a String
-  class RainbowFilterGroup < FilterGroup
+  # Extends native Ruby String format specifications with Rainbow methods
+  # @see https://ruby-doc.org/3.3.4/format_specifications_rdoc.html
+  # @note Rainbow specifiers will convert the Object to a String
+  class RainbowRegistry < Registry
     def initialize
       super
 
       if defined? Rainbow
-        safe_add :rainbow, ->(obj) { Rainbow obj } unless key?(:rainbow) # <- wraps object with Rainbow
+        add(:rainbow) { |obj| Rainbow obj }
 
         methods = Rainbow::Presenter.public_instance_methods(false).select do |method|
           Rainbow::Presenter.public_instance_method(method).arity == 0
@@ -23,7 +25,7 @@ module Fmt
           .sort
 
         method_names.each do |name|
-          safe_add name, ->(obj) { Rainbow(obj).public_send name }
+          add(name) { |obj| Rainbow(obj).public_send name }
         end
       end
     rescue => error

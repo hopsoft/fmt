@@ -1,0 +1,9 @@
+# Generated from lib/fmt/registries/native_registry.rb with RBS::Inline
+
+module Fmt
+  # Extends native Ruby String format specifications with native Ruby methods
+  # @see https://ruby-doc.org/3.3.4/format_specifications_rdoc.html
+  class NativeRegistry < Registry
+    def initialize: () -> untyped
+  end
+end

@@ -9,6 +9,4 @@ require "pry-byebug"
 require "pry-doc"
 require_relative "../lib/fmt"
 
-Fmt.add_rainbow_filters
-
 Pry.start

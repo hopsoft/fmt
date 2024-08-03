@@ -1,0 +1,27 @@
+# Generated from lib/fmt/sigils.rb with RBS::Inline
+
+module Fmt
+  module Sigils
+    PREFIX: ::String
+
+    NAME_PREFIXES: untyped
+
+    NAME_SUFFIXES: untyped
+
+    ARGS_PREFIX: ::String
+
+    ARGS_SUFFIX: ::String
+
+    PIPE_OPERATOR: ::String
+
+    EMBED_PREFIX: ::String
+
+    EMBED_SUFFIX: ::String
+
+    # Copies constants from this module to other when included
+    # Also creates a Regexp escaped version of each constant with an `_ESC` suffix
+    # @rbs other: Class | Module-- including class or module
+    # @rbs return: void
+    def self.included: (Class | Module other) -> void
+  end
+end

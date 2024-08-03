@@ -31,7 +31,7 @@ module Fmt
         template = Fmt::TemplateScanner.new(result).scan
 
         while template
-          result = template.format(result, locals: locals)
+          result = template.format(result, **locals)
           template = Fmt::TemplateScanner.new(result).scan
         end
 

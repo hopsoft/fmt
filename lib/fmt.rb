@@ -1,38 +1,48 @@
 # frozen_string_literal: true
 
+require "monitor"
+require_relative "fmt/pattern"
+require_relative "fmt/sigils"
 require_relative "fmt/version"
-require_relative "fmt/formatter"
+require_relative "fmt/registries/native_registry"
+require_relative "fmt/registries/rainbow_registry"
+require_relative "fmt/parsers/template_parser"
+# require_relative "fmt/formatter"
 
 module Fmt
+  LOCK = Monitor.new
+
   class Error < StandardError; end
 
   class << self
-    def formatter
-      Formatter.instance
+    def registry
+      @registry ||= LOCK.synchronize do
+        NativeRegistry.new.merge! RainbowRegistry.new
+      end
     end
 
-    def format(...)
-      formatter.format(...)
+    def register(...)
+      registry.add(...)
     end
 
-    def filters
-      formatter.filters
+    def unregister(...)
+      registry.delete(...)
     end
 
-    def add_rainbow_filters
-      formatter.add_rainbow_filters
-    end
+    # def formatter
+    # Formatter.instance
+    # end
 
-    def add_filter(...)
-      formatter.add_filter(...)
-    end
+    # def format(...)
+    # formatter.format(...)
+    # end
 
-    def delete_filter(...)
-      formatter.delete_filter(...)
-    end
+    # def filters
+    # formatter.filters
+    # end
   end
 end
 
-def Fmt(...)
-  Fmt.format(...)
-end
+# def Fmt(...)
+# Fmt.format(...)
+# end

@@ -1,0 +1,35 @@
+# Generated from lib/fmt/registries/registry.rb with RBS::Inline
+
+module Fmt
+  # Extends native Ruby String format specifications
+  # @see https://ruby-doc.org/3.3.4/format_specifications_rdoc.html
+  class Registry
+    include MonitorMixin
+
+    def initialize: () -> untyped
+
+    def []: (untyped key) -> untyped
+
+    def supported_method_names: (*untyped klasses) -> untyped
+
+    def key?: (untyped key, ?safe: untyped) -> untyped
+
+    def keys: () -> untyped
+
+    def values: () -> untyped
+
+    def add: (untyped key, ?overwrite: untyped, ?proc: untyped) ?{ (?) -> untyped } -> untyped
+
+    def delete: (untyped key) -> untyped
+
+    def fetch: (untyped key, ?untyped default, ?safe: untyped) -> untyped
+
+    def merge!: (untyped other) -> untyped
+
+    def to_h: () -> untyped
+
+    def with_overrides: (untyped overrides) ?{ (?) -> untyped } -> untyped
+
+    attr_reader data: untyped
+  end
+end

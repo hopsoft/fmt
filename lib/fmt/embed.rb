@@ -10,45 +10,40 @@ module Fmt
     TAIL = "}}"
 
     # Initializes a Fmt::Embed instance
-    # @rbs placeholder: String -- placeholder
-    # @rbs string: String -- string that contains embed
+    # @rbs placeholder: String -- placeholder (i.e. {{%{name}red|bold}})
     # @rbs return: Fmt::Embed
-    def initialize(placeholder_string, string:)
-      @key = :"embed_#{SecureRandom.alphanumeric(16)}"
-      @placeholder_string = placeholder_string
-      @string = string
+    def initialize(placeholder)
+      @placeholder = placeholder
     end
 
-    attr_reader :key # : Symbol -- unique key that identifies the embed
-    attr_reader :placeholder_string # : String -- placeholder
-    attr_reader :string # : String -- string that contains embed
+    attr_reader :placeholder # : String -- placeholder (i.e. {{%{name}red|bold}})
     attr_accessor :template # : Fmt::Template -- embed template (assign before calling format)
 
     # The placeholder regexp (i.e. /{{%{name}red\|bold}}/)
     # @rbs return: Regexp
     def placeholder_regexp
-      /#{HEAD}\s*#{template.placeholder_regexp}\s*#{TAIL}/
+      /(?<head>#{HEAD})(?<head_space>\s*)#{template.placeholder_regexp}(?<tail_space>\s*)(?<tail>#{TAIL})/
     end
 
-    # The template string (i.e. %{name}red|bold)
+    # Template placeholder (i.e. %{name}red|bold)
     # @rbs return: String
-    def template_string
-      placeholder_string.delete_prefix(HEAD).delete_suffix(TAIL)
+    def template_placeholder
+      placeholder.delete_prefix(HEAD).delete_suffix(TAIL)
     end
 
-    # Indicates if the embed is wrapped in a template (i.e. %{{{%{name}red|bold}}}underline)
-    # @rbs return: bool
-    def templated?
-      string.match?(/%{\s*#{placeholder_regexp}\s*}/)
-    end
+    # def format(**locals)
+    #  $nate = 1
+    #  formatted = template.format(**locals)
+    #  binding.pry
 
-    def format(locals: {})
-      replacement = template.format(template_string, locals: locals)
+    #  # binding.pry
+    #  # t = TemplateScanner.new(template.placeholder).scan
+    #  # t.format(template.placeholder, locals: {template.key => replacement})
+    #  # binding.pry
 
-      return string.sub(placeholder_regexp, replacement) unless templated?
-
-      locals[key] = replacement
-      string.sub placeholder_regexp, key.to_s
-    end
+    #  # locals[key] = template.format(template_string, locals: locals)
+    #  # binding.pry
+    #  # string.sub(placeholder_regexp, "#{head}#{key}#{tail}")
+    # end
   end
 end

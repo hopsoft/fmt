@@ -4,10 +4,12 @@
 
 require "date"
 require "set"
-require_relative "filter_group"
+require_relative "registry"
 
 module Fmt
-  class NativeFilterGroup < FilterGroup
+  # Extends native Ruby String format specifications with native Ruby methods
+  # @see https://ruby-doc.org/3.3.4/format_specifications_rdoc.html
+  class NativeRegistry < Registry
     def initialize
       super
 
@@ -38,7 +40,7 @@ module Fmt
       )
 
       method_names.each do |method_name|
-        add method_name, ->(obj) { obj.public_send method_name }
+        add(method_name) { |obj, *args| obj.public_send(method_name, *args) }
       end
     end
   end
