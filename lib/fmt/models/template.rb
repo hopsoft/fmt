@@ -14,16 +14,18 @@ module Fmt
         list = pipeline&.split(Sigils::PIPE_OPERATOR)&.reject(&:empty?) || []
         list&.map { |value| Fmt::Macro.new value }
       end
+      @embeds = []
     end
 
-    attr_reader :source, :key, :pipeline, :macros
+    attr_reader :source, :key, :pipeline, :macros, :embeds
 
     def to_h
       {
         source: source,
         key: key,
         pipeline: pipeline,
-        macros: macros.map(&:to_h)
+        macros: macros.map(&:to_h),
+        embeds: embeds.map(&:to_h)
       }
     end
 

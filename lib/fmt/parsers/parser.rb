@@ -41,7 +41,7 @@ module Fmt
     attr_reader :scanner # : StringScanner
 
     # Peforms parsing
-    # @note Subclasses must implement this method and assign and reutrn @value
+    # @note Subclasses must implement this method and assign and return @value
     # @rbs return: String?
     def perform
       raise NotImplementedError

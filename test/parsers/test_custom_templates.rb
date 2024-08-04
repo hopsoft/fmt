@@ -10,7 +10,7 @@ module Parsers
       assert_equal 1, templates.size
 
       templates[0].tap do |t|
-        assert_template t, source: source, key: nil, pipeline: "cyan"
+        assert_template t, source: source, key: nil, pipeline: "cyan", embeds: []
         assert_equal 1, t.macros.size
         assert_macro t.macros[0], source: "cyan", arguments: []
       end
@@ -22,7 +22,7 @@ module Parsers
       assert_equal 1, templates.size
 
       templates[0].tap do |t|
-        assert_template t, source: source, key: :value, pipeline: "red|>bold|>underline"
+        assert_template t, source: source, key: :value, pipeline: "red|>bold|>underline", embeds: []
         assert_equal 3, t.macros.size
         assert_macro t.macros[0], source: "red", arguments: []
         assert_macro t.macros[1], source: "bold", arguments: []
