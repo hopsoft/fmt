@@ -7,7 +7,6 @@ module Parsers
     def test_basic
       source = "Inspect: %p"
       templates = Fmt::TemplateParser.new(source).parse
-
       assert_equal 1, templates.size
 
       templates[0].tap do |t|
@@ -20,7 +19,6 @@ module Parsers
     def test_named_basic
       source = "Inspect: %{obj}p"
       templates = Fmt::TemplateParser.new(source).parse
-
       assert_equal 1, templates.size
 
       templates[0].tap do |t|
@@ -33,7 +31,6 @@ module Parsers
     def test_named_basic_alt
       source = "Inspect: %<obj>p"
       templates = Fmt::TemplateParser.new(source).parse
-
       assert_equal 1, templates.size
 
       templates[0].tap do |t|
@@ -46,7 +43,6 @@ module Parsers
     def test_complex
       source = "Precision: %.10f"
       templates = Fmt::TemplateParser.new(source).parse
-
       assert_equal 1, templates.size
 
       templates[0].tap do |t|
@@ -59,7 +55,6 @@ module Parsers
     def test_named_complex
       source = "Precision: %{obj}.10f"
       templates = Fmt::TemplateParser.new(source).parse
-
       assert_equal 1, templates.size
 
       templates[0].tap do |t|
@@ -72,7 +67,6 @@ module Parsers
     def test_named_complex_alt
       source = "Precision: %<obj>.10f"
       templates = Fmt::TemplateParser.new(source).parse
-
       assert_equal 1, templates.size
 
       templates[0].tap do |t|
@@ -85,7 +79,6 @@ module Parsers
     def test_multiples
       source = "Multiple: %p %.10f"
       templates = Fmt::TemplateParser.new(source).parse
-
       assert_equal 2, templates.size
 
       templates[0].tap do |t|
@@ -104,7 +97,6 @@ module Parsers
     def test_named_multiples
       source = "Multiple: %{obj}p %{num}.10f"
       templates = Fmt::TemplateParser.new(source).parse
-
       assert_equal 2, templates.size
 
       templates[0].tap do |t|
@@ -123,7 +115,6 @@ module Parsers
     def test_named_multiples_alt
       source = "Multiple: %<obj>p %<num>.10f"
       templates = Fmt::TemplateParser.new(source).parse
-
       assert_equal 2, templates.size
 
       templates[0].tap do |t|
@@ -142,7 +133,6 @@ module Parsers
     def test_mixed_multiples
       source = "Multiple: %s %{obj}p %<num>.10f %p"
       templates = Fmt::TemplateParser.new(source).parse
-
       assert_equal 4, templates.size
 
       templates[0].tap do |t|
