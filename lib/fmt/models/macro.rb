@@ -2,6 +2,8 @@
 
 # rbs_inline: enabled
 
+require_relative "../parsers/argument_parser"
+
 module Fmt
   class Macro
     def initialize(source)
@@ -10,7 +12,7 @@ module Fmt
       @block = Fmt.registry.fetch(source, safe: false) { |*args| sprintf("%#{self}", *args) } # TODO: revisit performing
 
       # TODO: parse arguments
-      @arguments = []
+      @arguments = Fmt::ArgumentParser.new(source).parse
     end
 
     attr_reader :arguments # : Array[Object] -- arguments to be passed the macro

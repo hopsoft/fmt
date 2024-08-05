@@ -12,6 +12,8 @@ module Fmt
 
     attr_reader macros: untyped
 
+    attr_reader embeds: untyped
+
     def to_h: () -> untyped
 
     def ==: (untyped other) -> untyped

@@ -2,6 +2,63 @@
 
 module Fmt
   class ArgumentParser < Parser
+    # Tokenizer for argument strings
+    # Extracts args and kwargs from the source string
+    #
+    # Ripper.lex cheatsheet: @see doc/lexer.md
+    #
+    # @example Ripper Tokens
+    #   [[lineno, column], type, token, state]
+    class Tokenizer
+      # Initializes a ArgumentTokenizer instance
+      # @rbs source: String -- source string to tokenize
+      # @rbs return: Fmt::ArgumentTokenizer
+      def initialize: (String source) -> Fmt::ArgumentTokenizer
+
+      attr_reader source: untyped
+
+      attr_reader args: untyped
+
+      attr_reader kwargs: untyped
+
+      def to_h: () -> untyped
+
+      private
+
+      attr_reader key: untyped
+
+      attr_reader composite: untyped
+
+      # Tokenizes the source string (extracts args and kwargs)
+      def tokenize: () -> untyped
+
+      def skip?: (untyped lexeme) -> untyped
+
+      def arg?: () -> untyped
+
+      def kwarg?: () -> untyped
+
+      def primitive?: (untyped lexeme) -> untyped
+
+      def cast_primitive: (untyped lexeme) -> untyped
+
+      def assign_primitive: (untyped lexeme) -> untyped
+
+      def composite?: () -> untyped
+
+      def composite_start?: (untyped lexeme) -> untyped
+
+      def composite_end?: (untyped lexeme) -> untyped
+
+      def new_composite: (untyped lexeme) -> untyped
+
+      def assign_composite: () -> untyped
+
+      def key?: (untyped lexeme) -> untyped
+
+      def new_key: (untyped lexeme) -> untyped
+    end
+
     def perform: () -> untyped
   end
 end

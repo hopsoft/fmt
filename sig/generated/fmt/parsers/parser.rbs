@@ -26,7 +26,7 @@ module Fmt
     attr_reader scanner: untyped
 
     # Peforms parsing
-    # @note Subclasses must implement this method and assign and reutrn @value
+    # @note Subclasses must implement this method and assign and return @value
     # @rbs return: String?
     def perform: () -> String?
   end

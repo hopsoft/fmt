@@ -23,7 +23,7 @@ module Fmt
     def supported_method_names(*klasses)
       method_names = klasses.each_with_object(Set.new) do |klass, set|
         klass.public_instance_methods.each do |name|
-          next if name.to_s.start_with?("_") || name.to_s.end_with?("_")
+          next if name.to_s.start_with?("_") || name.to_s.end_with?("!")
           set << name
         end
       end

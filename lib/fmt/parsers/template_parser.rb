@@ -11,7 +11,7 @@ module Fmt
     KEY_PREFIX = Pattern.build("(?<!\\s|%%)[%s]", Sigils::KEY_PREFIXES.join) # :: Regexp -- named-template key prefix
     KEY_VALUE = /\w+/ # :: Regexp -- named-template key value
     KEY_SUFFIX = Pattern.build("[%s]", Sigils::KEY_SUFFIXES.join) # :: Regexp -- named-template key suffix
-    MACROS = Pattern.build("(?=\\s|%%|[%s]|$)", Sigils::EMBED_PREFIX) # :: Regexp -- macros
+    MACROS = Pattern.build("(?=\\s|%%|[%s]|$)(.*[%s])*", Sigils::EMBED_PREFIX, Sigils::ARGS_SUFFIX) # :: Regexp -- macros
 
     protected
 

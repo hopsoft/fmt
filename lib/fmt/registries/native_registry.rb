@@ -15,19 +15,13 @@ module Fmt
 
       method_names = supported_method_names(
         Array,
-        Binding,
-        Class,
         Date,
         DateTime,
         FalseClass,
         Float,
         Hash,
         Integer,
-        Method,
-        Module,
         NilClass,
-        Object,
-        Proc,
         Range,
         Set,
         StandardError,
@@ -35,8 +29,7 @@ module Fmt
         Struct,
         Symbol,
         Time,
-        TrueClass,
-        UnboundMethod
+        TrueClass
       )
 
       method_names.each do |method_name|

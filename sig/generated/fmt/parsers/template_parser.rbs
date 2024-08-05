@@ -12,11 +12,7 @@ module Fmt
 
     MACROS: untyped
 
-    # Creates a template parser
-    # @rbs source: String -- string being parsed (default: "")
-    def initialize: (?String source) -> untyped
-
-    def next_template: () -> untyped
+    def next_template: (untyped source) -> untyped
 
     def perform: () -> untyped
   end
