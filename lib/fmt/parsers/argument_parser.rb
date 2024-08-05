@@ -4,6 +4,7 @@
 
 require "ripper"
 require_relative "parser"
+require_relative "../cache"
 
 module Fmt
   class ArgumentParser < Parser
@@ -188,7 +189,7 @@ module Fmt
       # @rbs return: bool
       def key?(lexeme)
         case lexeme
-        in [_, :on_label, value, _] then true
+        in [_, :on_label, _, _] then true
         else false
         end
       end
@@ -208,7 +209,9 @@ module Fmt
     # Tokenizes the source string and returns a hash of the tokenized arguments
     # @rbs return: Hash[Symbol, Object]
     def perform
-      @value = Tokenizer.new(source).to_h
+      @value = Cache.instance.fetch(source) do
+        Tokenizer.new(source).to_h
+      end
     end
   end
 end
