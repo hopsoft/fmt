@@ -21,7 +21,9 @@ module Fmt
 
       attr_reader kwargs: untyped
 
-      def to_h: () -> untyped
+      # Returns a hash of the tokenized arguments
+      # @rbs return: Hash[Symbol, Object]
+      def to_h: () -> Hash[Symbol, Object]
 
       private
 
@@ -32,33 +34,70 @@ module Fmt
       # Tokenizes the source string (extracts args and kwargs)
       def tokenize: () -> untyped
 
-      def skip?: (untyped lexeme) -> untyped
+      # Indicates if the lexeme should be skipped
+      # @rbs lexeme: [[Integer, Integer], Symbol, String, Object] -- lexeme to check
+      # @rbs return: bool
+      def skip?: ([ [ Integer, Integer ], Symbol, String, Object ] lexeme) -> bool
 
-      def arg?: () -> untyped
+      # Indicates if the tokenizer is currently working with an ordinal argument
+      # @rbs return: bool
+      def arg?: () -> bool
 
-      def kwarg?: () -> untyped
+      # Indicates if the tokenizer is currently working with a keyword argument
+      # @rbs return: bool
+      def kwarg?: () -> bool
 
-      def primitive?: (untyped lexeme) -> untyped
+      # Indicates if the tokenizer is currently working with a composite argument
+      # @rbs return: bool
+      def composite?: () -> bool
 
-      def cast_primitive: (untyped lexeme) -> untyped
+      # Indicates if the lexeme is a supported primitive argument
+      # @rbs lexeme: [[Integer, Integer], Symbol, String, Object] -- lexeme to check
+      # @rbs return: bool
+      def primitive?: ([ [ Integer, Integer ], Symbol, String, Object ] lexeme) -> bool
 
-      def assign_primitive: (untyped lexeme) -> untyped
+      # Type casts the lexeme to a supported primitive
+      # @rbs lexeme: [[Integer, Integer], Symbol, String, Object] -- lexeme to check
+      # @rbs return: String | Symbol | Integer | Float | Rational | Complex | bool | nil
+      def cast_primitive: ([ [ Integer, Integer ], Symbol, String, Object ] lexeme) -> (String | Symbol | Integer | Float | Rational | Complex | bool | nil)
 
-      def composite?: () -> untyped
+      # Assigns the lexeme to the appropriate location (i.e. args, composite, or kwargs)
+      # @rbs lexeme: [[Integer, Integer], Symbol, String, Object] -- lexeme to check
+      # @rbs return: void
+      def assign_primitive: ([ [ Integer, Integer ], Symbol, String, Object ] lexeme) -> void
 
-      def composite_start?: (untyped lexeme) -> untyped
+      # Indicates if the lexeme is the start of a composite argument (i.e. Array or Hash)
+      # @rbs lexeme: [[Integer, Integer], Symbol, String, Object] -- lexeme to check
+      # @rbs return: bool
+      def composite_start?: ([ [ Integer, Integer ], Symbol, String, Object ] lexeme) -> bool
 
-      def composite_end?: (untyped lexeme) -> untyped
+      # Indicates if the lexeme is the end of a composite argument (i.e. Array or Hash)
+      # @rbs lexeme: [[Integer, Integer], Symbol, String, Object] -- lexeme to check
+      # @rbs return: bool
+      def composite_end?: ([ [ Integer, Integer ], Symbol, String, Object ] lexeme) -> bool
 
-      def new_composite: (untyped lexeme) -> untyped
+      # Creates a new composite argument based on the lexeme (i.e. Array or Hash)
+      # @rbs lexeme: [[Integer, Integer], Symbol, String, Object] -- lexeme to check
+      # @rbs return: Array | Hash | nil
+      def new_composite: ([ [ Integer, Integer ], Symbol, String, Object ] lexeme) -> (Array | Hash | nil)
 
-      def assign_composite: () -> untyped
+      # Assigns the composite argument to the appropriate location (i.e. args or kwargs)
+      # @rbs return: void
+      def assign_composite: () -> void
 
-      def key?: (untyped lexeme) -> untyped
+      # Indicates if the lexeme is Hash key
+      # @rbs lexeme: [[Integer, Integer], Symbol, String, Object] -- lexeme to check
+      # @rbs return: bool
+      def key?: ([ [ Integer, Integer ], Symbol, String, Object ] lexeme) -> bool
 
-      def new_key: (untyped lexeme) -> untyped
+      # Creates a new Hash key based on the lexeme
+      # @rbs lexeme: [[Integer, Integer], Symbol, String, Object] -- lexeme to check
+      # @rbs return: Symbol
+      def new_key: ([ [ Integer, Integer ], Symbol, String, Object ] lexeme) -> Symbol
     end
 
-    def perform: () -> untyped
+    # Tokenizes the source string and returns a hash of the tokenized arguments
+    # @rbs return: Hash[Symbol, Object]
+    def perform: () -> Hash[Symbol, Object]
   end
 end

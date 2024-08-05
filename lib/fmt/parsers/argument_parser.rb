@@ -30,6 +30,8 @@ module Fmt
       attr_reader :args   # :: Array[Object]
       attr_reader :kwargs # :: Hash[Symbol, Object]
 
+      # Returns a hash of the tokenized arguments
+      # @rbs return: Hash[Symbol, Object]
       def to_h
         {args: args, kwargs: kwargs}
       end
@@ -59,6 +61,9 @@ module Fmt
         end
       end
 
+      # Indicates if the lexeme should be skipped
+      # @rbs lexeme: [[Integer, Integer], Symbol, String, Object] -- lexeme to check
+      # @rbs return: bool
       def skip?(lexeme)
         case lexeme
         in [_, :on_lparen | :on_sp, _, _] then true
@@ -68,18 +73,31 @@ module Fmt
         end
       end
 
+      # Indicates if the tokenizer is currently working with an ordinal argument
+      # @rbs return: bool
       def arg?
         return false if kwarg?
         return false if composite?
         true
       end
 
+      # Indicates if the tokenizer is currently working with a keyword argument
+      # @rbs return: bool
       def kwarg?
         return false unless key
         return false if composite?
         true
       end
 
+      # Indicates if the tokenizer is currently working with a composite argument
+      # @rbs return: bool
+      def composite?
+        !!composite
+      end
+
+      # Indicates if the lexeme is a supported primitive argument
+      # @rbs lexeme: [[Integer, Integer], Symbol, String, Object] -- lexeme to check
+      # @rbs return: bool
       def primitive?(lexeme)
         case lexeme
         in [_, :on_tstring_content, value, _] then true        # 1) String
@@ -95,6 +113,9 @@ module Fmt
         end
       end
 
+      # Type casts the lexeme to a supported primitive
+      # @rbs lexeme: [[Integer, Integer], Symbol, String, Object] -- lexeme to check
+      # @rbs return: String | Symbol | Integer | Float | Rational | Complex | bool | nil
       def cast_primitive(lexeme)
         case lexeme
         in [_, :on_tstring_content, value, _] then value            # 1) String
@@ -109,6 +130,9 @@ module Fmt
         end
       end
 
+      # Assigns the lexeme to the appropriate location (i.e. args, composite, or kwargs)
+      # @rbs lexeme: [[Integer, Integer], Symbol, String, Object] -- lexeme to check
+      # @rbs return: void
       def assign_primitive(lexeme)
         return args << cast_primitive(lexeme) if arg?
         return kwargs[key] = cast_primitive(lexeme) if kwarg?
@@ -121,10 +145,9 @@ module Fmt
         @key = nil
       end
 
-      def composite?
-        !!composite
-      end
-
+      # Indicates if the lexeme is the start of a composite argument (i.e. Array or Hash)
+      # @rbs lexeme: [[Integer, Integer], Symbol, String, Object] -- lexeme to check
+      # @rbs return: bool
       def composite_start?(lexeme)
         case lexeme
         in [_, :on_lbracket | :on_lbrace, _, _] then true
@@ -132,6 +155,9 @@ module Fmt
         end
       end
 
+      # Indicates if the lexeme is the end of a composite argument (i.e. Array or Hash)
+      # @rbs lexeme: [[Integer, Integer], Symbol, String, Object] -- lexeme to check
+      # @rbs return: bool
       def composite_end?(lexeme)
         case lexeme
         in [_, :on_rbracket | :on_rbrace, _, _] then true
@@ -139,6 +165,9 @@ module Fmt
         end
       end
 
+      # Creates a new composite argument based on the lexeme (i.e. Array or Hash)
+      # @rbs lexeme: [[Integer, Integer], Symbol, String, Object] -- lexeme to check
+      # @rbs return: Array | Hash | nil
       def new_composite(lexeme)
         case lexeme
         in [_, :on_lbracket, _, _] then @composite = []
@@ -146,12 +175,17 @@ module Fmt
         end
       end
 
+      # Assigns the composite argument to the appropriate location (i.e. args or kwargs)
+      # @rbs return: void
       def assign_composite
         args << composite
       ensure
         @composite = nil
       end
 
+      # Indicates if the lexeme is Hash key
+      # @rbs lexeme: [[Integer, Integer], Symbol, String, Object] -- lexeme to check
+      # @rbs return: bool
       def key?(lexeme)
         case lexeme
         in [_, :on_label, value, _] then true
@@ -159,6 +193,9 @@ module Fmt
         end
       end
 
+      # Creates a new Hash key based on the lexeme
+      # @rbs lexeme: [[Integer, Integer], Symbol, String, Object] -- lexeme to check
+      # @rbs return: Symbol
       def new_key(lexeme)
         case lexeme
         in [_, :on_label, value, _] then @key = value.chop.to_sym
@@ -168,6 +205,8 @@ module Fmt
 
     protected
 
+    # Tokenizes the source string and returns a hash of the tokenized arguments
+    # @rbs return: Hash[Symbol, Object]
     def perform
       @value = Tokenizer.new(source).to_h
     end
