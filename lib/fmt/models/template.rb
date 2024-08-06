@@ -11,7 +11,7 @@ module Fmt
       @key = key&.to_sym
       @pipeline = pipeline.to_s
       @macros ||= begin
-        list = pipeline&.split(Sigils::PIPE_OPERATOR)&.reject(&:empty?) || []
+        list = pipeline&.split(Sigils.pipe_operator)&.reject(&:empty?) || []
         list&.map { |value| Fmt::Macro.new value }
       end
       @embeds = []

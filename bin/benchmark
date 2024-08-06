@@ -6,34 +6,20 @@ require_relative "../lib/fmt"
 require "benchmark"
 require "rainbow"
 
-# source = "Multiple: %s|>truncate(length: 80, separator: '.')|>red|>bold %{a}green|>faint %<b>blue|>italic|>strike %bold|>underline"
-#
-# puts Rainbow(".".ljust(80, ".")).faint
-# puts Rainbow("First Run: Compiles and caches templates").red
-# puts Rainbow(".".ljust(80, ".")).faint
-# Benchmark.bm do |x|
-#   x.report { Fmt::TemplateParser.new(source).parse }
-# end
-#
-# puts
-# puts Rainbow(".".ljust(80, ".")).faint
-# puts Rainbow("Second Run: #{Rainbow("241x (99.6%) faster").lime.underline}").green
-# puts Rainbow(".".ljust(80, ".")).faint
-# Benchmark.bm do |x|
-#   x.report { Fmt::TemplateParser.new(source).parse }
-# end
-
 source = "Multiple: %s|>truncate(length: 80, separator: '.')|>red|>bold %{a}green|>faint %<b>blue|>italic|>strike %bold|>underline"
 
-a = Benchmark.measure { Fmt::TemplateParser.new(source).parse }
-b = Benchmark.measure { Fmt::TemplateParser.new(source).parse }
+first = Benchmark.measure { Fmt::TemplateParser.new(source).parse }
+puts Rainbow("".ljust(80, ".")).faint
+puts "#{Rainbow("     First Run:").red.bright} #{Rainbow(first.to_s.strip).orange} #{Rainbow("(compiles and caches templates)").italic.darkred}"
 
-# Calculate speed improvement
-times_faster = a.real / b.real
-percentage_faster = ((a.real - b.real) / a.real) * 100
+100.times do
 
-message = format("%.2fx (%.2f%% faster)", times_faster, percentage_faster)
-
-puts "#{Rainbow("First Run:").red.bright} #{Rainbow("(compiles and caches templates):").italic.darkred} #{Rainbow(a.to_s.strip).orange}"
-puts "#{Rainbow("................................Second Run:").green} #{Rainbow(b.to_s.strip).green.bright}"
-puts "#{Rainbow("...............................Improvement:").green} #{Rainbow(message).lime.bold.underline}"
+  subsequent = Benchmark.measure { Fmt::TemplateParser.new(source).parse }
+  times_faster = first.real / subsequent.real
+  percentage_faster = ((first.real - subsequent.real) / first.real) * 100
+  puts Rainbow("".ljust(80, ".")).faint
+  message = format("%.2fx (%.1f%% faster)", times_faster, percentage_faster)
+  puts "#{Rainbow("Subsequent Run:").green} #{Rainbow(subsequent.to_s.strip).green.bright}"
+  puts "#{Rainbow("   Improvement:").green} #{Rainbow(message).lime.bold.underline}"
+  puts
+end

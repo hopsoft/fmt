@@ -1,0 +1,68 @@
+# Generated from lib/fmt/cache.rb with RBS::Inline
+
+module Fmt
+  # A simple LRU cache with a fixed size
+  class Cache
+    include MonitorMixin
+
+    include Singleton
+
+    # The cache max capacity (number of entries)
+    # @rbs return: Integer
+    def capacity: () -> Integer
+
+    # Set the max capacity (number of entries)
+    # @rbs capacity: Integer -- new max capacity
+    # @rbs return: Integer -- new max capacity
+    def capacity=: (Integer capacity) -> Integer
+
+    # Clears the cache
+    # @rbs return: void
+    def clear: () -> void
+
+    # Deletes the entry for the specified key
+    # @rbs key: String | Symbol -- key to delete
+    # @rbs return: Object? -- the deleted value
+    def delete: (String | Symbol key) -> Object?
+
+    # Fetches the value for the specified key
+    # Writes the default value if the key is not found
+    # @rbs key: String | Symbol -- key to fetch
+    # @rbs default: Object -- default value to write
+    # @rbs block: Proc -- block to call to get the default value
+    # @rbs return: Object -- value
+    def fetch: (String | Symbol key, ?Object default) ?{ (?) -> untyped } -> Object
+
+    # Retrieves the value for the specified key
+    # @rbs key: String | Symbol -- key to retrieve
+    def get: (String | Symbol key) -> untyped
+
+    # Indicates if the cache contains the specified key
+    # @rbs key: String | Symbol -- key to check
+    # @rbs return: bool
+    def key?: (String | Symbol key) -> bool
+
+    # Stores the value for the specified key
+    # @rbs key: String | Symbol -- key to store
+    # @rbs value: Object -- value to store
+    # @rbs return: Object -- value
+    def put: (String | Symbol key, Object value) -> Object
+
+    # The current size of the cache (number of entries)
+    # @rbs return: Integer
+    def size: () -> Integer
+
+    private
+
+    # Constructor
+    # @rbs return: Fmt::Cache
+    def initialize: () -> Fmt::Cache
+
+    attr_reader hash: untyped
+
+    # Update position (LRU)
+    # @rbs key: Symbol -- key to reposition
+    # @rbs return: Object -- value
+    def reposition: (Symbol key) -> Object
+  end
+end
