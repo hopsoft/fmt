@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require_relative "../lib/fmt"
+require "benchmark"
+require "rainbow"
+
+# source = "Multiple: %s|>truncate(length: 80, separator: '.')|>red|>bold %{a}green|>faint %<b>blue|>italic|>strike %bold|>underline"
+#
+# puts Rainbow(".".ljust(80, ".")).faint
+# puts Rainbow("First Run: Compiles and caches templates").red
+# puts Rainbow(".".ljust(80, ".")).faint
+# Benchmark.bm do |x|
+#   x.report { Fmt::TemplateParser.new(source).parse }
+# end
+#
+# puts
+# puts Rainbow(".".ljust(80, ".")).faint
+# puts Rainbow("Second Run: #{Rainbow("241x (99.6%) faster").lime.underline}").green
+# puts Rainbow(".".ljust(80, ".")).faint
+# Benchmark.bm do |x|
+#   x.report { Fmt::TemplateParser.new(source).parse }
+# end
+
+source = "Multiple: %s|>truncate(length: 80, separator: '.')|>red|>bold %{a}green|>faint %<b>blue|>italic|>strike %bold|>underline"
+
+a = Benchmark.measure { Fmt::TemplateParser.new(source).parse }
+b = Benchmark.measure { Fmt::TemplateParser.new(source).parse }
+
+# Calculate speed improvement
+times_faster = a.real / b.real
+percentage_faster = ((a.real - b.real) / a.real) * 100
+
+message = format("%.2fx (%.2f%% faster)", times_faster, percentage_faster)
+
+puts "#{Rainbow("First Run:").red.bright} #{Rainbow("(compiles and caches templates):").italic.darkred} #{Rainbow(a.to_s.strip).orange}"
+puts "#{Rainbow("................................Second Run:").green} #{Rainbow(b.to_s.strip).green.bright}"
+puts "#{Rainbow("...............................Improvement:").green} #{Rainbow(message).lime.bold.underline}"
