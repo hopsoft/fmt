@@ -7,23 +7,6 @@ module Fmt
 
     include Singleton
 
-    extend Forwardable
-
-    # Changes the pipe operator
-    # @rbs value: String -- new pipe operator
-    # @rbs return: String -- new pipe operator
-    def self.pipe_operator=: (String value) -> String
-
-    # Changes the embed prefix
-    # @rbs value: String -- new embed prefix
-    # @rbs return: String -- new embed prefix
-    def self.embed_prefix=: (String value) -> String
-
-    # Changes the embed suffix
-    # @rbs value: String -- new embed suffix
-    # @rbs return: String -- new embed suffix
-    def self.embed_suffix=: (String value) -> String
-
     PREFIX: ::String
 
     KEY_PREFIXES: untyped
