@@ -13,7 +13,6 @@ puts Rainbow("".ljust(80, ".")).faint
 puts "#{Rainbow("     First Run:").red.bright} #{Rainbow(first.to_s.strip).orange} #{Rainbow("(compiles and caches templates)").italic.darkred}"
 
 100.times do
-
   subsequent = Benchmark.measure { Fmt::TemplateParser.new(source).parse }
   times_faster = first.real / subsequent.real
   percentage_faster = ((first.real - subsequent.real) / first.real) * 100

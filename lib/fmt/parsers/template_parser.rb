@@ -34,7 +34,7 @@ module Fmt
     end
 
     def perform
-      @value = Cache.instance.fetch(source) do
+      @value = Cache.fetch(source) do
         value = []
         template = next_template(source)
 

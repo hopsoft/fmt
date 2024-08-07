@@ -6,8 +6,21 @@ require "monitor"
 require "singleton"
 
 module Fmt
-  # A simple LRU cache with a fixed size
+  # A threadsafe fixed-size LRU cache
+  # Grows to capacity then evicts the least used entries
+  #
+  # @example Reading/Writing
+  #   Fmt::Cache.put(:key, "value")
+  #   Fmt::Cache.get(:key)
+  #   Fmt::Cahce.delete(:key)
+  #   Fmt::Cache.fetch(:key, "default")
+  #   Fmt::Cache.fetch(:key) { "default" }
+  #
+  # @example Capacity
+  #   Fmt::Cache.capacity = 5_000
   class Cache
+    DEFAULT_CAPACITY = 2_500 # :: Integer -- default capacity
+
     include MonitorMixin
     include Singleton
 
@@ -44,11 +57,9 @@ module Fmt
     # @rbs block: Proc -- block to call to get the default value
     # @rbs return: Object -- value
     def fetch(key, default = nil, &block)
-      synchronize do
-        return get(key) if key?(key)
-        value = default || block&.call
-        put key, value
-      end
+      return get(key) if key?(key)
+      default ||= block&.call
+      synchronize { put key, default }
     end
 
     # Retrieves the value for the specified key
@@ -59,6 +70,9 @@ module Fmt
         hash[key]
       end
     end
+
+    # Alias for get
+    alias_method :[], :get
 
     # Indicates if the cache contains the specified key
     # @rbs key: String | Symbol -- key to check
@@ -84,6 +98,15 @@ module Fmt
       end
     end
 
+    # Alias for put
+    alias_method :[]=, :put
+
+    # Resets the cache capacity to the default
+    # @rbs return: Integer -- capacity
+    def reset_capacity
+      synchronize { @capacity = DEFAULT_CAPACITY }
+    end
+
     # The current size of the cache (number of entries)
     # @rbs return: Integer
     def size
@@ -96,7 +119,7 @@ module Fmt
     # @rbs return: Fmt::Cache
     def initialize
       super
-      @capacity = 5_000
+      @capacity = DEFAULT_CAPACITY
       @hash = {}
     end
 
@@ -108,6 +131,11 @@ module Fmt
     def reposition(key)
       value = hash.delete(key)
       hash[key] = value
+    end
+
+    # Expose instance methods on the Fmt::Cache class
+    public_instance_methods(false).each do |name|
+      define_singleton_method name, ->(*a, **k, &b) { instance.public_send(name, *a, **k, &b) }
     end
   end
 end

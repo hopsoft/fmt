@@ -209,7 +209,7 @@ module Fmt
     # Tokenizes the source string and returns a hash of the tokenized arguments
     # @rbs return: Hash[Symbol, Object]
     def perform
-      @value = Cache.instance.fetch(source) do
+      @value = Cache.fetch(source) do
         Tokenizer.new(source).to_h
       end
     end

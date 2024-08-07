@@ -1,8 +1,21 @@
 # Generated from lib/fmt/cache.rb with RBS::Inline
 
 module Fmt
-  # A simple LRU cache with a fixed size
+  # A threadsafe fixed-size LRU cache
+  # Grows to capacity then evicts the least used entries
+  #
+  # @example Reading/Writing
+  #   Fmt::Cache.put(:key, "value")
+  #   Fmt::Cache.get(:key)
+  #   Fmt::Cahce.delete(:key)
+  #   Fmt::Cache.fetch(:key, "default")
+  #   Fmt::Cache.fetch(:key) { "default" }
+  #
+  # @example Capacity
+  #   Fmt::Cache.capacity = 5_000
   class Cache
+    DEFAULT_CAPACITY: ::Integer
+
     include MonitorMixin
 
     include Singleton
@@ -47,6 +60,10 @@ module Fmt
     # @rbs value: Object -- value to store
     # @rbs return: Object -- value
     def put: (String | Symbol key, Object value) -> Object
+
+    # Resets the cache capacity to the default
+    # @rbs return: Integer -- capacity
+    def reset_capacity: () -> Integer
 
     # The current size of the cache (number of entries)
     # @rbs return: Integer
