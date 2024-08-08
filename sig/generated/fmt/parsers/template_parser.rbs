@@ -12,7 +12,7 @@ module Fmt
 
     MACROS: untyped
 
-    def next_template: (untyped source) -> untyped
+    def next_template: (untyped scanner) -> untyped
 
     def perform: () -> untyped
   end

@@ -2,42 +2,45 @@
 
 # rbs_inline: enabled
 
+require "pathname"
+require_relative "model"
 require_relative "../parsers/argument_parser"
 
 module Fmt
-  class Macro
+  # Single discrete operation used to format a value
+  # @note Pipelines are comprised of N macros
+  # @rbs source: String -- source code
+  class Macro < Model
     def initialize(source)
-      raise ArgumentError, "source must be a String" unless source.is_a?(String)
       @source = source
-      @block = Fmt.registry.fetch(source, safe: false) { |*args| sprintf("%#{self}", *args) } # TODO: revisit performing
-
-      # TODO: parse arguments
-      @arguments = Fmt::ArgumentParser.new(source).parse
+      @block = Fmt.registry.fetch(source, safe: false) { |*args| sprintf("%#{self}", *args) }
+      @argv = Fmt::ArgumentParser.new(source).parse
     end
 
-    attr_reader :arguments # : Array[Object] -- arguments to be passed the macro
-    attr_reader :block # : Proc -- macro proc
-    attr_reader :source # : String -- macro source
+    attr_reader :source # : String -- source code
+    attr_reader :block  # : Proc -- format method
+    attr_reader :argv   # : Array[Object] -- arguments to pass the block
 
-    # TODO: Revisit performing
-    ## Calls the specifier method
-    ## @rbs context: Object -- context to invoke specifier with (i.e. self)
-    ## @rbs args: Array[Object] -- arguments to pass to specifier method
-    ## @rbs return: (?) -- value returned by specifier method
-    # def perform(context, *args)
-    #  context.instance_exec(*args, &method)
-    # end
-
+    # @rbs return: Hash[Symbol, Object]
     def to_h
       {
         source: source,
-        block: block,
-        arguments: arguments
+        block: {
+          path: block_path,
+          line: block.source_location.last,
+          arity: block.arity,
+          parameters: block.parameters
+        },
+        argv: argv.to_h
       }
     end
 
-    def ==(other)
-      to_h == other&.to_h
+    private
+
+    def block_path
+      root = Pathname.new(__dir__).join("..", "..", "..").expand_path
+      location = Pathname.new(block.source_location.first)
+      location.relative_path_from(root).to_s
     end
   end
 end

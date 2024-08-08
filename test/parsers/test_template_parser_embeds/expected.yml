@@ -1,0 +1,114 @@
+---
+test_peers_and_nested:
+- :source: "%<one>red{{%<two>ljust(80, '.')|>green {{%<three>blue {{%<four>yellow|>underline}}}}}}
+    {{%<five>cyan|>bold}}"
+  :key: :one
+  :pipeline: red{{%<two>ljust(80, '.')
+  :macros:
+  - :source: red{{%<two>ljust(80, '.')
+    :block:
+      :path: lib/fmt/models/macro.rb
+      :line: 16
+      :arity: -1
+      :parameters:
+      - - :rest
+        - :args
+    :argv:
+      :source: red{{%<two>ljust(80, '.')
+      :positional: []
+      :keyword: {}
+  :templates: {}
+- :source: "|>green %<fmt_embed_0> %<fmt_embed_1>"
+  :key: :fmt_embed_0
+  :pipeline: ''
+  :macros: []
+  :templates:
+    fmt_embed_0:
+    - :source: "%<three>blue %<fmt_embed_0>"
+      :key: :three
+      :pipeline: blue
+      :macros:
+      - :source: blue
+        :block:
+          :path: lib/fmt/registries/rainbow_registry.rb
+          :line: 28
+          :arity: 1
+          :parameters:
+          - - :opt
+            - :obj
+        :argv:
+          :source: blue
+          :positional: []
+          :keyword: {}
+      :templates:
+        fmt_embed_0:
+        - :source: "%<four>yellow|>underline}}"
+          :key: :four
+          :pipeline: yellow|>underline}}
+          :macros:
+          - :source: yellow
+            :block:
+              :path: lib/fmt/registries/rainbow_registry.rb
+              :line: 28
+              :arity: 1
+              :parameters:
+              - - :opt
+                - :obj
+            :argv:
+              :source: yellow
+              :positional: []
+              :keyword: {}
+          - :source: underline}}
+            :block:
+              :path: lib/fmt/models/macro.rb
+              :line: 16
+              :arity: -1
+              :parameters:
+              - - :rest
+                - :args
+            :argv:
+              :source: underline}}
+              :positional:
+              -
+              :keyword: {}
+          :templates: {}
+    - :source: " %<fmt_embed_0>"
+      :key: :fmt_embed_0
+      :pipeline: ''
+      :macros: []
+      :templates: {}
+    fmt_embed_1:
+    - :source: "%<five>cyan|>bold"
+      :key: :five
+      :pipeline: cyan|>bold
+      :macros:
+      - :source: cyan
+        :block:
+          :path: lib/fmt/registries/rainbow_registry.rb
+          :line: 28
+          :arity: 1
+          :parameters:
+          - - :opt
+            - :obj
+        :argv:
+          :source: cyan
+          :positional: []
+          :keyword: {}
+      - :source: bold
+        :block:
+          :path: lib/fmt/registries/rainbow_registry.rb
+          :line: 28
+          :arity: 1
+          :parameters:
+          - - :opt
+            - :obj
+        :argv:
+          :source: bold
+          :positional: []
+          :keyword: {}
+      :templates: {}
+- :source: " %<fmt_embed_1>"
+  :key: :fmt_embed_1
+  :pipeline: ''
+  :macros: []
+  :templates: {}

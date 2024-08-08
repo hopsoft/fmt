@@ -1,0 +1,283 @@
+---
+test_multiples_named_alt:
+- :source: 'Multiple: %<obj>p %<num>.10f'
+  :key: :obj
+  :pipeline: p
+  :macros:
+  - :source: p
+    :block:
+      :path: lib/fmt/models/macro.rb
+      :line: 16
+      :arity: -1
+      :parameters:
+      - - :rest
+        - :args
+    :argv:
+      :source: p
+      :positional: []
+      :keyword: {}
+  :templates: {}
+- :source: " %<num>.10f"
+  :key: :num
+  :pipeline: ".10f"
+  :macros:
+  - :source: ".10f"
+    :block:
+      :path: lib/fmt/models/macro.rb
+      :line: 16
+      :arity: -1
+      :parameters:
+      - - :rest
+        - :args
+    :argv:
+      :source: ".10f"
+      :positional: []
+      :keyword: {}
+  :templates: {}
+test_complex_named_alt:
+- :source: 'Precision: %<obj>.10f'
+  :key: :obj
+  :pipeline: ".10f"
+  :macros:
+  - :source: ".10f"
+    :block:
+      :path: lib/fmt/models/macro.rb
+      :line: 16
+      :arity: -1
+      :parameters:
+      - - :rest
+        - :args
+    :argv:
+      :source: ".10f"
+      :positional: []
+      :keyword: {}
+  :templates: {}
+test_basic_named_alt:
+- :source: 'Inspect: %<obj>p'
+  :key: :obj
+  :pipeline: p
+  :macros:
+  - :source: p
+    :block:
+      :path: lib/fmt/models/macro.rb
+      :line: 16
+      :arity: -1
+      :parameters:
+      - - :rest
+        - :args
+    :argv:
+      :source: p
+      :positional: []
+      :keyword: {}
+  :templates: {}
+test_multiples:
+- :source: 'Multiple: %p %.10f'
+  :key:
+  :pipeline: p
+  :macros:
+  - :source: p
+    :block:
+      :path: lib/fmt/models/macro.rb
+      :line: 16
+      :arity: -1
+      :parameters:
+      - - :rest
+        - :args
+    :argv:
+      :source: p
+      :positional: []
+      :keyword: {}
+  :templates: {}
+- :source: " %.10f"
+  :key:
+  :pipeline: ".10f"
+  :macros:
+  - :source: ".10f"
+    :block:
+      :path: lib/fmt/models/macro.rb
+      :line: 16
+      :arity: -1
+      :parameters:
+      - - :rest
+        - :args
+    :argv:
+      :source: ".10f"
+      :positional: []
+      :keyword: {}
+  :templates: {}
+test_basic:
+- :source: 'Inspect: %p'
+  :key:
+  :pipeline: p
+  :macros:
+  - :source: p
+    :block:
+      :path: lib/fmt/models/macro.rb
+      :line: 16
+      :arity: -1
+      :parameters:
+      - - :rest
+        - :args
+    :argv:
+      :source: p
+      :positional: []
+      :keyword: {}
+  :templates: {}
+test_complex:
+- :source: 'Precision: %.10f'
+  :key:
+  :pipeline: ".10f"
+  :macros:
+  - :source: ".10f"
+    :block:
+      :path: lib/fmt/models/macro.rb
+      :line: 16
+      :arity: -1
+      :parameters:
+      - - :rest
+        - :args
+    :argv:
+      :source: ".10f"
+      :positional: []
+      :keyword: {}
+  :templates: {}
+test_complex_named:
+- :source: 'Precision: %{obj}.10f'
+  :key: :obj
+  :pipeline: ".10f"
+  :macros:
+  - :source: ".10f"
+    :block:
+      :path: lib/fmt/models/macro.rb
+      :line: 16
+      :arity: -1
+      :parameters:
+      - - :rest
+        - :args
+    :argv:
+      :source: ".10f"
+      :positional: []
+      :keyword: {}
+  :templates: {}
+test_multiples_mixed:
+- :source: 'Multiple: %s %{obj}p %<num>.10f %p'
+  :key:
+  :pipeline: s
+  :macros:
+  - :source: s
+    :block:
+      :path: lib/fmt/models/macro.rb
+      :line: 16
+      :arity: -1
+      :parameters:
+      - - :rest
+        - :args
+    :argv:
+      :source: s
+      :positional: []
+      :keyword: {}
+  :templates: {}
+- :source: " %{obj}p %<num>.10f %p"
+  :key: :obj
+  :pipeline: p
+  :macros:
+  - :source: p
+    :block:
+      :path: lib/fmt/models/macro.rb
+      :line: 16
+      :arity: -1
+      :parameters:
+      - - :rest
+        - :args
+    :argv:
+      :source: p
+      :positional: &1 []
+      :keyword: &2 {}
+  :templates: {}
+- :source: " %<num>.10f %p"
+  :key: :num
+  :pipeline: ".10f"
+  :macros:
+  - :source: ".10f"
+    :block:
+      :path: lib/fmt/models/macro.rb
+      :line: 16
+      :arity: -1
+      :parameters:
+      - - :rest
+        - :args
+    :argv:
+      :source: ".10f"
+      :positional: []
+      :keyword: {}
+  :templates: {}
+- :source: " %p"
+  :key:
+  :pipeline: p
+  :macros:
+  - :source: p
+    :block:
+      :path: lib/fmt/models/macro.rb
+      :line: 16
+      :arity: -1
+      :parameters:
+      - - :rest
+        - :args
+    :argv:
+      :source: p
+      :positional: *1
+      :keyword: *2
+  :templates: {}
+test_basic_named:
+- :source: 'Inspect: %{obj}p'
+  :key: :obj
+  :pipeline: p
+  :macros:
+  - :source: p
+    :block:
+      :path: lib/fmt/models/macro.rb
+      :line: 16
+      :arity: -1
+      :parameters:
+      - - :rest
+        - :args
+    :argv:
+      :source: p
+      :positional: []
+      :keyword: {}
+  :templates: {}
+test_multiples_named:
+- :source: 'Multiple: %{obj}p %{num}.10f'
+  :key: :obj
+  :pipeline: p
+  :macros:
+  - :source: p
+    :block:
+      :path: lib/fmt/models/macro.rb
+      :line: 16
+      :arity: -1
+      :parameters:
+      - - :rest
+        - :args
+    :argv:
+      :source: p
+      :positional: []
+      :keyword: {}
+  :templates: {}
+- :source: " %{num}.10f"
+  :key: :num
+  :pipeline: ".10f"
+  :macros:
+  - :source: ".10f"
+    :block:
+      :path: lib/fmt/models/macro.rb
+      :line: 16
+      :arity: -1
+      :parameters:
+      - - :rest
+        - :args
+    :argv:
+      :source: ".10f"
+      :positional: []
+      :keyword: {}
+  :templates: {}

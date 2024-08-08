@@ -1,0 +1,13 @@
+# Generated from lib/fmt/parsers/embed_parser.rb with RBS::Inline
+
+module Fmt
+  class EmbedParser < Parser
+    HEAD: untyped
+
+    EMBED: untyped
+
+    def next_embed: (untyped scanner, index: untyped) -> untyped
+
+    def perform: () -> untyped
+  end
+end

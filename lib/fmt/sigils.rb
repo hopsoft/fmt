@@ -21,9 +21,11 @@ module Fmt
 
     ARGS_SUFFIX = ")" # :: String -- macro arguments suffix
 
+    EMBED_PREFIX = "{{" # :: String - embed prefix
+
+    EMBED_SUFFIX = "}}" # :: String - embed prefix
+
     attr_reader :pipe_operator # :: String -- template pipeline operator (i.e. macro delimiter)
-    attr_reader :embed_prefix # :: String -- embeded template prefix
-    attr_reader :embed_suffix # :: String -- embeded template suffix
 
     # Changes the pipe operator
     # @rbs value: String -- new pipe operator
@@ -32,26 +34,12 @@ module Fmt
       synchronize { @pipe_operator = value.to_s }
     end
 
-    # Changes the embed prefix
-    # @rbs value: String -- new embed prefix
-    # @rbs return: String -- new embed prefix
-    def embed_prefix=(value)
-      synchronize { @embed_prefix = value.to_s }
-    end
-
-    # Changes the embed suffix
-    # @rbs value: String -- new embed suffix
-    # @rbs return: String -- new embed suffix
-    def embed_suffix=(value)
-      synchronize { @embed_suffix = value.to_s }
-    end
-
     private
 
+    # Constructor
+    # @rbs return: Fmt::Sigils
     def initialize
       @pipe_operator = "|>"
-      @embed_prefix = "{{"
-      @embed_suffix = "}}"
     end
 
     # Expose instance methods on the Fmt::Sigils class

@@ -4,6 +4,7 @@
 
 require "ripper"
 require_relative "parser"
+require_relative "../models/argv"
 require_relative "../cache"
 
 module Fmt
@@ -30,12 +31,6 @@ module Fmt
       attr_reader :source # :: String
       attr_reader :args   # :: Array[Object]
       attr_reader :kwargs # :: Hash[Symbol, Object]
-
-      # Returns a hash of the tokenized arguments
-      # @rbs return: Hash[Symbol, Object]
-      def to_h
-        {args: args, kwargs: kwargs}
-      end
 
       private
 
@@ -210,7 +205,8 @@ module Fmt
     # @rbs return: Hash[Symbol, Object]
     def perform
       @value = Cache.fetch(source) do
-        Tokenizer.new(source).to_h
+        tokenizer = Tokenizer.new(source)
+        Argv.new(source, *tokenizer.args, **tokenizer.kwargs)
       end
     end
   end

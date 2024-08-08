@@ -1,0 +1,12 @@
+# Generated from lib/fmt/models/model.rb with RBS::Inline
+
+module Fmt
+  class Model
+    # @rbs return: Hash[Symbol, Object]
+    def to_h: () -> Hash[Symbol, Object]
+
+    # @rbs other: Object -- other object
+    # @rbs return: bool
+    def ==: (Object other) -> bool
+  end
+end

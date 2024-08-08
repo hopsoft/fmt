@@ -17,29 +17,21 @@ module Fmt
 
     ARGS_SUFFIX: ::String
 
+    EMBED_PREFIX: ::String
+
+    EMBED_SUFFIX: ::String
+
     attr_reader pipe_operator: untyped
-
-    attr_reader embed_prefix: untyped
-
-    attr_reader embed_suffix: untyped
 
     # Changes the pipe operator
     # @rbs value: String -- new pipe operator
     # @rbs return: String -- new pipe operator
     def pipe_operator=: (String value) -> String
 
-    # Changes the embed prefix
-    # @rbs value: String -- new embed prefix
-    # @rbs return: String -- new embed prefix
-    def embed_prefix=: (String value) -> String
-
-    # Changes the embed suffix
-    # @rbs value: String -- new embed suffix
-    # @rbs return: String -- new embed suffix
-    def embed_suffix=: (String value) -> String
-
     private
 
-    def initialize: () -> untyped
+    # Constructor
+    # @rbs return: Fmt::Sigils
+    def initialize: () -> Fmt::Sigils
   end
 end

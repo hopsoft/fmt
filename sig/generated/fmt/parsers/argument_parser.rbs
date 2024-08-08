@@ -21,10 +21,6 @@ module Fmt
 
       attr_reader kwargs: untyped
 
-      # Returns a hash of the tokenized arguments
-      # @rbs return: Hash[Symbol, Object]
-      def to_h: () -> Hash[Symbol, Object]
-
       private
 
       attr_reader key: untyped

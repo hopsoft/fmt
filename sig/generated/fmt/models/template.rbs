@@ -1,8 +1,14 @@
 # Generated from lib/fmt/models/template.rb with RBS::Inline
 
 module Fmt
-  class Template
-    def initialize: (untyped source, key: untyped, pipeline: untyped) -> untyped
+  class Template < Model
+    # Constructor
+    # @rbs source:    String -- source code
+    # @rbs key:       Symbol -- template key
+    # @rbs pipeline:  String -- pipeline source code
+    # @rbs templates: Hash[Symbol, Fmt::Template] -- nested templates
+    # @rbs return:    Fmt::Template
+    def initialize: (String source, key: Symbol, pipeline: String, ?templates: Hash[Symbol, Fmt::Template]) -> Fmt::Template
 
     attr_reader source: untyped
 
@@ -12,10 +18,9 @@ module Fmt
 
     attr_reader macros: untyped
 
-    attr_reader embeds: untyped
+    attr_reader templates: untyped
 
-    def to_h: () -> untyped
-
-    def ==: (untyped other) -> untyped
+    # @rbs return: Hash[Symbol, Object]
+    def to_h: () -> Hash[Symbol, Object]
   end
 end

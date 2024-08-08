@@ -1,0 +1,494 @@
+---
+test_named_with_pipeline_alt:
+- :source: "%<value>red|>bold|>underline"
+  :key: :value
+  :pipeline: red|>bold|>underline
+  :macros:
+  - :source: red
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: red
+      :positional: []
+      :keyword: {}
+  - :source: bold
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: bold
+      :positional: []
+      :keyword: {}
+  - :source: underline
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: underline
+      :positional: []
+      :keyword: {}
+  :templates: {}
+test_multiples_mixed_with_pipelines:
+- :source: 'Multiple: %red|>bold %{second}green|>faint %<third>blue|>italic|>strike
+    %bold|>underline'
+  :key:
+  :pipeline: red|>bold
+  :macros:
+  - :source: red
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: red
+      :positional: []
+      :keyword: {}
+  - :source: bold
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: bold
+      :positional: &1 []
+      :keyword: &2 {}
+  :templates: {}
+- :source: " %{second}green|>faint %<third>blue|>italic|>strike %bold|>underline"
+  :key: :second
+  :pipeline: green|>faint
+  :macros:
+  - :source: green
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: green
+      :positional: []
+      :keyword: {}
+  - :source: faint
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: faint
+      :positional: []
+      :keyword: {}
+  :templates: {}
+- :source: " %<third>blue|>italic|>strike %bold|>underline"
+  :key: :third
+  :pipeline: blue|>italic|>strike
+  :macros:
+  - :source: blue
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: blue
+      :positional: []
+      :keyword: {}
+  - :source: italic
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: italic
+      :positional: []
+      :keyword: {}
+  - :source: strike
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: strike
+      :positional: []
+      :keyword: {}
+  :templates: {}
+- :source: " %bold|>underline"
+  :key:
+  :pipeline: bold|>underline
+  :macros:
+  - :source: bold
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: bold
+      :positional: *1
+      :keyword: *2
+  - :source: underline
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: underline
+      :positional: []
+      :keyword: {}
+  :templates: {}
+test_basic_named_alt:
+- :source: "%<value>blue"
+  :key: :value
+  :pipeline: blue
+  :macros:
+  - :source: blue
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: blue
+      :positional: []
+      :keyword: {}
+  :templates: {}
+test_multiples_named:
+- :source: 'Multiple: %{first}red %{second}green %{third}blue'
+  :key: :first
+  :pipeline: red
+  :macros:
+  - :source: red
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: red
+      :positional: []
+      :keyword: {}
+  :templates: {}
+- :source: " %{second}green %{third}blue"
+  :key: :second
+  :pipeline: green
+  :macros:
+  - :source: green
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: green
+      :positional: []
+      :keyword: {}
+  :templates: {}
+- :source: " %{third}blue"
+  :key: :third
+  :pipeline: blue
+  :macros:
+  - :source: blue
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: blue
+      :positional: []
+      :keyword: {}
+  :templates: {}
+test_basic:
+- :source: "%cyan"
+  :key:
+  :pipeline: cyan
+  :macros:
+  - :source: cyan
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: cyan
+      :positional: []
+      :keyword: {}
+  :templates: {}
+test_multiples:
+- :source: 'Multiple: %red %green %blue'
+  :key:
+  :pipeline: red
+  :macros:
+  - :source: red
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: red
+      :positional: []
+      :keyword: {}
+  :templates: {}
+- :source: " %green %blue"
+  :key:
+  :pipeline: green
+  :macros:
+  - :source: green
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: green
+      :positional: []
+      :keyword: {}
+  :templates: {}
+- :source: " %blue"
+  :key:
+  :pipeline: blue
+  :macros:
+  - :source: blue
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: blue
+      :positional: []
+      :keyword: {}
+  :templates: {}
+test_multiples_mixed:
+- :source: 'Multiple: %red %{second}green %<third>blue %bold'
+  :key:
+  :pipeline: red
+  :macros:
+  - :source: red
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: red
+      :positional: []
+      :keyword: {}
+  :templates: {}
+- :source: " %{second}green %<third>blue %bold"
+  :key: :second
+  :pipeline: green
+  :macros:
+  - :source: green
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: green
+      :positional: []
+      :keyword: {}
+  :templates: {}
+- :source: " %<third>blue %bold"
+  :key: :third
+  :pipeline: blue
+  :macros:
+  - :source: blue
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: blue
+      :positional: []
+      :keyword: {}
+  :templates: {}
+- :source: " %bold"
+  :key:
+  :pipeline: bold
+  :macros:
+  - :source: bold
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: bold
+      :positional: []
+      :keyword: {}
+  :templates: {}
+test_multiples_named_alt:
+- :source: 'Multiple: %<first>red %<second>green %<third>blue'
+  :key: :first
+  :pipeline: red
+  :macros:
+  - :source: red
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: red
+      :positional: []
+      :keyword: {}
+  :templates: {}
+- :source: " %<second>green %<third>blue"
+  :key: :second
+  :pipeline: green
+  :macros:
+  - :source: green
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: green
+      :positional: []
+      :keyword: {}
+  :templates: {}
+- :source: " %<third>blue"
+  :key: :third
+  :pipeline: blue
+  :macros:
+  - :source: blue
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: blue
+      :positional: []
+      :keyword: {}
+  :templates: {}
+test_basic_named:
+- :source: "%{value}blue"
+  :key: :value
+  :pipeline: blue
+  :macros:
+  - :source: blue
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: blue
+      :positional: []
+      :keyword: {}
+  :templates: {}
+test_named_with_pipeline:
+- :source: "%{value}red|>bold|>underline"
+  :key: :value
+  :pipeline: red|>bold|>underline
+  :macros:
+  - :source: red
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: red
+      :positional: []
+      :keyword: {}
+  - :source: bold
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: bold
+      :positional: []
+      :keyword: {}
+  - :source: underline
+    :block:
+      :path: lib/fmt/registries/rainbow_registry.rb
+      :line: 28
+      :arity: 1
+      :parameters:
+      - - :opt
+        - :obj
+    :argv:
+      :source: underline
+      :positional: []
+      :keyword: {}
+  :templates: {}

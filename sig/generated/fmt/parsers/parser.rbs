@@ -15,18 +15,8 @@ module Fmt
     # @rbs return: String?
     def parse: () -> String?
 
-    # Current parse position
-    # @rbs return: Integer
-    def position: () -> Integer
-
-    # Unparsed portion of the string
-    # @rbs return: String
-    def tail: () -> String
-
-    attr_reader scanner: untyped
-
     # Peforms parsing
-    # @note Subclasses must implement this method and assign and return @value
+    # @note Subclasses must implement this method and assign @value
     # @rbs return: String?
     def perform: () -> String?
   end

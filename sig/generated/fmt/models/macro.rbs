@@ -1,17 +1,23 @@
 # Generated from lib/fmt/models/macro.rb with RBS::Inline
 
 module Fmt
-  class Macro
+  # Single discrete operation used to format a value
+  # @note Pipelines are comprised of N macros
+  # @rbs source: String -- source code
+  class Macro < Model
     def initialize: (untyped source) -> untyped
-
-    attr_reader arguments: untyped
-
-    attr_reader block: untyped
 
     attr_reader source: untyped
 
-    def to_h: () -> untyped
+    attr_reader block: untyped
 
-    def ==: (untyped other) -> untyped
+    attr_reader argv: untyped
+
+    # @rbs return: Hash[Symbol, Object]
+    def to_h: () -> Hash[Symbol, Object]
+
+    private
+
+    def block_path: () -> untyped
   end
 end

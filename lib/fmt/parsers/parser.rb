@@ -2,15 +2,12 @@
 
 # rbs_inline: enabled
 
-require "strscan"
-
 module Fmt
   class Parser
     # Creates a parser
     # @rbs source: String -- string being parsed (default: "")
     def initialize(source = "")
       @source = source.to_s
-      @scanner = StringScanner.new(source)
     end
 
     attr_reader :source # : String -- string being parsed
@@ -24,24 +21,10 @@ module Fmt
       value
     end
 
-    # Current parse position
-    # @rbs return: Integer
-    def position
-      scanner.pos
-    end
-
-    # Unparsed portion of the string
-    # @rbs return: String
-    def tail
-      scanner.rest
-    end
-
     protected
 
-    attr_reader :scanner # : StringScanner
-
     # Peforms parsing
-    # @note Subclasses must implement this method and assign and return @value
+    # @note Subclasses must implement this method and assign @value
     # @rbs return: String?
     def perform
       raise NotImplementedError
