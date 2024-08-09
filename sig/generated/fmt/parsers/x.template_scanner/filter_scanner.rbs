@@ -1,0 +1,19 @@
+# Generated from lib/fmt/parsers/x.template_scanner/filter_scanner.rb with RBS::Inline
+
+module Fmt
+  class TemplateScanner < BaseScanner
+    class FilterScanner < BaseScanner
+      def initialize: (untyped string) -> untyped
+
+      # Regexp that matches the tail/end of a filter string
+      # @rbs return: Regexp
+      def tail: () -> Regexp
+
+      # 1) Performs the scan
+      # 2) Extracts the value
+      # 3) Builds the list of Fmt::Filter instances
+      # @rbs return: Aray[Fmt::Filter]
+      def perform: () -> Aray[Fmt::Filter]
+    end
+  end
+end

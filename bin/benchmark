@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require_relative "../lib/fmt"
+require "benchmark"
+require "rainbow"
+
+source = "Multiple: %s|>truncate(length: 80, separator: '.')|>red|>bold %{a}green|>faint %<b>blue|>italic|>strike %bold|>underline"
+
+first = Benchmark.measure { Fmt::TemplateParser.new(source).parse }
+puts Rainbow("".ljust(80, ".")).faint
+puts "#{Rainbow("     First Run:").red.bright} #{Rainbow(first.to_s.strip).orange} #{Rainbow("(compiles and caches templates)").italic.darkred}"
+
+100.times do
+  subsequent = Benchmark.measure { Fmt::TemplateParser.new(source).parse }
+  times_faster = first.real / subsequent.real
+  percentage_faster = ((first.real - subsequent.real) / first.real) * 100
+  puts Rainbow("".ljust(80, ".")).faint
+  message = format("%.2fx (%.1f%% faster)", times_faster, percentage_faster)
+  puts "#{Rainbow("Subsequent Run:").green} #{Rainbow(subsequent.to_s.strip).green.bright}"
+  puts "#{Rainbow("   Improvement:").green} #{Rainbow(message).lime.bold.underline}"
+  puts
+end

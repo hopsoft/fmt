@@ -1,0 +1,19 @@
+---
+test_native: |-
+  (procedure
+    (key :capitalize)
+    (filename "lib/fmt/registries/native_registry.rb")
+    (lineno 36)
+    (tokens ["proc", " ", "{", " ", "|", "obj", ",", " ", "*", "args", "|", " ", "obj", ".", "public_send", "(", "method_name", ",", " ", "*", "args", ")", " ", "}"]))
+test_rainbow: |-
+  (procedure
+    (key :magenta)
+    (filename "lib/fmt/registries/rainbow_registry.rb")
+    (lineno 28)
+    (tokens ["proc", " ", "{", " ", "|", "obj", "|", " ", "Rainbow", "(", "obj", ")", ".", "public_send", " ", "name", " ", "}"]))
+test_custom: |-
+  (procedure
+    (key :custom)
+    (filename "test/test_parse_and_process_procs.rb")
+    (lineno 42)
+    (tokens ["proc", " ", "{", " ", "|", "obj", "|", " ", "obj", ".", "to_s", ".", "upcase", " ", "}"]))

@@ -1,0 +1,39 @@
+# Generated from lib/fmt/x.template.rb with RBS::Inline
+
+module Fmt
+  class Template
+    HEAD: ::String
+
+    TAIL: ::String
+
+    def initialize: (untyped string) -> untyped
+
+    attr_reader key: untyped
+
+    attr_reader filters: untyped
+
+    attr_reader embeds: untyped
+
+    # The placeholder ➜ "%{name}red|bold"
+    # @rbs return: String
+    def placeholder: () -> String
+
+    # Placeholder regexp
+    # @rbs return: Regexp
+    def placeholder_regexp: (untyped placeholder) -> Regexp
+
+    # The filter placeholder (i.e. red|bold)
+    # @rbs return: String
+    def filter_placeholder: () -> String
+
+    # The filter regexp (i.e. /red\|bold/)
+    # @rbs return: Regexp
+    def filter_regexp: () -> Regexp
+
+    def format: (?untyped value, **untyped locals) -> untyped
+
+    def format_embeds: (untyped value, **untyped locals) -> untyped
+
+    def apply_filters: (untyped value) -> untyped
+  end
+end

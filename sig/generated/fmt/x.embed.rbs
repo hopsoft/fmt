@@ -1,0 +1,26 @@
+# Generated from lib/fmt/x.embed.rb with RBS::Inline
+
+module Fmt
+  class Embed
+    HEAD: ::String
+
+    TAIL: ::String
+
+    # Initializes a Fmt::Embed instance
+    # @rbs placeholder: String -- placeholder (i.e. {{%{name}red|bold}})
+    # @rbs return: Fmt::Embed
+    def initialize: (String placeholder) -> Fmt::Embed
+
+    attr_reader placeholder: untyped
+
+    attr_accessor template: untyped
+
+    # The placeholder regexp (i.e. /{{%{name}red\|bold}}/)
+    # @rbs return: Regexp
+    def placeholder_regexp: () -> Regexp
+
+    # Template placeholder (i.e. %{name}red|bold)
+    # @rbs return: String
+    def template_placeholder: () -> String
+  end
+end

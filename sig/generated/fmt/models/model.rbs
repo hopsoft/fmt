@@ -1,0 +1,11 @@
+# Generated from lib/fmt/models/model.rb with RBS::Inline
+
+module Fmt
+  class Model < AST::Node
+    def node: (untyped type, *untyped children, **untyped properties) -> untyped
+
+    # @rbs other: Object -- other object
+    # @rbs return: bool
+    def ==: (Object other) -> bool
+  end
+end

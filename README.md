@@ -134,12 +134,12 @@ Fmt.add_rainbow_filters
 Fmt.add_filter(:ljust) { |val| "".ljust 14, val.to_s }
 
 template = <<~T
-  %{head}ljust|faint
+  %{prefix}ljust|faint
   %{message}bold
-  %{tail}ljust|faint
+  %{suffix}ljust|faint
 T
 
-Fmt template, head: "#", message: "Give it a try!", tail: "#"
+Fmt template, prefix: "#", message: "Give it a try!", suffix: "#"
 
 #=> "\e[2m##############\e[0m\n\e[1mGive it a try!\e[0m\n\e[2m##############\e[0m\n"
 ```
