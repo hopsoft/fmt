@@ -6,8 +6,8 @@ test_named_with_pipeline_alt:
   :macros:
   - :source: red
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -18,8 +18,8 @@ test_named_with_pipeline_alt:
       :keyword: {}
   - :source: bold
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -30,8 +30,8 @@ test_named_with_pipeline_alt:
       :keyword: {}
   - :source: underline
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -49,8 +49,8 @@ test_multiples_mixed_with_pipelines:
   :macros:
   - :source: red
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -61,8 +61,8 @@ test_multiples_mixed_with_pipelines:
       :keyword: {}
   - :source: bold
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -78,8 +78,8 @@ test_multiples_mixed_with_pipelines:
   :macros:
   - :source: green
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -90,8 +90,8 @@ test_multiples_mixed_with_pipelines:
       :keyword: {}
   - :source: faint
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -107,8 +107,8 @@ test_multiples_mixed_with_pipelines:
   :macros:
   - :source: blue
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -119,8 +119,8 @@ test_multiples_mixed_with_pipelines:
       :keyword: {}
   - :source: italic
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -131,8 +131,8 @@ test_multiples_mixed_with_pipelines:
       :keyword: {}
   - :source: strike
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -148,8 +148,8 @@ test_multiples_mixed_with_pipelines:
   :macros:
   - :source: bold
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -160,8 +160,8 @@ test_multiples_mixed_with_pipelines:
       :keyword: *2
   - :source: underline
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -178,8 +178,8 @@ test_basic_named_alt:
   :macros:
   - :source: blue
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -196,8 +196,8 @@ test_multiples_named:
   :macros:
   - :source: red
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -213,8 +213,8 @@ test_multiples_named:
   :macros:
   - :source: green
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -230,8 +230,8 @@ test_multiples_named:
   :macros:
   - :source: blue
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -248,8 +248,8 @@ test_basic:
   :macros:
   - :source: cyan
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -266,8 +266,8 @@ test_multiples:
   :macros:
   - :source: red
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -283,8 +283,8 @@ test_multiples:
   :macros:
   - :source: green
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -300,8 +300,8 @@ test_multiples:
   :macros:
   - :source: blue
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -318,8 +318,8 @@ test_multiples_mixed:
   :macros:
   - :source: red
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -335,8 +335,8 @@ test_multiples_mixed:
   :macros:
   - :source: green
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -352,8 +352,8 @@ test_multiples_mixed:
   :macros:
   - :source: blue
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -369,8 +369,8 @@ test_multiples_mixed:
   :macros:
   - :source: bold
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -387,8 +387,8 @@ test_multiples_named_alt:
   :macros:
   - :source: red
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -404,8 +404,8 @@ test_multiples_named_alt:
   :macros:
   - :source: green
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -421,8 +421,8 @@ test_multiples_named_alt:
   :macros:
   - :source: blue
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -439,8 +439,8 @@ test_basic_named:
   :macros:
   - :source: blue
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -457,8 +457,8 @@ test_named_with_pipeline:
   :macros:
   - :source: red
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -469,8 +469,8 @@ test_named_with_pipeline:
       :keyword: {}
   - :source: bold
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt
@@ -481,8 +481,8 @@ test_named_with_pipeline:
       :keyword: {}
   - :source: underline
     :block:
-      :path: lib/fmt/registries/rainbow_registry.rb
-      :line: 28
+      :filename: lib/fmt/registries/rainbow_registry.rb
+      :lineno: 28
       :arity: 1
       :parameters:
       - - :opt

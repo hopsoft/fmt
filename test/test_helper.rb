@@ -38,30 +38,32 @@ class UnitTest < Minitest::Test
     assert_equal expected, macro.to_h.except(:block)
   end
 
+  def save?
+    ENV["SAVE"]
+  end
+
+  def resave?
+    ENV["RESAVE"]
+  end
+
+  def save_expected?(expected, actual)
+    return false if expected == actual
+    save? || resave?
+  end
+
   def assert_saved(actual)
     location = caller_locations(1, 1).first
     expected = find_expected(location: location)
+    expected = save_expected(actual, location: location) if save_expected?(expected, actual)
 
-    if expected.nil?
-      if ENV["SAVE_EXPECTED"]
-        expected = save_expected(actual, location: location)
-      else
-        puts Rainbow("\n".ljust(80, ".")).faint
-        puts Rainbow("Expected not found!").red.bright
-        puts Rainbow("#{storage_key(location)} ").orange + Rainbow(storage_path(location)).faint
-        puts Rainbow("Try running with ").cyan + Rainbow("SAVE_EXPECTED=true").cyan.bright
-        puts
-      end
-    elsif expected != actual
-      if ENV["RESAVE_EXPECTED"]
-        expected = save_expected(actual, location: location)
-      else
-        puts Rainbow("\n".ljust(80, ".")).faint
-        puts Rainbow("Expected mismatch!").red.bright
-        puts Rainbow("#{storage_key(location)} ").orange + Rainbow(storage_path(location)).faint
-        puts Rainbow("Try running with ").cyan + Rainbow("RESAVE_EXPECTED=true").cyan.bright
-        puts
-      end
+    if expected != actual
+      puts Rainbow("\n".ljust(80, ".")).faint
+      puts Rainbow("Expected mismatch!").red.bright
+      puts Rainbow("#{storage_key(location)} ").orange + Rainbow(storage_path(location)).faint
+      puts Rainbow("Try running with:").cyan
+      puts Rainbow("SAVE=true").cyan.bright if expected.nil?
+      puts Rainbow("RESAVE=true").cyan.bright if expected != actual
+      puts
     end
 
     assert_equal expected, actual

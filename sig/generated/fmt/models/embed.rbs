@@ -9,15 +9,8 @@ module Fmt
     # @rbs return: Fmt::Embed
     def initialize: (String source, index: Symbol) -> Fmt::Embed
 
-    attr_reader key: untyped
-
     attr_reader source: untyped
 
     attr_reader template_source: untyped
-
-    attr_reader placeholder: untyped
-
-    # @rbs return: Hash[Symbol, Object]
-    def to_h: () -> Hash[Symbol, Object]
   end
 end

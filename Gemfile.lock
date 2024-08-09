@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     fmt (0.1.3)
+      ast
 
 GEM
   remote: https://rubygems.org/

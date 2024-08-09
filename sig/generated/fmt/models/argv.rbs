@@ -7,11 +7,10 @@ module Fmt
 
     attr_reader source: untyped
 
-    attr_reader positional: untyped
+    # @rbs return: Array[Object] -- positional arguments
+    def positional: () -> Array[Object]
 
-    attr_reader keyword: untyped
-
-    # @rbs return: Hash[Symbol, Object]
-    def to_h: () -> Hash[Symbol, Object]
+    # @rbs return: Hash[Symbol, Object] -- keyword arguments
+    def keyword: () -> Hash[Symbol, Object]
   end
 end

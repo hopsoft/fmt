@@ -6,8 +6,8 @@ test_multiples_named_alt:
   :macros:
   - :source: p
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -23,8 +23,8 @@ test_multiples_named_alt:
   :macros:
   - :source: ".10f"
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -41,8 +41,8 @@ test_complex_named_alt:
   :macros:
   - :source: ".10f"
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -59,8 +59,8 @@ test_basic_named_alt:
   :macros:
   - :source: p
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -77,8 +77,8 @@ test_multiples:
   :macros:
   - :source: p
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -94,8 +94,8 @@ test_multiples:
   :macros:
   - :source: ".10f"
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -112,8 +112,8 @@ test_basic:
   :macros:
   - :source: p
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -130,8 +130,8 @@ test_complex:
   :macros:
   - :source: ".10f"
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -148,8 +148,8 @@ test_complex_named:
   :macros:
   - :source: ".10f"
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -166,8 +166,8 @@ test_multiples_mixed:
   :macros:
   - :source: s
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -183,8 +183,8 @@ test_multiples_mixed:
   :macros:
   - :source: p
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -200,8 +200,8 @@ test_multiples_mixed:
   :macros:
   - :source: ".10f"
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -217,8 +217,8 @@ test_multiples_mixed:
   :macros:
   - :source: p
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -235,8 +235,8 @@ test_basic_named:
   :macros:
   - :source: p
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -253,8 +253,8 @@ test_multiples_named:
   :macros:
   - :source: p
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -270,8 +270,8 @@ test_multiples_named:
   :macros:
   - :source: ".10f"
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest

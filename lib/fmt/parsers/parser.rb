@@ -2,6 +2,8 @@
 
 # rbs_inline: enabled
 
+require_relative "../cache"
+
 module Fmt
   class Parser
     # Creates a parser
@@ -22,6 +24,10 @@ module Fmt
     end
 
     protected
+
+    def node(type, *children, **properties)
+      AST::Node.new type, children, properties
+    end
 
     # Peforms parsing
     # @note Subclasses must implement this method and assign @value

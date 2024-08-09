@@ -8,6 +8,8 @@ module Parsers
       source = "%<one>red{{%<two>ljust(80, '.')|>green {{%<three>blue {{%<four>yellow|>underline}}}}}} {{%<five>cyan|>bold}}"
       templates = Fmt::TemplateParser.new(source).parse
 
+      binding.pry
+
       # @see key matching __method__ in: test/__dir__/expected.yml
       assert_saved templates.map(&:to_h)
     end

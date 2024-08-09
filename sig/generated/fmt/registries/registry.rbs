@@ -1,35 +1,92 @@
 # Generated from lib/fmt/registries/registry.rb with RBS::Inline
 
 module Fmt
-  # Extends native Ruby String format specifications
-  # @see https://ruby-doc.org/3.3.4/format_specifications_rdoc.html
+  # Registry for storing and retrieving String formatters i.e. Procs
   class Registry
     include MonitorMixin
 
-    def initialize: () -> untyped
+    PROC_INSTANCE_VAR: ::Symbol
 
-    def []: (untyped key) -> untyped
+    # Constructor
+    # @rbs return: Fmt::Registry
+    def initialize: () -> Fmt::Registry
 
-    def supported_method_names: (*untyped klasses) -> untyped
+    # Retrieves a Proc from the registry
+    # @rbs key: String | Symbol -- key to retrieve
+    # @rbs return: Proc?
+    def []: (String | Symbol key) -> Proc?
 
-    def key?: (untyped key, ?safe: untyped) -> untyped
+    # Retrieves an Array of supported method names for the given classes
+    # @rbs klasses: Array[Class]
+    # @rbs return: Array[Symbol]
+    def supported_method_names: (*untyped klasses) -> Array[Symbol]
 
-    def keys: () -> untyped
+    # Indicates if a key exists in the registry
+    # @rbs key: String | Symbol -- key to check
+    # @rbs safe: bool -- indicates if the check should be synchronized (default: true)
+    def key?: (String | Symbol key, ?safe: bool) -> untyped
 
-    def values: () -> untyped
+    # Retrieves the registered key for a Proc
+    # @rbs block: Proc -- Proc to retrieve the key for
+    # @rbs return: Symbol?
+    def key_for: (Proc block) -> Symbol?
 
-    def add: (untyped key, ?overwrite: untyped, ?proc: untyped) ?{ (?) -> untyped } -> untyped
+    # Registry keys
+    # @rbs return: Array[Symbol]
+    def keys: () -> Array[Symbol]
 
-    def delete: (untyped key) -> untyped
+    # Registry values
+    # @rbs return: Array[Proc]
+    def values: () -> Array[Proc]
 
-    def fetch: (untyped key, ?safe: untyped) ?{ (?) -> untyped } -> untyped
+    # Adds a keypair to the registry
+    # @rbs key: String | Symbol -- key to use
+    # @rbs overwrite: bool -- overwrite the existing keypair (default: false)
+    # @rbs proc: Proc -- Proc to add (optional, if block is provided)
+    # @rbs block: Proc -- Proc to add (optional, if proc is provided)
+    # @rbs return: Proc
+    def add: (String | Symbol key, ?overwrite: bool, ?proc: Proc) ?{ (?) -> untyped } -> Proc
 
-    def merge!: (untyped other) -> untyped
+    # Deletes a keypair from the registry
+    # @rbs key: String | Symbol -- key to delete
+    # @rbs return: Proc?
+    def delete: (String | Symbol key) -> Proc?
 
-    def to_h: () -> untyped
+    # Fetches a Proc from the registry
+    # @rbs key: String | Symbol -- key to retrieve
+    # @rbs safe: bool -- indicates if the fetch should be synchronized (default: true)
+    # @rbs proc: Proc -- Proc to use if the key is not found (optional, if block is provided)
+    # @rbs block: Proc -- block to use if the key is not found (optional, if proc is provided)
+    # @rbs return: Proc
+    def fetch: (String | Symbol key, ?safe: bool, ?proc: Proc) ?{ (?) -> untyped } -> Proc
 
-    def with_overrides: (untyped overrides) ?{ (?) -> untyped } -> untyped
+    # Merges another registry into this one
+    # @rbs other: Fmt::Registry -- other registry to merge
+    # @rbs return: Fmt::Registry
+    def merge!: (Fmt::Registry other) -> Fmt::Registry
 
-    attr_reader data: untyped
+    # Converts the registry to a Hash
+    # @rbs return: Hash[Symbol, Proc]
+    def to_h: () -> Hash[Symbol, Proc]
+
+    # Executes a block with registry overrides
+    #
+    # @note Overrides will temporarily be added to the registry
+    #       and will overwrite existing entries for the duration of the block
+    #       Non overriden entries remain unchanged
+    #
+    # @rbs overrides: Hash[String | Symbol, Proc] -- overrides to apply
+    # @rbs block: Proc -- block to execute with overrides
+    # @rbs return: void
+    def with_overrides: (Hash[String | Symbol, Proc] overrides) ?{ (?) -> untyped } -> void
+
+    attr_reader store: untyped
+
+    attr_reader procstore: untyped
+
+    # Builds a store key
+    # @rbs value: String | Symbol -- value to build the key for
+    # @rbs return: Symbol
+    def build_key: (String | Symbol value) -> Symbol
   end
 end

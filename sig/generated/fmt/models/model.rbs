@@ -1,9 +1,8 @@
 # Generated from lib/fmt/models/model.rb with RBS::Inline
 
 module Fmt
-  class Model
-    # @rbs return: Hash[Symbol, Object]
-    def to_h: () -> Hash[Symbol, Object]
+  class Model < AST::Node
+    def node: (untyped type, *untyped children, **untyped properties) -> untyped
 
     # @rbs other: Object -- other object
     # @rbs return: bool

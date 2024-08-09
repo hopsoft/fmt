@@ -6,8 +6,8 @@ test_custom_kwargs_with_args_and_kwargs:
   :macros:
   - :source: 'prepend(''Prefix: '')'
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -19,8 +19,8 @@ test_custom_kwargs_with_args_and_kwargs:
       :keyword: {}
   - :source: 'truncate(length: 80, separator: ''.'')'
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -39,8 +39,8 @@ test_native_with_args:
   :macros:
   - :source: s
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -51,8 +51,8 @@ test_native_with_args:
       :keyword: {}
   - :source: ljust(80, '.')
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
@@ -71,8 +71,8 @@ test_native_named_with_args:
   :macros:
   - :source: 'prepend(''Prefix: '')'
     :block:
-      :path: lib/fmt/models/macro.rb
-      :line: 16
+      :filename: lib/fmt/models/macro.rb
+      :lineno: 16
       :arity: -1
       :parameters:
       - - :rest
