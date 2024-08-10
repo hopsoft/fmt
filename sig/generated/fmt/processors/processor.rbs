@@ -1,0 +1,13 @@
+# Generated from lib/fmt/processors/processor.rb with RBS::Inline
+
+module Fmt
+  # @see https://github.com/whitequark/ast
+  class Processor
+    include AST::Processor::Mixin
+
+    # Assigns node properties to the processor
+    # @rbs from: AST::Node -- node to assign properties from
+    # @rbs return: void
+    def assign_properties: (from: AST::Node) -> void
+  end
+end

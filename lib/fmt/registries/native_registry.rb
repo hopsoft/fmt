@@ -4,7 +4,6 @@
 
 require "date"
 require "set"
-require_relative "registry"
 
 module Fmt
   # Extends native Ruby String format specifications with native Ruby methods

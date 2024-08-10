@@ -1,0 +1,19 @@
+# Generated from lib/fmt/processors/args_processor.rb with RBS::Inline
+
+module Fmt
+  class ArgsProcessor < Processor
+    def initialize: () -> untyped
+
+    attr_reader args: untyped
+
+    attr_reader kwargs: untyped
+
+    def on_args: (untyped node) -> untyped
+
+    def on_tokens: (untyped node) -> untyped
+
+    def on_int: (untyped node) -> untyped
+
+    def on_tstring_content: (untyped node) -> untyped
+  end
+end

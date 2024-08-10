@@ -1,31 +1,16 @@
 # Generated from lib/fmt/processors/proc_processor.rb with RBS::Inline
 
 module Fmt
-  # @see https://github.com/whitequark/ast
-  # @see http://whitequark.github.io/ast/AST/Processor/Mixin.html
-  class ProcProcessor
-    include AST::Processor::Mixin
-
+  class ProcProcessor < Processor
     attr_reader key: untyped
 
-    attr_reader filename: untyped
+    # Returns the Proc associated with the key
+    # @note Fmt::ProcProcessor#process must be called before accessing this property
+    # @rbs return: Proc?
+    def block: () -> Proc?
 
-    attr_reader lineno: untyped
-
-    attr_reader tokens: untyped
-
-    attr_reader source: untyped
-
-    def block: () -> untyped
-
-    def on_procedure: (untyped node) -> untyped
+    def on_proc: (untyped node) -> untyped
 
     def on_key: (untyped node) -> untyped
-
-    def on_filename: (untyped node) -> untyped
-
-    def on_lineno: (untyped node) -> untyped
-
-    def on_tokens: (untyped node) -> untyped
   end
 end

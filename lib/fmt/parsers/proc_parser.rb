@@ -1,17 +1,22 @@
 # frozen_string_literal: true
 
-require_relative "lexers/proc_lexer"
-require_relative "parser"
-
-# Parser that converts a Proc into an AST
-#
-# Uses Ripper from Ruby's standard library
-# @see https://rubyapi.org/3.4/o/ripper
-#
 module Fmt
+  # Parser
+  #
+  # 1) Parses input (Proc) so it can be tokenized
+  # 2) Uses a tokenizer to tokenize the parsed value
+  # 3) Returns the tokenized AST
+  #
+  # @example
+  #   prc = proc { |name| "Hello, #{name}!" }
+  #   ProcParser.new(prc).parse #=> AST
+  #
   class ProcParser < Parser
+    FILENAME_REGEX = /lib\/fmt\/.*/
+    private_constant :FILENAME_REGEX
+
     # Constructor
-    # @rbs block: Proc -- the proc to parse
+    # @rbs block: Proc -- the Proc to parse
     # @rbs return: Fmt::ProcParser
     def initialize(block)
       @block = block
@@ -22,24 +27,64 @@ module Fmt
 
     protected
 
+    # Parses the Proc and returns an AST for the tokenized Proc
+    # @rbs return: AST::Node
+    def perform
+      @value = Cache.fetch(cache_key) do
+        tokenizer = ProcTokenizer.new(*lines, key: key, filename: filename, lineno: lineno)
+        tokenizer.tokenize
+        tokenizer.to_ast
+      ensure
+        close_file
+      end
+    end
+
+    private
+
+    # Registry key for the Proc
+    # @rbs return: Symbol
+    def key
+      Fmt.registry.key_for block
+    end
+
     # Cache key for the Proc
     # @rbs return: String
     def cache_key
       block.source_location.join ":"
     end
 
-    # Tokenizes the Proc
-    # @rbs return: Fmt::Procedure
-    def perform
-      @value = Cache.fetch(cache_key) do
-        lexer = ProcLexer.new(block)
+    # Full path to the file where the Proc is defined
+    # @return [String]
+    def filename
+      path = block.source_location[0]
+      path = path.match(FILENAME_REGEX).to_s if path.match?(FILENAME_REGEX)
+      path
+    end
 
-        node(:procedure,
-          node(:key, Fmt.registry.key_for(block)),
-          node(:filename, lexer.filename),
-          node(:lineno, lexer.lineno),
-          node(:tokens, lexer.lex))
-      end
+    # Line number where the Proc begins in filename
+    # @rbs return: Integer
+    def lineno
+      block.source_location[1]
+    end
+
+    # Opens the source file
+    # @rbs return: File
+    def open_file
+      @file ||= File.open(filename, "r")
+    end
+
+    # Closes the source file and cleans up resources
+    # @rbs return: void
+    def close_file
+      @file&.close
+      remove_instance_variable :@file if instance_variable_defined?(:@file)
+    end
+
+    # Lines of source code in filename starting at lineno
+    # @note Lazily reads the file line by line starting at lineno
+    # @rbs return: Enumerator[String]
+    def lines
+      open_file.each_line.lazy.drop lineno - 1
     end
   end
 end

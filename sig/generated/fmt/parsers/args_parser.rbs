@@ -1,0 +1,20 @@
+# Generated from lib/fmt/parsers/args_parser.rb with RBS::Inline
+
+module Fmt
+  class ArgsParser < Parser
+    PREFIX: ::Regexp
+
+    SUFFIX: ::Regexp
+
+    # Constructor
+    # @rbs source: String -- source code string
+    # @rbs return: Fmt::ArgsParser
+    def initialize: (?String source) -> Fmt::ArgsParser
+
+    attr_reader source: untyped
+
+    # Parses the source string and returns an AST for tokenized arguments
+    # @rbs return: AST::Node
+    def perform: () -> AST::Node
+  end
+end

@@ -4,8 +4,6 @@
 
 require "strscan"
 require_relative "parser"
-require_relative "embed_parser"
-require_relative "../models/template"
 
 module Fmt
   class TemplateParser < Parser

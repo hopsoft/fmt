@@ -2,8 +2,6 @@
 
 # rbs_inline: enabled
 
-require_relative "registry"
-
 module Fmt
   # Extends native Ruby String format specifications with Rainbow methods
   # @see https://ruby-doc.org/3.3.4/format_specifications_rdoc.html
