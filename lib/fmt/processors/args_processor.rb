@@ -20,7 +20,6 @@ module Fmt
     # @rbs node: AST::Node -- node to process
     # @rbs return: void
     def on_args(node)
-      assign_properties from: node
       process_all node.children
     end
 

@@ -4,10 +4,7 @@ module Fmt
   class ProcProcessor < Processor
     attr_reader key: untyped
 
-    # Returns the Proc associated with the key
-    # @note Fmt::ProcProcessor#process must be called before accessing this property
-    # @rbs return: Proc?
-    def block: () -> Proc?
+    attr_reader block: untyped
 
     def on_proc: (untyped node) -> untyped
 
