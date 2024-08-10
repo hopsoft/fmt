@@ -4,6 +4,7 @@ module Fmt
   class EmbedParser < Parser
     HEAD: untyped
 
+    # :: Regexp
     EMBED: untyped
 
     def next_embed: (untyped scanner, index: untyped) -> untyped

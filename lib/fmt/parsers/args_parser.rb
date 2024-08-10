@@ -18,16 +18,18 @@ module Fmt
 
     protected
 
-    # Parses the source string and returns an AST for tokenized arguments
-    # @rbs return: AST::Node
+    # Parses the source
+    # @rbs return: Fmt::ArgsModel
     def perform
-      @value = Cache.fetch(source) do
+      @model = Cache.fetch(source) do
         scanner = StringScanner.new(source)
         scanner.skip_until PREFIX
         parsed = scanner.scan_until(SUFFIX) if scanner.matched?
+
         tokenizer = ArgsTokenizer.new(parsed.to_s)
-        tokenizer.tokenize
-        tokenizer.to_ast
+        tokens = tokenizer.tokenize
+
+        ArgsModel.new(*tokens)
       end
     end
   end

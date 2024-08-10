@@ -13,8 +13,8 @@ module Fmt
 
     attr_reader source: untyped
 
-    # Parses the source string and returns an AST for tokenized arguments
-    # @rbs return: AST::Node
-    def perform: () -> AST::Node
+    # Parses the source
+    # @rbs return: Fmt::ArgsModel
+    def perform: () -> Fmt::ArgsModel
   end
 end

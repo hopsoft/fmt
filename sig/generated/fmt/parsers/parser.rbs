@@ -2,43 +2,15 @@
 
 module Fmt
   class Parser
-    # Regexp escapes args or kwargs
-    # @rbs args: Array[String]? -- arguments to escape
-    # @rbs kwargs: Hash[Symbol, String]? -- keyword arguments to escape
-    # @rbs return: Array[String]? | Hash[Symbol, String]?
-    def self.xcape: (*untyped args, **untyped kwargs) -> (Array[String]? | Hash[Symbol, String]?)
+    attr_reader model: untyped
 
-    # Builds a Regexp with specifier based String formatting
-    #
-    # @example
-    #   x "[%s][b-y][%s]", "a", "z"
-    #   x "[%s<prefix>][b-y][%s<suffix>]", prefix: "a", suffix: "z"
-    #
-    # @rbs template: String -- regular expression template
-    # @rbs args: Array[Object] -- args to interpolate
-    # @rbs return: Regexp
-    def self.x: (String template, *untyped args) -> Regexp
+    # Invokes perform and returns a model
+    # @rbs return: Fmt::Model
+    def parse: () -> Fmt::Model
 
-    attr_reader value: untyped
-
-    # Performs the following:
-    # 1) Prepares input for tokenization
-    # 2) Passes prepared input to a tokenizer for tokenization
-    # 3) Returns the tokenized AST
-    # @note Subclasses must implement the perform method to support parsing
-    # @rbs return: AST::Node
-    def parse: () -> AST::Node
-
-    # Creates an AST node
-    # @rbs type: Symbol -- node type
-    # @rbs children: Array[Object]
-    # @rbs properties: Hash[Symbol, Object]
-    # @rbs return: AST::Node
-    def ast: (Symbol type, *untyped children, **untyped properties) -> AST::Node
-
-    # Peforms parsing
-    # @note The @value instance variable must be assigned by this method
-    # @rbs return: String?
-    def perform: () -> String?
+    # Peforms parsing (internal implementation of parse)
+    # @note Should assign @model and return it
+    # @rbs return: Fmt::Model?
+    def perform: () -> Fmt::Model?
   end
 end

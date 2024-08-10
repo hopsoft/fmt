@@ -1,0 +1,23 @@
+# Generated from lib/fmt/builders/proc_builder.rb with RBS::Inline
+
+module Fmt
+  class ProcBuilder < Builder
+    # Constructor
+    # @rbs tokens: Array[[[Integer, Integer], Symbol, String, Object]] -- Ripper tokens
+    # @rbs key: Symbol -- registry key for the Proc
+    # @rbs filename: String -- full path to the file where the Proc is defined
+    # @rbs lineno: Integer -- line number where the Proc begins in filename
+    # @rbs return: Fmt::Builder
+    def initialize: (*untyped tokens, key: Symbol, filename: String, lineno: Integer) -> Fmt::Builder
+
+    attr_reader key: untyped
+
+    attr_reader filename: untyped
+
+    attr_reader lineno: untyped
+
+    # Converts the ArgsBuilder to an AST
+    # @rbs return: AST::Node
+    def to_ast: () -> AST::Node
+  end
+end

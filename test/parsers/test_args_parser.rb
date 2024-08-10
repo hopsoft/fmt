@@ -8,33 +8,51 @@ module Parsers
       source = "ljust(80, '.')"
 
       parser = Fmt::ArgsParser.new(source)
-      processor = Fmt::ArgsProcessor.new
+      model = parser.parse
 
-      ast = parser.parse
-      processor.process ast
+      expected = <<~AST
+        (args
+          (tokens
+            (lparen "(")
+            (int "80")
+            (comma ",")
+            (sp " ")
+            (tstring-beg "'")
+            (tstring-content ".")
+            (tstring-end "'")
+            (rparen ")")))
+      AST
 
-      expected = "(args\n  (tokens\n    (int \"80\")\n    (comma \",\")\n    (sp \" \")\n    (tstring-beg \"'\")\n    (tstring-content \".\")\n    (tstring-end \"'\")))"
-      assert_equal expected, ast.to_s
-
-      assert_equal "(80, '.')", processor.source
-      assert_equal [80, "."], processor.args
+      assert_equal expected.rstrip, model.ast.to_s
+      assert_equal "(80, '.')", model.processor.source
+      assert_equal [80, "."], model.processor.args
     end
 
     def test_with_positional_and_keyword_args
       source = "truncate(20, omission: '&hellip;')"
 
       parser = Fmt::ArgsParser.new(source)
-      processor = Fmt::ArgsProcessor.new
+      model = parser.parse
 
-      ast = parser.parse
-      processor.process ast
+      expected = <<~AST
+        (args
+          (tokens
+            (lparen "(")
+            (int "20")
+            (comma ",")
+            (sp " ")
+            (label "omission:")
+            (sp " ")
+            (tstring-beg "'")
+            (tstring-content "&hellip;")
+            (tstring-end "'")
+            (rparen ")")))
+      AST
 
-      expected = "(args\n  (tokens\n    (int \"20\")\n    (comma \",\")\n    (sp \" \")\n    (label \"omission:\")\n    (sp \" \")\n    (tstring-beg \"'\")\n    (tstring-content \"&hellip;\")\n    (tstring-end \"'\")))"
-      assert_equal expected, ast.to_s
-
-      assert_equal "(20, omission: '&hellip;')", processor.source
-      assert_equal [20], processor.args
-      assert_equal({omission: "&hellip;"}, processor.kwargs)
+      assert_equal expected.rstrip, model.ast.to_s
+      assert_equal "(20, omission: '&hellip;')", model.processor.source
+      assert_equal [20], model.processor.args
+      assert_equal({omission: "&hellip;"}, model.processor.kwargs)
     end
   end
 end

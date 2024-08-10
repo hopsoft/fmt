@@ -1,19 +1,17 @@
-# Generated from lib/fmt/models/model.rb with RBS::Inline
+# Generated from lib/fmt/builders/builder.rb with RBS::Inline
 
 module Fmt
-  class Model
+  class Builder
     # Constructor
     # @rbs tokens: Array[[[Integer, Integer], Symbol, String, Object]] -- Ripper tokens
-    # @rbs return: Fmt::Model
-    def initialize: (*untyped tokens) -> Fmt::Model
-
-    attr_reader processor: untyped
+    # @rbs return: Fmt::Builder
+    def initialize: (*untyped tokens) -> Fmt::Builder
 
     attr_reader tokens: untyped
 
-    # AST representation of the model
+    # Converts the Builder to an AST
     # @rbs return: AST::Node
-    def ast: () -> AST::Node
+    def to_ast: () -> AST::Node
 
     # AST::Node built from the Ripper tokens
     # @example [[lineno, column], type, token, state]
@@ -32,11 +30,5 @@ module Fmt
     # @rbs properties: Hash[Symbol, Object] -- node properties
     # @rbs return: AST::Node
     def ast_node: (Symbol type, *untyped children, **untyped properties) -> AST::Node
-
-    private
-
-    # Processes the model
-    # @rbs return: void
-    def process: () -> void
   end
 end

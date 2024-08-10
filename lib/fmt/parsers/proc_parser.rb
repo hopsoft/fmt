@@ -27,16 +27,17 @@ module Fmt
 
     protected
 
-    # Parses the Proc and returns an AST for the tokenized Proc
-    # @rbs return: AST::Node
+    # Parses the block (Proc)
+    # @rbs return: Fmt::ProcModel
     def perform
-      @value = Cache.fetch(cache_key) do
-        tokenizer = ProcTokenizer.new(*lines, key: key, filename: filename, lineno: lineno)
-        tokenizer.tokenize
-        tokenizer.to_ast
-      ensure
-        close_file
+      @model = Cache.fetch(cache_key) do
+        tokenizer = ProcTokenizer.new(*lines)
+        tokens = tokenizer.tokenize
+
+        ProcModel.new(*tokens, key: key, filename: filename, lineno: lineno)
       end
+    ensure
+      close_file
     end
 
     private

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "ast"
 require "ripper"
 
 module Fmt
@@ -29,42 +28,7 @@ module Fmt
       raise NotImplementedError, "Must be implemented by subclass"
     end
 
-    # Converts the result of tokenization to an AST
-    # @rbs return: AST::Node
-    def to_ast
-      raise NotImplementedError, "Must be implemented by subclass"
-    end
-
     protected
-
-    # Builds an AST node
-    # @rbs type: Symbol -- node type
-    # @rbs children: Array[Object] -- node children
-    # @rbs properties: Hash[Symbol, Object] -- node properties
-    # @rbs return: AST::Node
-    def ast_node(type, *children, **properties)
-      AST::Node.new type, children, properties
-    end
-
-    # Converts the tokenized Ripper tokens to an AST
-    # @example [[lineno, column], type, token, state]
-    # @rbs return: Array[AST::Node]
-    def tokens_to_ast
-      node = ast_node(:tokens)
-      tokens.each do |token|
-        (_lineno, _column), type, tok, _state = token
-        child = ast_node(type.to_s.delete_prefix("on_").to_sym, tok)
-        node = node.append(child) # @note AST::Nodes are immutable, so we reassign
-      end
-      node
-    end
-
-    # Builds a source string from the tokenized Ripper tokens
-    # @example [[lineno, column], type, token, state]
-    # @rbs return: String
-    def tokens_to_source
-      tokens.map { |token| token[2] }.join
-    end
 
     # Indicates if the token is a String
     # @rbs token: [[Integer, Integer], Symbol, String, Object]

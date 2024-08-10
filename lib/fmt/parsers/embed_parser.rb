@@ -7,15 +7,15 @@ require_relative "parser"
 
 module Fmt
   class EmbedParser < Parser
-    HEAD = Pattern.build("(?=%s)", Pattern.escape(Sigils::EMBED_PREFIX)).freeze # :: Regexp
+    HEAD = Regexp.new("(?=%s)", Regexp.escape(Sigils::EMBED_PREFIX)).freeze # :: Regexp
 
-    EMBED = Pattern.build(
-      "(%{embed_prefix}%{prefix}[^\\s%{embed_prefix}]+\\s*(%{embed_prefix}.*%{embed_suffix})*\\s*%{embed_suffix})", {
-        prefix: Pattern.escape(Sigils::PREFIX),
-        embed_prefix: Pattern.escape(Sigils::EMBED_PREFIX),
-        embed_suffix: Pattern.escape(Sigils::EMBED_SUFFIX)
-      }
-    ).freeze # :: Regexp
+    # :: Regexp
+    EMBED = Regexp.new(
+      "(%{embed_prefix}%{prefix}[^\\s%{embed_prefix}]+\\s*(%{embed_prefix}.*%{embed_suffix})*\\s*%{embed_suffix})",
+      prefix: Regexp.escape(Sigils::PREFIX),
+      embed_prefix: Regexp.escape(Sigils::EMBED_PREFIX),
+      embed_suffix: Regexp.escape(Sigils::EMBED_SUFFIX)
+    ).freeze
 
     protected
 
