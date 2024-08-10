@@ -24,5 +24,12 @@ module Fmt
         end
       end
     end
+
+    # Indicates if the value is a composite type (Array or Hash)
+    # @rbs value: Object -- value to check
+    # @rbs return: bool
+    def composite?(value)
+      value.is_a?(Array) || value.is_a?(Hash)
+    end
   end
 end

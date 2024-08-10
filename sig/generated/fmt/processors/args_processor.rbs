@@ -8,12 +8,82 @@ module Fmt
 
     attr_reader kwargs: untyped
 
-    def on_args: (untyped node) -> untyped
+    # Processes the args node
+    # @rbs node: AST::Node -- node to process
+    # @rbs return: void
+    def on_args: (AST::Node node) -> void
 
-    def on_tokens: (untyped node) -> untyped
+    # Processes the tokens node
+    # @rbs node: AST::Node -- node to process
+    # @rbs return: void
+    def on_tokens: (AST::Node node) -> void
 
-    def on_int: (untyped node) -> untyped
+    # Processes a keyword node
+    # @rbs node: AST::Node -- node to process
+    # @rbs return: nil | true | false | Object
+    def on_kw: (AST::Node node) -> (nil | true | false | Object)
 
-    def on_tstring_content: (untyped node) -> untyped
+    # Processes a String node
+    # @rbs node: AST::Node -- node to process
+    # @rbs return: String
+    def on_tstring_content: (AST::Node node) -> String
+
+    # Processes a Symbol node
+    # @rbs node: AST::Node -- node to process
+    # @rbs return: Symbol
+    def on_symbol: (AST::Node node) -> Symbol
+
+    # Processes an Integer node
+    # @rbs node: AST::Node -- node to process
+    # @rbs return: Integer
+    def on_int: (AST::Node node) -> Integer
+
+    # Processes a Float node
+    # @rbs node: AST::Node -- node to process
+    # @rbs return: Float
+    def on_float: (AST::Node node) -> Float
+
+    # Processes a Rational node
+    # @rbs node: AST::Node -- node to process
+    # @rbs return: Rational
+    def on_rational: (AST::Node node) -> Rational
+
+    # Processes an imaginary node (Complex)
+    # @rbs node: AST::Node -- node to process
+    # @rbs return: Complex
+    def on_imaginary: (AST::Node node) -> Complex
+
+    # Processes an Array node
+    # @rbs node: AST::Node -- node to process
+    # @rbs return: Array
+    def on_lbracket: (AST::Node node) -> Array
+
+    # Processes a Hash node
+    # @rbs node: AST::Node -- node to process
+    # @rbs return: Hash
+    def on_lbrace: (AST::Node node) -> Hash
+
+    # Process a label node (Hash key)
+    # @rbs node: AST::Node -- node to process
+    # @rbs return: void
+    def on_label: (AST::Node node) -> void
+
+    private
+
+    # Assigns a value to the receiver
+    # @rbs value: Object -- value to assign
+    # @rbs label: Symbol? -- label to use (if applicable)
+    # @rbs return: Object
+    def assign: (Object value, ?label: Symbol?) -> Object
+
+    # Receiver that the processed value will be assigned to
+    # @rbs label: Symbol? -- label to use (if applicable)
+    # @rbs return: Array | Hash
+    def receiver: (?label: Symbol?) -> (Array | Hash)
+
+    # Finds the receiver that the processed value will be assigned to
+    # @rbs obj: Object
+    # @rbs return: Array? | Hash?
+    def find_receiver: (Object obj) -> (Array? | Hash?)
   end
 end

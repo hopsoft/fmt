@@ -76,45 +76,6 @@ module Fmt
       end
     end
 
-    ## Type casts the token to a supported primitive
-    ## @rbs token: [[Integer, Integer], Symbol, String, Object]
-    ## @rbs return: String | Symbol | Integer | Float | Rational | Complex | bool | nil
-    # def cast_primitive(token)
-    #  # rubocop:disable Layout/ExtraSpacing
-    #  case token
-    #  in [_, :on_tstring_content, value, _]        then value                  # 01) String
-    #  in [_, :on_symbol, value, _]                 then value.to_sym           # 02) Symbol
-    #  in [_, :on_int, value, _]                    then value.to_i             # 03) Integer
-    #  in [_, :on_kw, value, _] if value == "false" then false                  # 04) Boolean
-    #  in [_, :on_kw, value, _] if value == "true"  then true                   # 05) Boolean
-    #  in [_, :on_kw, value, _] if value == "nil"   then nil                    # 06) Nil
-    #  in [_, :on_float, value, _]                  then value.to_f             # 07) Float
-    #  in [_, :on_rational, value, _]               then Rational(value)        # 08) Rational
-    #  in [_, :on_imaginary, value, _]              then Complex(0, value.to_f) # 09) Complex
-    #  end
-    #  # rubocop:enable Layout/ExtraSpacing
-    # end
-
-    # # Indicates if the token is a supported primitive
-    # # @rbs token: [[Integer, Integer], Symbol, String, Object]
-    # # @rbs return: bool
-    # def primitive?(token)
-    #   # rubocop:disable Layout/ExtraSpacing
-    #   case token
-    #   in [_, :on_tstring_content, value, _]        then true # 01) String
-    #   in [_, :on_symbol, value, _]                 then true # 02) Symbol
-    #   in [_, :on_int, value, _]                    then true # 03) Integer
-    #   in [_, :on_kw, value, _] if value == "false" then true # 04) Boolean
-    #   in [_, :on_kw, value, _] if value == "true"  then true # 05) Boolean
-    #   in [_, :on_kw, value, _] if value == "nil"   then true # 06) Nil
-    #   in [_, :on_float, value, _]                  then true # 07) Float
-    #   in [_, :on_rational, value, _]               then true # 08) Rational
-    #   in [_, :on_imaginary, value, _]              then true # 09) Complex
-    #   else false
-    #   end
-    #   # rubocop:enable Layout/ExtraSpacing
-    # end
-
     # Indicates if the token begins arguments for a method definition or call
     # @rbs token: [[Integer, Integer], Symbol, String, Object]
     # @rbs return: bool
@@ -134,26 +95,6 @@ module Fmt
       else false
       end
     end
-
-    # # Indicates if the token begins a supported composite literal (i.e. Array or Hash)
-    # # @rbs token: [[Integer, Integer], Symbol, String, Object]
-    # # @rbs return: bool
-    # def composite_begin?(token)
-    #   case token
-    #   in [_, :on_lbracket | :on_lbrace, _, _] then true
-    #   else false
-    #   end
-    # end
-
-    # # Indicates if the Ripper token finishes a supported composite literal (i.e. Array or Hash)
-    # # @rbs token: [[Integer, Integer], Symbol, String, Object]
-    # # @rbs return: bool
-    # def composite_finish?(token)
-    #   case token
-    #   in [_, :on_rbracket | :on_rbrace, _, _] then true
-    #   else false
-    #   end
-    # end
 
     # Indicates if the Ripper token begins a Regexp literal
     # @rbs token: [[Integer, Integer], Symbol, String, Object]
@@ -215,32 +156,5 @@ module Fmt
       end
       # rubocop:enable Layout/ExtraSpacing
     end
-
-    # # Extracts Proc tokens from Ripper token
-    # #
-    # # @note Prepends ["proc", " "] if the Proc was defined as a Ruby block
-    # #       Supports reconstructing the Proc from the AST later if needed
-    # #
-    # # @rbs token: [[Integer, Integer], Symbol, String, Object]
-    # # @rbs return: Array[String]
-    # def proc_tokens(token)
-    #   # rubocop:disable Layout/ExtraSpacing
-    #   case token
-    #   in [_, :on_kw, token, _] if token == "do" then ["proc", " ", token]
-    #   in [_, :on_lbrace, token, _]              then ["proc", " ", token]
-    #   in [_, _, token, _]                       then [token]
-    #   end
-    #   # rubocop:enable Layout/ExtraSpacing
-    # end
-
-    ## Indicates if the token is a Hash key
-    ## @rbs token: [[Integer, Integer], Symbol, String, Object]
-    ## @rbs return: bool
-    # def hash_key?(token)
-    #  case token
-    #  in [_, :on_label, _, _] then true
-    #  else false
-    #  end
-    # end
   end
 end

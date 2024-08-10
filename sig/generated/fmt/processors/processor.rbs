@@ -9,5 +9,10 @@ module Fmt
     # @rbs from: AST::Node -- node to assign properties from
     # @rbs return: void
     def assign_properties: (from: AST::Node) -> void
+
+    # Indicates if the value is a composite type (Array or Hash)
+    # @rbs value: Object -- value to check
+    # @rbs return: bool
+    def composite?: (Object value) -> bool
   end
 end
