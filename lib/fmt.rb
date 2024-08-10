@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require "monitor"
-require_relative "fmt/cache"
-require_relative "fmt/sigils"
 require_relative "fmt/registries"
 require_relative "fmt/models"
 require_relative "fmt/parsers"

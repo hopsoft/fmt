@@ -3,26 +3,34 @@
 # rbs_inline: enabled
 
 require "monitor"
-require "singleton"
 
 module Fmt
-  # A threadsafe fixed-size LRU cache
+  # A threadsafe fixed-size LRU in-memory cache
   # Grows to capacity then evicts the least used entries
   #
-  # @example Reading/Writing
-  #   Fmt::Cache.put(:key, "value")
-  #   Fmt::Cache.get(:key)
-  #   Fmt::Cahce.delete(:key)
-  #   Fmt::Cache.fetch(:key, "default")
-  #   Fmt::Cache.fetch(:key) { "default" }
+  # @example
+  #   cache = Fmt::Cache.new
+  #
+  #   cache.put :key, "value"
+  #   cache.get :key
+  #   cache.delete :key
+  #   cache.fetch :key, "default"
+  #   cache.fetch(:key) { "default" }
   #
   # @example Capacity
-  #   Fmt::Cache.capacity = 5_000
-  class Cache
-    DEFAULT_CAPACITY = 2_500 # :: Integer -- default capacity
-
+  #   Fmt::Cache.capacity = 10_000
+  class LRUCache
     include MonitorMixin
-    include Singleton
+
+    DEFAULT_CAPACITY = 5_000 # :: Integer -- default capacity
+
+    # Constructor
+    # @rbs return: Fmt::Cache
+    def initialize(capacity: DEFAULT_CAPACITY)
+      super()
+      @capacity = capacity
+      @hash = {}
+    end
 
     # The cache max capacity (number of entries)
     # @rbs return: Integer
@@ -74,6 +82,12 @@ module Fmt
     # Alias for get
     alias_method :[], :get
 
+    # Cache keys
+    # @rbs return: Array[Symbol]
+    def keys
+      synchronize { hash.keys }
+    end
+
     # Indicates if the cache contains the specified key
     # @rbs key: String | Symbol -- key to check
     # @rbs return: bool
@@ -115,14 +129,6 @@ module Fmt
 
     private
 
-    # Constructor
-    # @rbs return: Fmt::Cache
-    def initialize
-      super
-      @capacity = DEFAULT_CAPACITY
-      @hash = {}
-    end
-
     attr_reader :hash # :: Hash[Symbol, Object]
 
     # Update position (LRU)
@@ -131,11 +137,6 @@ module Fmt
     def reposition(key)
       value = hash.delete(key)
       hash[key] = value
-    end
-
-    # Expose instance methods on the Fmt::Cache class
-    public_instance_methods(false).each do |name|
-      define_singleton_method name, ->(*a, **k, &b) { instance.public_send(name, *a, **k, &b) }
     end
   end
 end

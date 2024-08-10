@@ -51,7 +51,7 @@ module Fmt
     # Cache key for the Proc
     # @rbs return: String
     def cache_key
-      block.source_location.join ":"
+      key || block.hash
     end
 
     # Full path to the file where the Proc is defined

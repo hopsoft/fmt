@@ -2,8 +2,13 @@
 
 # rbs_inline: enabled
 
+require_relative "../lru_cache"
+require_relative "../sigils"
+
 module Fmt
   class Parser
+    Cache = Fmt::LRUCache.new # :: Fmt::LRUCache
+
     attr_reader :model # : Fmt::Model? -- extracted model
 
     # Invokes perform and returns a model
