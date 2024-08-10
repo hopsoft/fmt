@@ -32,6 +32,7 @@ module Parsers
       expected = "(args\n  (tokens\n    (int \"20\")\n    (comma \",\")\n    (sp \" \")\n    (label \"omission:\")\n    (sp \" \")\n    (tstring-beg \"'\")\n    (tstring-content \"&hellip;\")\n    (tstring-end \"'\")))"
       assert_equal expected, ast.to_s
 
+      assert_equal "(20, omission: '&hellip;')", processor.source
       assert_equal [20], processor.args
       assert_equal({omission: "&hellip;"}, processor.kwargs)
     end
