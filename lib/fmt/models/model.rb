@@ -3,19 +3,23 @@
 # rbs_inline: enabled
 
 require "ast"
+require "forwardable"
 
 module Fmt
   class Model
+    extend Forwardable
+
     # Constructor
     # @rbs tokens: Array[[[Integer, Integer], Symbol, String, Object]] -- Ripper tokens
     # @rbs return: Fmt::Model
     def initialize(*tokens)
       @tokens = tokens
+      @source = tokens_source
       process
     end
 
-    attr_reader :processor # :: Fmt::Processor -- processor (override in subclass)
     attr_reader :tokens    # :: Array[[[Integer, Integer], Symbol, String, Object]] -- Ripper tokens
+    attr_reader :source    # :: String -- source code based on Ripper tokens
 
     # AST representation of the model
     # @rbs return: AST::Node
@@ -23,21 +27,23 @@ module Fmt
       raise NotImplementedError, "Must be implemented by subclass"
     end
 
+    # AST::Node built from the Ripper tokens
+    # @rbs return: Array[AST::Node]
+    def tokens_ast
+      @tokens_ast ||= begin
+        node = ast_node(:tokens)
+        tokens.each do |token|
+          (_lineno, _column), type, tok, _state = token
+          child = ast_node(type.to_s.delete_prefix("on_").to_sym, tok)
+          node = node.append(child) # @note AST::Nodes are immutable, so we reassign
+        end
+        node
+      end
+    end
+
     protected
 
-    # AST::Node built from the Ripper tokens
-    # @example [[lineno, column], type, token, state]
-    # @rbs type: Symbol -- node type
-    # @rbs return: Array[AST::Node]
-    def tokens_ast_node(type)
-      node = ast_node(type)
-      tokens.each do |token|
-        (_lineno, _column), type, tok, _state = token
-        child = ast_node(type.to_s.delete_prefix("on_").to_sym, tok)
-        node = node.append(child) # @note AST::Nodes are immutable, so we reassign
-      end
-      node
-    end
+    attr_reader :processor # :: Fmt::Processor -- processor (override in subclass)
 
     # Source string built from Ripper tokens
     # @example [[lineno, column], type, token, state]

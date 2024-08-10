@@ -12,12 +12,12 @@ module Fmt
       super
     end
 
+    def_delegators :processor, :args, :kwargs
+
     # AST representation of the model
     # @rbs return: AST::Node
     def ast
-      @ast ||= ast_node :args,
-        tokens_ast_node(:tokens),
-        source: tokens_source
+      @ast ||= ast_node(:args, tokens_ast, source: source)
     end
   end
 end

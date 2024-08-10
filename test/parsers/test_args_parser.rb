@@ -24,8 +24,8 @@ module Parsers
       AST
 
       assert_equal expected.rstrip, model.ast.to_s
-      assert_equal "(80, '.')", model.processor.source
-      assert_equal [80, "."], model.processor.args
+      assert_equal "(80, '.')", model.source
+      assert_equal [80, "."], model.args
     end
 
     def test_with_positional_and_keyword_args
@@ -50,9 +50,9 @@ module Parsers
       AST
 
       assert_equal expected.rstrip, model.ast.to_s
-      assert_equal "(20, omission: '&hellip;')", model.processor.source
-      assert_equal [20], model.processor.args
-      assert_equal({omission: "&hellip;"}, model.processor.kwargs)
+      assert_equal "(20, omission: '&hellip;')", model.source
+      assert_equal [20], model.args
+      assert_equal({omission: "&hellip;"}, model.kwargs)
     end
   end
 end

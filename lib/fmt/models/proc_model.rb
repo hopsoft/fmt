@@ -18,6 +18,8 @@ module Fmt
       super(*tokens)
     end
 
+    def_delegators :processor, :key, :block
+
     attr_reader :key      # :: Symbol
     attr_reader :filename # :: String
     attr_reader :lineno   # :: Integer
@@ -25,11 +27,11 @@ module Fmt
     # AST representation of the model
     # @rbs return: AST::Node
     def ast
-      @ast ||= ast_node :proc, ast_node(:key, key),
+      @ast ||= ast_node(:proc, ast_node(:key, key),
         filename: filename,
         lineno: lineno,
-        source: tokens_source,
-        tokens: tokens_ast_node(:tokens)
+        source: source,
+        tokens: tokens_ast)
     end
   end
 end

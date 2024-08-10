@@ -41,15 +41,15 @@ module Parsers
           (sp " ")
           (rbrace "}"))
       AST
-      assert_equal expected.rstrip, model.processor.tokens.to_s
+      assert_equal expected.rstrip, model.tokens_ast.to_s
 
-      assert_equal :capitalize, model.processor.key
-      assert_equal block, model.processor.block
-      assert model.processor.filename.end_with?("lib/fmt/registries/native_registry.rb")
-      assert_instance_of Integer, model.processor.lineno
-      assert_equal "{ |obj, *args| obj.public_send(method_name, *args) }", model.processor.source
+      assert_equal :capitalize, model.key
+      assert_equal block, model.block
+      assert model.filename.end_with?("lib/fmt/registries/native_registry.rb")
+      assert_instance_of Integer, model.lineno
+      assert_equal "{ |obj, *args| obj.public_send(method_name, *args) }", model.source
       assert_equal "Test", block.call("test")
-      assert_equal "Test", model.processor.block.call("test")
+      assert_equal "Test", model.block.call("test")
     end
 
     def test_rainbow
@@ -83,16 +83,16 @@ module Parsers
           (sp " ")
           (rbrace "}"))
       AST
-      assert_equal expected.rstrip, model.processor.tokens.to_s
+      assert_equal expected.rstrip, model.tokens_ast.to_s
 
       assert_equal "(proc\n  (key :magenta))", model.ast.to_s
-      assert_equal :magenta, model.processor.key
-      assert_equal block, model.processor.block
-      assert model.processor.filename.end_with?("lib/fmt/registries/rainbow_registry.rb")
-      assert_instance_of Integer, model.processor.lineno
-      assert_equal "{ |obj| Rainbow(obj).public_send name }", model.processor.source
+      assert_equal :magenta, model.key
+      assert_equal block, model.block
+      assert model.filename.end_with?("lib/fmt/registries/rainbow_registry.rb")
+      assert_instance_of Integer, model.lineno
+      assert_equal "{ |obj| Rainbow(obj).public_send name }", model.source
       assert_equal "\e[35mtest\e[0m", block.call("test")
-      assert_equal "\e[35mtest\e[0m", model.processor.block.call("test")
+      assert_equal "\e[35mtest\e[0m", model.block.call("test")
     end
 
     def test_custom
@@ -126,17 +126,17 @@ module Parsers
             (sp " ")
             (rbrace "}"))
         AST
-        assert_equal expected.rstrip, model.processor.tokens.to_s
+        assert_equal expected.rstrip, model.tokens_ast.to_s
 
         assert_equal "(proc\n  (key :custom))", model.ast.to_s
         assert Fmt.registry.key?(:custom)
-        assert_equal :custom, model.processor.key
-        assert_equal block, model.processor.block
-        assert_equal __FILE__, model.processor.filename
-        assert_instance_of Integer, model.processor.lineno
-        assert_equal "proc { |obj| obj.to_s.upcase }", model.processor.source
+        assert_equal :custom, model.key
+        assert_equal block, model.block
+        assert_equal __FILE__, model.filename
+        assert_instance_of Integer, model.lineno
+        assert_equal "proc { |obj| obj.to_s.upcase }", model.source
         assert_equal "TEST", block.call("test")
-        assert_equal "TEST", model.processor.block.call("test")
+        assert_equal "TEST", model.block.call("test")
       end
 
       refute Fmt.registry.key?(:custom)
