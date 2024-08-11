@@ -1,9 +1,0 @@
-# Generated from lib/fmt/builders/args_builder.rb with RBS::Inline
-
-module Fmt
-  class ArgsBuilder < Builder
-    # Converts the ArgsBuilder to an AST
-    # @rbs return: AST::Node
-    def to_ast: () -> AST::Node
-  end
-end

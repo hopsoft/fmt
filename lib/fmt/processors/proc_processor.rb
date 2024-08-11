@@ -3,7 +3,10 @@
 # rbs_inline: enabled
 
 module Fmt
-  class ProcProcessor < Processor
+  class ProcProcessor
+    # @see http://whitequark.github.io/ast/AST/Processor/Mixin.html
+    include AST::Processor::Mixin
+
     attr_reader :key   # :: Symbol  -- key for the Proc in the registry
     attr_reader :block # :: Proc? -- Proc from the registry
 

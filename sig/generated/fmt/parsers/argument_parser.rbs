@@ -1,9 +1,0 @@
-# Generated from lib/fmt/parsers/argument_parser.rb with RBS::Inline
-
-module Fmt
-  class ArgumentParser < Parser
-    # Tokenizes the source string and returns a hash of the tokenized arguments
-    # @rbs return: Hash[Symbol, Object]
-    def perform: () -> Hash[Symbol, Object]
-  end
-end

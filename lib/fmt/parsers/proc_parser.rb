@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require_relative "../asts/proc_ast"
+require_relative "parser"
+
 module Fmt
   # Parser
   #
@@ -30,14 +33,11 @@ module Fmt
     # Parses the block (Proc)
     # @rbs return: Fmt::ProcModel
     def perform
-      @model = Cache.fetch(cache_key) do
-        tokenizer = ProcTokenizer.new(*lines)
-        tokens = tokenizer.tokenize
+      return ProcAST.stub unless block.is_a?(Proc)
 
-        ProcModel.new(*tokens, key: key, filename: filename, lineno: lineno)
+      @model = Cache.fetch(cache_key) do
+        ProcAST.new(key, filename: filename, lineno: lineno)
       end
-    ensure
-      close_file
     end
 
     private
@@ -66,26 +66,6 @@ module Fmt
     # @rbs return: Integer
     def lineno
       block.source_location[1]
-    end
-
-    # Opens the source file
-    # @rbs return: File
-    def open_file
-      @file ||= File.open(filename, "r")
-    end
-
-    # Closes the source file and cleans up resources
-    # @rbs return: void
-    def close_file
-      @file&.close
-      remove_instance_variable :@file if instance_variable_defined?(:@file)
-    end
-
-    # Lines of source code in filename starting at lineno
-    # @note Lazily reads the file line by line starting at lineno
-    # @rbs return: Enumerator[String]
-    def lines
-      open_file.each_line.lazy.drop lineno - 1
     end
   end
 end

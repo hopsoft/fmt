@@ -1,5 +1,0 @@
-# Generated from lib/fmt/version.rb with RBS::Inline
-
-module Fmt
-  VERSION: ::String
-end
