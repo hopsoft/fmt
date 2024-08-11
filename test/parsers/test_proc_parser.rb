@@ -11,7 +11,7 @@ module Parsers
 
       expected = <<~AST
         (proc
-          (key :capitalize))
+          (name :capitalize))
       AST
       assert_equal expected.rstrip, ast.to_s
     end
@@ -23,7 +23,7 @@ module Parsers
 
       expected = <<~AST
         (proc
-          (key :magenta))
+          (name :magenta))
       AST
       assert_equal expected.rstrip, ast.to_s
     end
@@ -37,7 +37,7 @@ module Parsers
 
         expected = <<~AST
           (proc
-            (key :custom))
+            (name :custom))
         AST
         assert_equal expected.rstrip, ast.to_s
       end

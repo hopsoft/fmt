@@ -11,15 +11,15 @@ module Fmt
       processor = ProcProcessor.new
       processor.process ast
 
-      @key = processor.key
+      @name = processor.name
       @block = processor.block
       @filename = ast.filename
       @lineno = ast.lineno
     end
 
-    attr_reader :key      # :: Symbol?
-    attr_reader :block    # :: Proc?
-    attr_reader :filename # :: String?
-    attr_reader :lineno   # :: Integer?
+    attr_reader :name     # :: Symbol
+    attr_reader :block    # :: Proc
+    attr_reader :filename # :: String
+    attr_reader :lineno   # :: Integer
   end
 end

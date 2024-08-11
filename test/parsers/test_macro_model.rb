@@ -8,8 +8,7 @@ module Parsers
       source = "ljust(80, '.')"
       ast = Fmt::MacroParser.new(source).parse
       model = Fmt::MacroModel.new(ast)
-
-      assert_equal :ljust, model.key
+      assert_equal :ljust, model.name
       assert_equal Fmt.registry[:ljust], model.block
       assert_equal [80, "."], model.args
       assert_empty model.kwargs
@@ -19,7 +18,7 @@ module Parsers
       source = "truncate(20, omission: '&hellip;')"
       ast = Fmt::MacroParser.new(source).parse
       model = Fmt::MacroModel.new(ast)
-      assert_equal :truncate, model.key
+      assert_equal :truncate, model.name
       assert_equal Fmt.registry[:truncate], model.block
       assert_equal [20], model.args
       assert_equal({omission: "&hellip;"}, model.kwargs)

@@ -7,16 +7,16 @@ module Fmt
     # @see http://whitequark.github.io/ast/AST/Processor/Mixin.html
     include AST::Processor::Mixin
 
-    attr_reader :key   # :: Symbol  -- key for the Proc in the registry
-    attr_reader :block # :: Proc? -- Proc from the registry
+    attr_reader :name   # :: Symbol -- key for the Proc in the registry
+    attr_reader :block # :: Proc -- Proc from the registry
 
     def on_proc(node)
       process_all node.children
     end
 
-    def on_key(node)
-      @key = node.children.first
-      @block = Fmt.registry[key]
+    def on_name(node)
+      @name = node.children.first
+      @block = Fmt.registry[name]
     end
   end
 end

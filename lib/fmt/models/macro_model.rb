@@ -21,6 +21,6 @@ module Fmt
     attr_reader :arguments_model # :: Fmt::ArgsModel
 
     def_delegators :arguments_model, :args, :kwargs
-    def_delegators :proc_model, :key, :block, :filename, :lineno
+    def_delegators :proc_model, :name, :block, :filename, :lineno
   end
 end

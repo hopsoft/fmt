@@ -12,7 +12,7 @@ module Parsers
       expected = <<~AST
         (macro
           (proc
-            (key :ljust))
+            (name :ljust))
           (arguments
             (tokens
               (lparen "(")
@@ -35,7 +35,7 @@ module Parsers
       expected = <<~AST
         (macro
           (proc
-            (key :truncate))
+            (name :truncate))
           (arguments
             (tokens
               (lparen "(")
