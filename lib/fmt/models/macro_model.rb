@@ -2,25 +2,43 @@
 
 # rbs_inline: enabled
 
-require "forwardable"
-require_relative "../processors/macro_processor"
-
 module Fmt
   class MacroModel
     extend Forwardable
+    include PatternMatchable
 
-    def initialize(ast)
-      processor = MacroProcessor.new
+    # Constructor
+    # @rbs ast: MacroAST
+    # @rbs processor: AST::Processor::Mixin
+    # @rbs return: Fmt::MacroModel
+    def initialize(ast, processor: MacroProcessor.new)
       processor.process ast
-
-      @proc_model = processor.proc_model
-      @arguments_model = processor.arguments_model
+      @source = ast.source
+      @proc_model = ProcModel.new(processor.proc_ast)
+      @arguments_model = ArgumentsModel.new(processor.arguments_ast)
     end
 
-    attr_reader :proc_model # :: Fmt::ProcModel
+    attr_reader :source          # :: String -- source code
+    attr_reader :proc_model      # :: Fmt::ProcModel
     attr_reader :arguments_model # :: Fmt::ArgsModel
 
-    def_delegators :arguments_model, :args, :kwargs
-    def_delegators :proc_model, :name, :block, :filename, :lineno
+    def_delegator :proc_model, :name     # :: Symbol -- method name (key in registry)
+    def_delegator :proc_model, :block    # :: Proc
+    def_delegator :proc_model, :filename # :: String
+    def_delegator :proc_model, :lineno   # :: Integer
+
+    def_delegator :arguments_model, :args   # :: Array[Object] -- positional arguments
+    def_delegator :arguments_model, :kwargs # :: Hash[Symbol, Object] -- keyword arguments
+
+    # @rbs return: Hash[Symbol, Object]
+    def to_h
+      {
+        source: source,
+        name: name,
+        block: block,
+        args: args,
+        kwargs: kwargs
+      }
+    end
   end
 end

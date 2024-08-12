@@ -2,15 +2,15 @@
 
 module Fmt
   # Convenience wrapper for Ripper tokens
-  #
-  # @example Ripper Token
-  #   [[lineno, column], type, token, state]
-  #   [[Integer, Integer], Symbol, String, Object]
-  #
   # @see https://rubyapi.org/3.4/o/ripper
   # @see doc/RIPPER.md (cheetsheet)
   class TokenModel
     # Constructor
+    #
+    # @example Ripper Token
+    #   [[lineno, column], type, token, state]
+    #   [[Integer, Integer], Symbol, String, Object]
+    #
     # @rbs ripper_token: Array[[Integer, Integer], Symbol, String, Object] -- Ripper token
     # @rbs return: Fmt::RipperToken
     def initialize(ripper_token)
@@ -18,7 +18,7 @@ module Fmt
       @ripper_token = ripper_token
       @lineno = lineno
       @column = column
-      @type = type.to_s.delete_prefix("on_").to_sym
+      @type = type.to_s.delete_prefix("on_").to_sym # strip Ripper's "on_" prefix for parser semantics
       @token = token
       @state = state
     end
@@ -33,6 +33,7 @@ module Fmt
     # @note The entire data structure is considered a "token",
     #       so the embedded "token" is aliased as "value" to reduce confusion
     alias_method :value, :token
+    alias_method :source, :token # added for consistency with other models
 
     # Returns an Array representation of the token
     # @rbs return: Array[[Integer, Integer], Symbol, String, Object]
@@ -76,6 +77,12 @@ module Fmt
     # @rbs return: bool
     def string?
       type == :tstring_content
+    end
+
+    # Indicates if the token is a Symbol
+    # @rbs return: bool
+    def symbol?
+      type == :symbeg
     end
 
     # Indicates if the token begins arguments for a method definition or call

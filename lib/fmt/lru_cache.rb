@@ -2,8 +2,6 @@
 
 # rbs_inline: enabled
 
-require "monitor"
-
 module Fmt
   # A threadsafe fixed-size LRU in-memory cache
   # Grows to capacity then evicts the least used entries

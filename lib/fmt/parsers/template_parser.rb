@@ -2,9 +2,6 @@
 
 # rbs_inline: enabled
 
-require "strscan"
-require_relative "parser"
-
 module Fmt
   class TemplateParser < Parser
     PREFIX = Pattern.build(Sigils::PREFIX, escape: true).freeze                     # :: Regexp -- template prefix
@@ -49,7 +46,7 @@ module Fmt
     end
 
     def perform
-      @value = Cache.fetch(source) do
+      @value = cache(source) do
         templates = []
 
         scanner = StringScanner.new(source)

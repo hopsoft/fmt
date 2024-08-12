@@ -2,11 +2,6 @@
 
 # rbs_inline: enabled
 
-require "singleton"
-require_relative "filter_groups/native_filter_group"
-require_relative "filter_groups/rainbow_filter_group"
-require_relative "scanners/template_scanner"
-
 module Fmt
   class Formatter
     include Singleton

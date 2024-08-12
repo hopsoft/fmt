@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "ripper"
-
 module Fmt
   # Ruby source code token extractor
   #

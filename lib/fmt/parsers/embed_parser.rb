@@ -2,19 +2,17 @@
 
 # rbs_inline: enabled
 
-require "strscan"
-require_relative "parser"
-
 module Fmt
   class EmbedParser < Parser
-    HEAD = Regexp.new("(?=%s)", Regexp.escape(Sigils::EMBED_PREFIX)).freeze # :: Regexp
+    HEAD = Regexp.new("(?=%s)" % Regexp.escape(Sigils::EMBED_PREFIX)).freeze # :: Regexp
 
     # :: Regexp
     EMBED = Regexp.new(
-      "(%{embed_prefix}%{prefix}[^\\s%{embed_prefix}]+\\s*(%{embed_prefix}.*%{embed_suffix})*\\s*%{embed_suffix})",
-      prefix: Regexp.escape(Sigils::PREFIX),
-      embed_prefix: Regexp.escape(Sigils::EMBED_PREFIX),
-      embed_suffix: Regexp.escape(Sigils::EMBED_SUFFIX)
+      "(%{embed_prefix}%{prefix}[^\\s%{embed_prefix}]+\\s*(%{embed_prefix}.*%{embed_suffix})*\\s*%{embed_suffix})" % {
+        prefix: Regexp.escape(Sigils::PREFIX),
+        embed_prefix: Regexp.escape(Sigils::EMBED_PREFIX),
+        embed_suffix: Regexp.escape(Sigils::EMBED_SUFFIX)
+      }
     ).freeze
 
     protected

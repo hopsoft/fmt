@@ -10,7 +10,9 @@ require "pry-doc"
 require "rainbow"
 require_relative "../lib/fmt"
 
+AmazingPrint.defaults = {indent: 2, index: false, ruby19_syntax: true}
 AmazingPrint.pry!
+
 FileUtils.mkdir_p "tmp"
 
 Minitest::Reporters.use! [

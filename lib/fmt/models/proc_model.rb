@@ -2,24 +2,32 @@
 
 # rbs_inline: enabled
 
-require "ast"
-require_relative "../processors/proc_processor"
-
 module Fmt
   class ProcModel
-    def initialize(ast)
-      processor = ProcProcessor.new
-      processor.process ast
+    include PatternMatchable
 
+    # Constructor
+    # @rbs ast: ProcAST
+    # @rbs processor: AST::Processor::Mixin
+    # @rbs return: Fmt::ProcModel
+    def initialize(ast, processor: ProcProcessor.new)
+      processor.process ast
+      @source = ast.source
       @name = processor.name
       @block = processor.block
-      @filename = ast.filename
-      @lineno = ast.lineno
     end
 
-    attr_reader :name     # :: Symbol
-    attr_reader :block    # :: Proc
-    attr_reader :filename # :: String
-    attr_reader :lineno   # :: Integer
+    attr_reader :source # :: String -- source code
+    attr_reader :name   # :: Symbol -- method name (key in registry)
+    attr_reader :block  # :: Proc
+
+    # @rbs return: Hash[Symbol, Object]
+    def to_h
+      {
+        source: source,
+        name: name,
+        block: block
+      }
+    end
   end
 end

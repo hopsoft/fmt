@@ -2,9 +2,6 @@
 
 # rbs_inline: enabled
 
-require "monitor"
-require "set"
-
 module Fmt
   # Registry for storing and retrieving String formatters i.e. Procs
   class Registry

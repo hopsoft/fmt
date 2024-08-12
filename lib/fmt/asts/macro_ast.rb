@@ -2,8 +2,6 @@
 
 # rbs_inline: enabled
 
-require "ast"
-
 module Fmt
   class MacroAST < AST::Node
     # Stub
@@ -13,9 +11,14 @@ module Fmt
     end
 
     # Constructor
+    # @rbs proc_ast: Fmt::ProcAST
+    # @rbs arguments_ast: Fmt::ArgumentsAST
     # @rbs return: Fmt::TokenAST
     def initialize(proc_ast, arguments_ast)
+      @source = "#{proc_ast.name}#{arguments_ast.source}"
       super(:macro, [proc_ast, arguments_ast])
     end
+
+    attr_reader :source # :: String -- source code
   end
 end

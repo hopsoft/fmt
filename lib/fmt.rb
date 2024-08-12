@@ -1,14 +1,8 @@
 # frozen_string_literal: true
 
-require "ast"
-require "monitor"
-require_relative "fmt/version"
-# require_relative "fmt/asts"
-require_relative "fmt/registries"
-require_relative "fmt/models"
-require_relative "fmt/parsers"
-# require_relative "fmt/processors"
-# require_relative "fmt/tokenizers"
+# rbs_inline: enabled
+#
+require_relative "fmt/boot"
 
 # Extends native Ruby String format specifications
 # @see https://ruby-doc.org/3.3.4/format_specifications_rdoc.html

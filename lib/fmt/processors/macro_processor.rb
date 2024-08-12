@@ -2,28 +2,29 @@
 
 # rbs_inline: enabled
 
-require "ast"
-require_relative "../models/arguments_model"
-require_relative "../models/proc_model"
-
 module Fmt
   class MacroProcessor
     # @see http://whitequark.github.io/ast/AST/Processor/Mixin.html
     include AST::Processor::Mixin
 
-    attr_reader :proc_model # :: Fmt::ProcModel
-    attr_reader :arguments_model # :: Fmt::ArgumentsModel
+    def initialize
+      @proc_ast = ProcAST.stub
+      @arguments_ast = ArgumentsAST.stub
+    end
+
+    attr_reader :proc_ast      # :: Fmt::ProcAST
+    attr_reader :arguments_ast # :: Fmt::ArgumentsAST
 
     def on_macro(node)
       process_all node.children
     end
 
     def on_proc(node)
-      @proc_model = ProcModel.new(node)
+      @proc_ast = node
     end
 
     def on_arguments(node)
-      @arguments_model = ArgumentsModel.new(node)
+      @arguments_ast = node
     end
   end
 end

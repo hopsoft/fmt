@@ -2,8 +2,6 @@
 
 # rbs_inline: enabled
 
-require "ast"
-
 module Fmt
   class ArgumentsProcessor
     # @see http://whitequark.github.io/ast/AST/Processor/Mixin.html
@@ -62,6 +60,22 @@ module Fmt
     # @rbs return: Symbol
     def on_symbol(node)
       assign node.children.first.to_sym
+    end
+
+    # Processes the start of a Symbol identifier
+    # @rbs node: AST::Node -- node to process
+    # @rbs return: void
+    def on_symbeg(node)
+      @next_ident_is_symbol = true
+    end
+
+    # Processes identifiers
+    # @rbs node: AST::Node -- node to process
+    # @rbs return: Symbol?
+    def on_ident(node)
+      assign node.children.first.to_sym if @next_ident_is_symbol
+    ensure
+      @next_ident_is_symbol = false
     end
 
     # Processes an Integer node

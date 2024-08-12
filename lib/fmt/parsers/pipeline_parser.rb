@@ -18,9 +18,12 @@ module Fmt
     # Parses the source
     # @rbs return: Fmt::ArgsModel
     def perform
-      @model = Cache.fetch(source) do
-        source.split(Sigils::PIPE_OPERATOR).map do |source|
+      @model = cache(source) do
+        macro_asts = source.split(Sigils::PIPE_OPERATOR).map do |chunk|
+          MacroParser.new(chunk).parse
         end
+
+        PipelineAST.new(*macro_asts)
       end
     end
   end

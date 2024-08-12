@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../asts/proc_ast"
-require_relative "parser"
-
 module Fmt
   # Parser
   #
@@ -35,8 +32,8 @@ module Fmt
     def perform
       return ProcAST.stub unless block.is_a?(Proc)
 
-      @model = Cache.fetch(cache_key) do
-        ProcAST.new(key, filename: filename, lineno: lineno)
+      @model = cache(key || block.hash) do
+        key ? ProcAST.new(key) : ProcAST.stub
       end
     end
 
@@ -46,26 +43,6 @@ module Fmt
     # @rbs return: Symbol
     def key
       Fmt.registry.key_for block
-    end
-
-    # Cache key for the Proc
-    # @rbs return: String
-    def cache_key
-      key || block.hash
-    end
-
-    # Full path to the file where the Proc is defined
-    # @return [String]
-    def filename
-      path = block.source_location[0]
-      path = path.match(FILENAME_REGEX).to_s if path.match?(FILENAME_REGEX)
-      path
-    end
-
-    # Line number where the Proc begins in filename
-    # @rbs return: Integer
-    def lineno
-      block.source_location[1]
     end
   end
 end

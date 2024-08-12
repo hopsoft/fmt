@@ -2,14 +2,10 @@
 
 # rbs_inline: enabled
 
-require "ast"
-require_relative "token_ast"
-
 module Fmt
   class ArgumentsAST < AST::Node
-    # AST stub
     # @rbs return: AST::Node
-    def self.ast
+    def self.stub
       AST::Node.new :arguments
     end
 
@@ -18,15 +14,12 @@ module Fmt
     # @rbs return: Fmt::Model
     def initialize(*tokens)
       @tokens = tokens
-
-      super(
-        :arguments,
-        [AST::Node.new(:tokens, tokens.map { |t| TokenAST.new t })],
-        source: tokens.map(&:value).join
-      )
+      @source = tokens.map(&:source).join
+      token_asts = tokens.map { |t| TokenAST.new t }
+      super(:arguments, [AST::Node.new(:tokens, token_asts)])
     end
 
     attr_reader :tokens # :: Array[Fmt::TokenModel] -- Ripper tokens
-    attr_reader :source # :: String -- source code based on Ripper tokens
+    attr_reader :source # :: String -- source code
   end
 end

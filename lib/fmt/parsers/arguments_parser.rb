@@ -2,10 +2,6 @@
 
 # rbs_inline: enabled
 
-require_relative "../asts/arguments_ast"
-require_relative "../tokenizers/arguments_tokenizer"
-require_relative "parser"
-
 module Fmt
   class ArgumentsParser < Parser
     PREFIX = /(?=\()/
@@ -25,7 +21,7 @@ module Fmt
     # Parses the source
     # @rbs return: Fmt::ArgsModel
     def perform
-      @model = Cache.fetch(source) do
+      @model = cache(source) do
         scanner = StringScanner.new(source)
         scanner.skip_until PREFIX
         parsed = scanner.scan_until(SUFFIX) if scanner.matched?

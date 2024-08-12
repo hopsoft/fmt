@@ -3,36 +3,35 @@
 # rbs_inline: enabled
 
 module Fmt
-  class PipelineModel < Model
-    # AST stub
+  class PipelineModel
+    include PatternMatchable
+
     # @rbs return: AST::Node
-    def self.ast
-      AST::Node.new :proc
+    def self.stub
+      AST::Node.new :pipeline
     end
 
     # Constructor
-    # @rbs macros: Array[Fmt::MacroModel] -- MacroModels
+    # @rbs ast: MacroAST
+    # @rbs processor: AST::Processor::Mixin
     # @rbs return: Fmt::MacroModel
-    def initialize(*macros)
-      @processor = PipelineProcessor.new
-      @macros = macros
-      super
+    def initialize(ast, processor: PipelineProcessor.new)
+      processor.process ast
+      @source = ast.source
+      @macros = processor.macro_asts.map do |macro_ast|
+        MacroModel.new macro_ast
+      end
     end
 
     attr_reader :macros # :: Array[Fmt::MacroModel]
+    attr_reader :source # :: String -- source code
 
-    # def_delegators :processor, :
-
-    # AST representation of the model
-    # @rbs return: AST::Node
-    def ast
-      # @ast ||= AST::Node.new(:pipeline, ...)
-    end
-
-    # Source code string
-    # @rbs return: String
-    def source
-      macros.map(&:source).join Sigils::PIPE_OPERATOR
+    # @rbs return: Hash[Symbol, Object]
+    def to_h
+      {
+        source: source,
+        macros: macros.map(&:to_h)
+      }
     end
   end
 end

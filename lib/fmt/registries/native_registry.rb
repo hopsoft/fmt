@@ -2,9 +2,6 @@
 
 # rbs_inline: enabled
 
-require "date"
-require "set"
-
 module Fmt
   # Extends native Ruby String format specifications with native Ruby methods
   # @see https://ruby-doc.org/3.3.4/format_specifications_rdoc.html

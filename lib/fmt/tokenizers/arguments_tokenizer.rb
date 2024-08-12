@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../models/token_model"
-require_relative "tokenizer"
-
 module Fmt
   class ArgumentsTokenizer < Tokenizer
     # Constructor
