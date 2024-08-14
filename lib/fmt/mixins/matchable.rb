@@ -3,7 +3,7 @@
 # rbs_inline: enabled
 
 module Fmt
-  module PatternMatchable
+  module Matchable
     def to_h
       raise NotImplementedError, "Must be implemented by including class"
     end

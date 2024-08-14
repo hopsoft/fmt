@@ -7,8 +7,8 @@ module Fmt
   class Registry
     include MonitorMixin
 
-    PROC_INSTANCE_VAR = :@fmt_registry_key # :: Symbol -- instance variable set on registered Procs
-    private_constant :PROC_INSTANCE_VAR
+    INSTANCE_VAR = :@fmt_registry_key # :: Symbol -- instance variable set on registered Procs
+    private_constant :INSTANCE_VAR
 
     # Constructor
     # @rbs return: Fmt::Registry
@@ -48,10 +48,10 @@ module Fmt
     end
 
     # Retrieves the registered key for a Proc
-    # @rbs block: Proc -- Proc to retrieve the key for
+    # @rbs callable: Proc -- Proc to retrieve the key for
     # @rbs return: Symbol?
-    def key_for(block)
-      block&.instance_variable_get PROC_INSTANCE_VAR
+    def key_for(callable)
+      callable&.instance_variable_get INSTANCE_VAR
     end
 
     # Registry keys
@@ -69,20 +69,17 @@ module Fmt
     # Adds a keypair to the registry
     # @rbs key: String | Symbol -- key to use
     # @rbs overwrite: bool -- overwrite the existing keypair (default: false)
-    # @rbs proc: Proc -- Proc to add (optional, if block is provided)
     # @rbs block: Proc -- Proc to add (optional, if proc is provided)
     # @rbs return: Proc
-    def add(key, overwrite: false, proc: nil, &block)
+    def add(key, overwrite: false, &block)
       key = build_key(key)
-      block ||= binding.local_variable_get(:proc)
 
-      return unless block.is_a?(Proc)
       return self[key] if key?(key) && !overwrite
 
       synchronize do
         block.tap do |b|
           store[key] = b
-          b.instance_variable_set PROC_INSTANCE_VAR, key
+          b.instance_variable_set INSTANCE_VAR, key
         end
       end
     end
@@ -94,7 +91,7 @@ module Fmt
       key = build_key(key)
       synchronize do
         store.delete(key).tap do |b|
-          b&.remove_instance_variable PROC_INSTANCE_VAR
+          b&.remove_instance_variable INSTANCE_VAR
         end
       end
     end
@@ -102,21 +99,21 @@ module Fmt
     # Fetches a Proc from the registry
     # @rbs key: String | Symbol -- key to retrieve
     # @rbs safe: bool -- indicates if the fetch should be synchronized (default: true)
-    # @rbs proc: Proc -- Proc to use if the key is not found (optional, if block is provided)
+    # @rbs callable: Proc -- Proc to use if the key is not found (optional, if block is provided)
     # @rbs block: Proc -- block to use if the key is not found (optional, if proc is provided)
     # @rbs return: Proc
-    def fetch(key, safe: true, proc: nil, &block)
+    def fetch(key, safe: true, callable: nil, &block)
       key = build_key(key)
-      block ||= binding.local_variable_get(:proc)
+      block ||= callable
       value = safe ? self[key] : store[key]
-      value || add(key, proc: block)
+      value || add(key, &block)
     end
 
     # Merges another registry into this one
     # @rbs other: Fmt::Registry -- other registry to merge
     # @rbs return: Fmt::Registry
     def merge!(other)
-      other.to_h.each { |key, val| add key, proc: val }
+      other.to_h.each { |key, block| add(key, &block) }
       self
     end
 
@@ -140,13 +137,13 @@ module Fmt
 
       overrides = overrides.transform_keys { |key| build_key key }
       originals = store.slice(*overrides.keys)
-      overrides.each { |key, val| add key, overwrite: true, proc: val }
+      overrides.each { |key, block| add(key, overwrite: true, &block) }
 
       yield
     ensure
       synchronize do
         overrides&.each { |key, _| delete key }
-        originals&.each { |key, val| add key, overwrite: true, proc: val }
+        originals&.each { |key, block| add(key, overwrite: true, &block) }
       end
     end
 

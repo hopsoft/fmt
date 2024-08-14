@@ -4,19 +4,29 @@
 
 module Fmt
   class PipelineAST < AST::Node
-    # @rbs return: AST::Node
-    def self.stub
-      AST::Node.new :pipeline
-    end
+    include Composable
 
     # Constructor
-    # @rbs macro_asts: Array[Fmt::MacroAST]
+    # @rbs components: Array[Fmt::MacroAST]
+    # @rbs properties: Hash[Symbol, Object]
     # @rbs return: Fmt::PipelineAST
-    def initialize(*macro_asts)
-      @source = macro_asts.map(&:source).join(Sigils::PIPE_OPERATOR)
-      super(:pipeline, [AST::Node.new(:macros, macro_asts)])
+    def initialize(*components, **properties)
+      assemble(*components, **properties)
+      super(:pipeline, macros, properties)
     end
 
-    attr_reader :source # :: String -- source code
+    # @rbs return: Array[Fmt::MacroAST]
+    def macros
+      @macros ||= components.select { |c| Fmt::MacroAST === c }
+    end
+
+    private
+
+    def subtree
+      case macros
+      in [Fmt::MacroAST, *] then [AST::Node.new(:macros, macros)]
+      else []
+      end
+    end
   end
 end

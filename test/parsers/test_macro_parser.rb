@@ -2,54 +2,71 @@
 
 require_relative "../test_helper"
 
-class TestMacroParser < UnitTest
-  def test_with_positional_args
-    source = "ljust(80, '.')"
-    ast = Fmt::MacroParser.new(source).parse
-    assert_instance_of Fmt::MacroAST, ast
-    assert_equal source, ast.source
+module Fmt
+  class TestMacroParser < UnitTest
+    def test_without_args
+      source = "strip"
+      ast = MacroParser.new(source).parse
+      assert_instance_of MacroAST, ast
+      assert_equal source, ast.source
 
-    expected = <<~AST
-      (macro
-        (proc
-          (name :ljust))
-        (arguments
-          (tokens
-            (lparen "(")
-            (int "80")
-            (comma ",")
-            (sp " ")
-            (tstring-beg "'")
-            (tstring-content ".")
-            (tstring-end "'")
-            (rparen ")"))))
-    AST
-    assert_equal expected.rstrip, ast.to_s
-  end
+      expected = <<~AST
+        (macro
+          (procedure
+            (name :strip)))
+      AST
 
-  def test_with_positional_and_keyword_args
-    source = "truncate(20, omission: '&hellip;')"
-    ast = Fmt::MacroParser.new(source).parse
-    assert_instance_of Fmt::MacroAST, ast
-    assert_equal source, ast.source
+      assert_equal expected.rstrip, ast.to_s
+    end
 
-    expected = <<~AST
-      (macro
-        (proc
-          (name :truncate))
-        (arguments
-          (tokens
-            (lparen "(")
-            (int "20")
-            (comma ",")
-            (sp " ")
-            (label "omission:")
-            (sp " ")
-            (tstring-beg "'")
-            (tstring-content "&hellip;")
-            (tstring-end "'")
-            (rparen ")"))))
-    AST
-    assert_equal expected.rstrip, ast.to_s
+    def test_with_positional_args
+      source = "ljust(80, '.')"
+      ast = MacroParser.new(source).parse
+      assert_instance_of MacroAST, ast
+      assert_equal source, ast.source
+
+      expected = <<~AST
+        (macro
+          (procedure
+            (name :ljust))
+          (arguments
+            (tokens
+              (lparen "(")
+              (int "80")
+              (comma ",")
+              (sp " ")
+              (tstring-beg "'")
+              (tstring-content ".")
+              (tstring-end "'")
+              (rparen ")"))))
+      AST
+      assert_equal expected.rstrip, ast.to_s
+    end
+
+    def test_with_positional_and_keyword_args
+      source = "truncate(20, omission: '&hellip;')"
+      ast = MacroParser.new(source).parse
+      assert_instance_of MacroAST, ast
+      assert_equal source, ast.source
+
+      expected = <<~AST
+        (macro
+          (procedure
+            (name :truncate))
+          (arguments
+            (tokens
+              (lparen "(")
+              (int "20")
+              (comma ",")
+              (sp " ")
+              (label "omission:")
+              (sp " ")
+              (tstring-beg "'")
+              (tstring-content "&hellip;")
+              (tstring-end "'")
+              (rparen ")"))))
+      AST
+      assert_equal expected.rstrip, ast.to_s
+    end
   end
 end

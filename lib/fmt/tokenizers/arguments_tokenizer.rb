@@ -25,7 +25,7 @@ module Fmt
         started = false
 
         Ripper.lex(source).each do |token|
-          token = TokenModel.new(token)
+          token = Token.new(token)
           next unless started ||= token.arguments_start?
           tokens << token
           break if token.arguments_finish?

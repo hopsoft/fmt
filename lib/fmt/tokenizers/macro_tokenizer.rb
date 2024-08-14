@@ -25,7 +25,7 @@ module Fmt
       super do
         Ripper.lex(source).each do |token|
           break if tokens.any?
-          token = TokenModel.new(token)
+          token = Token.new(token)
           next unless token.identifier?
           tokens << token
         end

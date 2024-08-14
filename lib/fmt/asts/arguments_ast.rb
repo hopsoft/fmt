@@ -4,22 +4,29 @@
 
 module Fmt
   class ArgumentsAST < AST::Node
-    # @rbs return: AST::Node
-    def self.stub
-      AST::Node.new :arguments
-    end
+    include Composable
 
     # Constructor
-    # @rbs tokens: Array[Fmt::TokenModel] -- Ripper tokens
-    # @rbs return: Fmt::Model
-    def initialize(*tokens)
-      @tokens = tokens
-      @source = tokens.map(&:source).join
-      token_asts = tokens.map { |t| TokenAST.new t }
-      super(:arguments, [AST::Node.new(:tokens, token_asts)])
+    # @rbs components: Array[Fmt::TokenAST]
+    # @rbs properties: Hash[Symbol, Object]
+    # @rbs return: Fmt::ArgumentsAST
+    def initialize(*components, **properties)
+      assemble(*components, **properties)
+      super(:arguments, subtree, properties)
     end
 
-    attr_reader :tokens # :: Array[Fmt::TokenModel] -- Ripper tokens
-    attr_reader :source # :: String -- source code
+    # @rbs return: Array[Fmt::TokenAST]
+    def tokens
+      @tokens ||= components.select { |c| Fmt::TokenAST === c }
+    end
+
+    private
+
+    def subtree
+      case tokens
+      in Fmt::TokenAST, * then [AST::Node.new(:tokens, tokens)]
+      else []
+      end
+    end
   end
 end

@@ -2,18 +2,18 @@
 
 require_relative "../test_helper"
 
-class TestPipelineParser < UnitTest
-  def test_one
-    source = "ljust(80, '.')"
-    ast = Fmt::PipelineParser.new(source).parse
-    assert_instance_of Fmt::PipelineAST, ast
-    assert_equal source, ast.source
+module Fmt
+  class TestPipelineParser < UnitTest
+    def test_one
+      source = "ljust(80, '.')"
+      ast = PipelineParser.new(source).parse
+      assert_instance_of PipelineAST, ast
+      assert_equal source, ast.source
 
-    expected = <<~AST
-      (pipeline
-        (macros
+      expected = <<~AST
+        (pipeline
           (macro
-            (proc
+            (procedure
               (name :ljust))
             (arguments
               (tokens
@@ -24,22 +24,22 @@ class TestPipelineParser < UnitTest
                 (tstring-beg "'")
                 (tstring-content ".")
                 (tstring-end "'")
-                (rparen ")"))))))
-    AST
-    assert_equal expected.rstrip, ast.to_s
-  end
+                (rparen ")")))))
+      AST
 
-  def test_two
-    source = "ljust(80, '.')|>cyan"
-    ast = Fmt::PipelineParser.new(source).parse
-    assert_instance_of Fmt::PipelineAST, ast
-    assert_equal source, ast.source
+      assert_equal expected.rstrip, ast.to_s
+    end
 
-    expected = <<~AST
-      (pipeline
-        (macros
+    def test_two
+      source = "ljust(80, '.')|>cyan"
+      ast = PipelineParser.new(source).parse
+      assert_instance_of PipelineAST, ast
+      assert_equal source, ast.source
+
+      expected = <<~AST
+        (pipeline
           (macro
-            (proc
+            (procedure
               (name :ljust))
             (arguments
               (tokens
@@ -52,25 +52,23 @@ class TestPipelineParser < UnitTest
                 (tstring-end "'")
                 (rparen ")"))))
           (macro
-            (proc
-              (name :cyan))
-            (arguments
-              (tokens)))))
-    AST
-    assert_equal expected.rstrip, ast.to_s
-  end
+            (procedure
+              (name :cyan))))
+      AST
 
-  def test_multiple
-    source = "pluralize(2, locale: :en)|>titleize|>truncate(30, '.')|>red|>bold|>underline"
-    ast = Fmt::PipelineParser.new(source).parse
-    assert_instance_of Fmt::PipelineAST, ast
-    assert_equal source, ast.source
+      assert_equal expected.rstrip, ast.to_s
+    end
 
-    expected = <<~AST
-      (pipeline
-        (macros
+    def test_multiple
+      source = "pluralize(2, locale: :en)|>titleize|>truncate(30, '.')|>red|>bold|>underline"
+      ast = PipelineParser.new(source).parse
+      assert_instance_of PipelineAST, ast
+      assert_equal source, ast.source
+
+      expected = <<~AST
+        (pipeline
           (macro
-            (proc
+            (procedure
               (name :pluralize))
             (arguments
               (tokens
@@ -84,12 +82,10 @@ class TestPipelineParser < UnitTest
                 (ident "en")
                 (rparen ")"))))
           (macro
-            (proc
-              (name :titleize))
-            (arguments
-              (tokens)))
+            (procedure
+              (name :titleize)))
           (macro
-            (proc
+            (procedure
               (name :truncate))
             (arguments
               (tokens
@@ -102,21 +98,17 @@ class TestPipelineParser < UnitTest
                 (tstring-end "'")
                 (rparen ")"))))
           (macro
-            (proc
-              (name :red))
-            (arguments
-              (tokens)))
+            (procedure
+              (name :red)))
           (macro
-            (proc
-              (name :bold))
-            (arguments
-              (tokens)))
+            (procedure
+              (name :bold)))
           (macro
-            (proc
-              (name :underline))
-            (arguments
-              (tokens)))))
-    AST
-    assert_equal expected.rstrip, ast.to_s
+            (procedure
+              (name :underline))))
+      AST
+
+      assert_equal expected.rstrip, ast.to_s
+    end
   end
 end

@@ -4,20 +4,32 @@
 
 module Fmt
   class TokenAST < AST::Node
-    # Stub
-    # @rbs return: AST::Node
-    def self.stub
-      AST::Node.new :token
-    end
+    include Composable
 
     # Constructor
-    # @rbs token: Fmt::TokenModel -- Ripper token
+    # @rbs type: Symbol -- Token type
+    # @rbs components: Array[String, Symbol] -- [type, value]
+    # @rbs properties: Hash[Symbol, Object]
     # @rbs return: Fmt::TokenAST
-    def initialize(token)
-      @source = token.value
-      super(token.type, [token.value])
+    def initialize(*components, **properties)
+      assemble(*components, **properties)
+      super(type || :invalid, subtree, properties)
     end
 
-    attr_reader :source # :: String -- source code
+    # @rbs return: Symbol?
+    def type
+      @type ||= components.find { |c| Symbol === c }
+    end
+
+    # @rbs return: String?
+    def value
+      @value ||= components.find { |c| String === c }
+    end
+
+    private
+
+    def subtree
+      [value].compact
+    end
   end
 end

@@ -4,21 +4,35 @@
 
 module Fmt
   class MacroAST < AST::Node
-    # Stub
-    # @rbs return: AST::Node
-    def self.stub
-      AST::Node.new :macro
-    end
+    include Composable
 
     # Constructor
-    # @rbs proc_ast: Fmt::ProcAST
-    # @rbs arguments_ast: Fmt::ArgumentsAST
-    # @rbs return: Fmt::TokenAST
-    def initialize(proc_ast, arguments_ast)
-      @source = "#{proc_ast.name}#{arguments_ast.source}"
-      super(:macro, [proc_ast, arguments_ast])
+    # @rbs components: Array[Fmt::ProcedureAST | Fmt::ArgumentsAST]
+    # @rbs properties: Hash[Symbol, Object]
+    # @rbs return: Fmt::MacroAST
+    def initialize(*components, **properties)
+      assemble(*components, **properties)
+      super(:macro, subtree, properties)
     end
 
-    attr_reader :source # :: String -- source code
+    # @rbs return: Fmt::ProcedureAST?
+    def callable
+      @callable ||= components.find { |c| Fmt::ProcedureAST === c }
+    end
+
+    # @rbs return: Fmt::ArgumentsAST?
+    def arguments
+      @arguments ||= components.find { |c| Fmt::ArgumentsAST === c }
+    end
+
+    private
+
+    def subtree
+      case [callable&.children, arguments&.children]
+      in [[AST::Node], [AST::Node, *]] then [callable, arguments]
+      in [[AST::Node], _] then [callable]
+      else []
+      end
+    end
   end
 end

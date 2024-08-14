@@ -6,13 +6,13 @@ module Fmt
   class Parser
     Cache = Fmt::LRUCache.new # :: Fmt::LRUCache
 
-    attr_reader :model # : Fmt::Model? -- extracted model
+    attr_reader :ast # : AST::Node -- extracted AST
 
-    # Invokes perform and returns a model
-    # @rbs return: Fmt::Model
+    # Invokes perform and returns an AST
+    # @rbs return: AST::Node
     def parse
       perform
-      model
+      ast
     end
 
     protected
@@ -33,8 +33,8 @@ module Fmt
     end
 
     # Peforms parsing (internal implementation of parse)
-    # @note Should assign @model and return it
-    # @rbs return: Fmt::Model?
+    # @note Should assign @ast and return it
+    # @rbs return: AST::Node
     def perform
       raise NotImplementedError, "Must be implemented by subclass"
     end

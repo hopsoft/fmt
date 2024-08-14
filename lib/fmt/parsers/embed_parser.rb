@@ -9,7 +9,7 @@ module Fmt
     # :: Regexp
     EMBED = Regexp.new(
       "(%{embed_prefix}%{prefix}[^\\s%{embed_prefix}]+\\s*(%{embed_prefix}.*%{embed_suffix})*\\s*%{embed_suffix})" % {
-        prefix: Regexp.escape(Sigils::PREFIX),
+        prefix: Regexp.escape(Sigils::TEMPLATE_PREFIX),
         embed_prefix: Regexp.escape(Sigils::EMBED_PREFIX),
         embed_suffix: Regexp.escape(Sigils::EMBED_SUFFIX)
       }
@@ -28,7 +28,7 @@ module Fmt
     end
 
     def perform
-      @value = []
+      value = []
 
       index = 0
       scanner = StringScanner.new(source)

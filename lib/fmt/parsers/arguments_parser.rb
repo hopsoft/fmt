@@ -8,28 +8,31 @@ module Fmt
     SUFFIX = /\)/
 
     # Constructor
-    # @rbs source: String -- source code string
+    # @rbs source: String -- source code
     # @rbs return: Fmt::ArgsParser
     def initialize(source = "")
       @source = source.to_s
     end
 
-    attr_reader :source # : String -- string being parsed
+    attr_reader :source # : String -- source code
 
     protected
 
     # Parses the source
-    # @rbs return: Fmt::ArgsModel
+    # @rbs return: Fmt::ArgumentsAST
     def perform
-      @model = cache(source) do
+      @ast ||= cache(source) do
         scanner = StringScanner.new(source)
         scanner.skip_until PREFIX
         parsed = scanner.scan_until(SUFFIX) if scanner.matched?
 
         tokenizer = ArgumentsTokenizer.new(parsed.to_s)
         tokens = tokenizer.tokenize
+        components = tokens.map do |token|
+          TokenAST.new(token.type, token.value, source: token.value)
+        end
 
-        ArgumentsAST.new(*tokens)
+        ArgumentsAST.new(*components, source: tokens.map(&:value).join)
       end
     end
   end

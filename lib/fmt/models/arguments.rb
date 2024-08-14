@@ -3,26 +3,39 @@
 # rbs_inline: enabled
 
 module Fmt
-  class ArgumentsProcessor
+  class Arguments
     # @see http://whitequark.github.io/ast/AST/Processor/Mixin.html
     include AST::Processor::Mixin
+    include Matchable
 
-    def initialize
+    def initialize(ast)
       @args = []
       @kwargs = {}
+      process ast
     end
 
-    attr_reader :args # :: Array[Object] -- positional arguments
+    attr_reader :source # :: String -- source code
+    attr_reader :args   # :: Array[Object] -- positional arguments
     attr_reader :kwargs # :: Hash[Symbol, Object] -- keyword arguments
 
+    # @rbs return: Hash[Symbol, Object]
+    def to_h
+      {
+        source: source,
+        args: args,
+        kwargs: kwargs
+      }
+    end
+
     # ..........................................................................
-    # @!group Top Level Nodes
+    # @!group AST Processors
     # ..........................................................................
 
     # Processes the arguments node
     # @rbs node: AST::Node -- node to process
     # @rbs return: void
     def on_arguments(node)
+      @source = node.source
       process_all node.children
     end
 
@@ -32,10 +45,6 @@ module Fmt
     def on_tokens(node)
       process_all node.children
     end
-
-    # ..........................................................................
-    # @!group Primitive Data Types
-    # ..........................................................................
 
     # Processes a keyword node
     # @rbs node: AST::Node -- node to process

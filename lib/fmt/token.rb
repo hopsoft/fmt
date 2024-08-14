@@ -4,7 +4,7 @@ module Fmt
   # Convenience wrapper for Ripper tokens
   # @see https://rubyapi.org/3.4/o/ripper
   # @see doc/RIPPER.md (cheetsheet)
-  class TokenModel
+  class Token
     # Constructor
     #
     # @example Ripper Token
@@ -33,7 +33,6 @@ module Fmt
     # @note The entire data structure is considered a "token",
     #       so the embedded "token" is aliased as "value" to reduce confusion
     alias_method :value, :token
-    alias_method :source, :token # added for consistency with other models
 
     # Returns an Array representation of the token
     # @rbs return: Array[[Integer, Integer], Symbol, String, Object]
