@@ -29,10 +29,10 @@ module Fmt
         tokenizer = ArgumentsTokenizer.new(parsed.to_s)
         tokens = tokenizer.tokenize
         components = tokens.map do |token|
-          TokenAST.new(token.type, token.value, source: token.value)
+          TokenAST.new(token.type, token.value, urtext: source, source: token.value)
         end
 
-        ArgumentsAST.new(*components, source: tokens.map(&:value).join)
+        ArgumentsAST.new(*components, urtext: source, source: tokens.map(&:value).join)
       end
     end
   end

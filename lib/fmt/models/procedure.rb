@@ -12,6 +12,7 @@ module Fmt
       process ast
     end
 
+    attr_reader :urtext # :: String -- original source code
     attr_reader :source # :: String -- source code
     attr_reader :name   # :: Symbol -- key for the Proc in the registry
     attr_reader :callable    # :: Proc -- Proc from the registry
@@ -19,6 +20,7 @@ module Fmt
     # @rbs return: Hash[Symbol, Object]
     def to_h
       {
+        urtext: urtext,
         source: source,
         name: name,
         callable: callable
@@ -30,6 +32,7 @@ module Fmt
     # ..........................................................................
 
     def on_procedure(node)
+      @urtext = node.urtext
       @source = node.source
       process_all node.children
     end

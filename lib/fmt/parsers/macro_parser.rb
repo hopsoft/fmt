@@ -26,9 +26,10 @@ module Fmt
 
         procedure = ProcedureParser.new(block).parse
         arguments = ArgumentsParser.new(source).parse
-        source = [procedure.source, arguments.source].join
 
-        MacroAST.new procedure, arguments, source: source
+        MacroAST.new procedure, arguments,
+          urtext: source,
+          source: [procedure.source, arguments.source].join
       end
     end
   end

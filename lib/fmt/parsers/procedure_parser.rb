@@ -31,7 +31,7 @@ module Fmt
     # @rbs return: Fmt::ProcedureAST
     def perform
       @ast ||= cache(name || callable.hash) do
-        ProcedureAST.new AST::Node.new(:name, [name]), source: name&.to_s
+        ProcedureAST.new AST::Node.new(:name, [name]), urtext: name&.to_s, source: name&.to_s
       end
     end
 

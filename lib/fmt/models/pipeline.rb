@@ -13,12 +13,14 @@ module Fmt
       process ast
     end
 
+    attr_reader :urtext # :: String -- original source code
     attr_reader :source # :: String -- source code
     attr_reader :macros # :: Array[Fmt::MacroAST]
 
     # @rbs return: Hash[Symbol, Object]
     def to_h
       {
+        urtext: urtext,
         source: source,
         macros: macros.map(&:to_h)
       }
@@ -29,6 +31,7 @@ module Fmt
     # ..........................................................................
 
     def on_pipeline(node)
+      @urtext = node.urtext
       @source = node.source
       process_all node.children
     end

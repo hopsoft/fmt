@@ -14,6 +14,7 @@ module Fmt
       process ast
     end
 
+    attr_reader :urtext # :: String -- original source code
     attr_reader :source # :: String -- source code
     attr_reader :args   # :: Array[Object] -- positional arguments
     attr_reader :kwargs # :: Hash[Symbol, Object] -- keyword arguments
@@ -21,6 +22,7 @@ module Fmt
     # @rbs return: Hash[Symbol, Object]
     def to_h
       {
+        urtext: urtext,
         source: source,
         args: args,
         kwargs: kwargs
@@ -35,6 +37,7 @@ module Fmt
     # @rbs node: AST::Node -- node to process
     # @rbs return: void
     def on_arguments(node)
+      @urtext = node.urtext
       @source = node.source
       process_all node.children
     end

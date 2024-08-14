@@ -12,6 +12,7 @@ module Fmt
       assert_equal callable, procedure.callable
       assert_pattern {
         procedure => {
+          urtext: "capitalize",
           source: "capitalize",
           name: :capitalize,
           callable: Proc
@@ -27,6 +28,7 @@ module Fmt
       assert_equal callable, procedure.callable
       assert_pattern {
         procedure => {
+          urtext: "cyan",
           source: "cyan",
           name: :cyan,
           callable: Proc
@@ -44,6 +46,7 @@ module Fmt
         assert_equal callable, procedure.callable
         assert_pattern {
           procedure => {
+            urtext: "custom",
             source: "custom",
             name: :custom,
             callable: Proc

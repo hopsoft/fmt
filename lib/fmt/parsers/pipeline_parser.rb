@@ -23,9 +23,9 @@ module Fmt
           MacroParser.new(entry).parse
         end
 
-        source = macros.map(&:source).join(Sigils::PIPE_OPERATOR)
-
-        PipelineAST.new(*macros, source: source)
+        PipelineAST.new(*macros,
+          urtext: source,
+          source: macros.map(&:source).join(Sigils::PIPE_OPERATOR))
       end
     end
   end
