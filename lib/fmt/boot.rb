@@ -49,7 +49,7 @@ require_relative "parsers/procedure_parser"
 require_relative "parsers/template_parser"
 require_relative "parsers/root_parser"
 
-# 7) Processors -- AST processors
+# 7) Models -- data structures build from ASTs
 require_relative "models/arguments"
 require_relative "models/macro"
 require_relative "models/pipeline"
