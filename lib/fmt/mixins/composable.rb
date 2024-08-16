@@ -2,17 +2,18 @@
 
 module Fmt
   module Composable
-    attr_reader :components # :: Array[Object]
+    include Enumerable
 
-    protected
+    def initialize(type, children = [], properties = {})
+      assemble properties
+      super(type, children.compact, properties)
+    end
 
-    # Assigns components to the receiver
-    # @rbs components: Array[Object] -- components to assign
+    private
+
+    # Assigns properties to the receiver
     # @rbs properties: Hash[Symbol, Object] -- exposed as instance methods
-    # @rbs return: Array[Object] -- components
-    def assemble(*components, **properties)
-      @components = components
-
+    def assemble(properties)
       properties.each do |key, val|
         next if singleton_class.public_instance_methods(false).include?(key)
         singleton_class.define_method(key) { val }

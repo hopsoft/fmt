@@ -4,35 +4,48 @@
 
 module Fmt
   class ArgumentsParser < Parser
-    PREFIX = /(?=\()/
-    SUFFIX = /\)/
+    ## TODO: move all logic to the tokenizer and remove use of StringScanner in this class
+    ##       update the tokenizer to work for string formatting specifiers and (...)
+    # PREFIX = /(?=\()/
+    # SUFFIX = /\)/
 
     # Constructor
-    # @rbs source: String -- source code
-    # @rbs return: Fmt::ArgsParser
-    def initialize(source = "")
-      @source = source.to_s
+    # @rbs urtext: String -- original source code
+    def initialize(urtext = "")
+      @urtext = urtext.to_s
     end
 
-    attr_reader :source # : String -- source code
+    attr_reader :urtext # : String -- original source code
 
     protected
 
-    # Parses the source
+    # Parses the urtext (original source code)
     # @rbs return: Fmt::ArgumentsAST
     def perform
-      @ast ||= cache(source) do
-        scanner = StringScanner.new(source)
-        scanner.skip_until PREFIX
-        parsed = scanner.scan_until(SUFFIX) if scanner.matched?
+      cache urtext do
+        # 1) extract the arguments
+        # scanner = StringScanner.new(urtext)
+        # scanner.skip_until PREFIX
+        # parsed = scanner.scan_until(SUFFIX) if scanner.matched?
 
-        tokenizer = ArgumentsTokenizer.new(parsed.to_s)
+        # 2) tokenize the arguments
+        tokenizer = ArgumentsTokenizer.new(urtext)
         tokens = tokenizer.tokenize
-        components = tokens.map do |token|
-          TokenAST.new(token.type, token.value, urtext: source, source: token.value)
+
+        # 3) build the AST children
+        tokens = tokens.map do |token|
+          TokenAST.new(token.type, token.value, urtext: urtext, source: token.value)
         end
 
-        ArgumentsAST.new(*components, urtext: source, source: tokens.map(&:value).join)
+        # 4) assemble the AST children
+        children = []
+        children << AST::Node.new(:tokens, tokens) if tokens.any?
+
+        # 5) build the parsed source
+        source = tokens.map(&:source).join
+
+        # 6) build the AST
+        ArgumentsAST.new(*children, urtext: urtext, source: source)
       end
     end
   end

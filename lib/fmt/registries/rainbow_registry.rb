@@ -7,6 +7,7 @@ module Fmt
   # @see https://ruby-doc.org/3.3.4/format_specifications_rdoc.html
   # @note Rainbow macros convert the Object to a String
   class RainbowRegistry < Registry
+    # Constructor
     def initialize
       super
 
@@ -23,7 +24,7 @@ module Fmt
           .sort
 
         method_names.each do |name|
-          add(name) { |obj| Rainbow(obj).public_send name }
+          add(name) { Rainbow(self).public_send name }
         end
       end
     rescue => error

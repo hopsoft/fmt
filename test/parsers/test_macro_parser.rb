@@ -4,10 +4,126 @@ require_relative "../test_helper"
 
 module Fmt
   class TestMacroParser < UnitTest
-    def test_without_args
+    def test_formatter_simple
+      source = "s"
+      ast = MacroParser.new(source).parse
+      assert_instance_of MacroAST, ast
+      assert_equal source, ast.urtext
+      assert_equal "sprintf(%Q[%s])", ast.source
+
+      expected = <<~AST
+        (macro
+          (procedure
+            (name :sprintf))
+          (arguments
+            (tokens
+              (lparen "(")
+              (tstring-beg "%Q[")
+              (tstring-content "%s")
+              (tstring-end "]")
+              (rparen ")"))))
+      AST
+
+      assert_equal expected.rstrip, ast.to_s
+    end
+
+    def test_formatter_complex
+      source = ".10f"
+      ast = MacroParser.new(source).parse
+      assert_instance_of MacroAST, ast
+      assert_equal source, ast.urtext
+      assert_equal "sprintf(%Q[%.10f])", ast.source
+
+      expected = <<~AST
+        (macro
+          (procedure
+            (name :sprintf))
+          (arguments
+            (tokens
+              (lparen "(")
+              (tstring-beg "%Q[")
+              (tstring-content "%.10f")
+              (tstring-end "]")
+              (rparen ")"))))
+      AST
+
+      assert_equal expected.rstrip, ast.to_s
+    end
+
+    def test_formatter_named
+      source = "{value}s"
+      ast = MacroParser.new(source).parse
+      assert_instance_of MacroAST, ast
+      assert_equal source, ast.urtext
+      assert_equal "sprintf(%Q[%{value}s])", ast.source
+
+      expected = <<~AST
+        (macro
+          (procedure
+            (name :sprintf))
+          (arguments
+            (tokens
+              (lparen "(")
+              (tstring-beg "%Q[")
+              (tstring-content "%{value}s")
+              (tstring-end "]")
+              (rparen ")"))))
+      AST
+
+      assert_equal expected.rstrip, ast.to_s
+    end
+
+    def test_formatter_named_alt
+      source = "<value>s"
+      ast = MacroParser.new(source).parse
+      assert_instance_of MacroAST, ast
+      assert_equal source, ast.urtext
+      assert_equal "sprintf(%Q[%<value>s])", ast.source
+
+      expected = <<~AST
+        (macro
+          (procedure
+            (name :sprintf))
+          (arguments
+            (tokens
+              (lparen "(")
+              (tstring-beg "%Q[")
+              (tstring-content "%<value>s")
+              (tstring-end "]")
+              (rparen ")"))))
+      AST
+
+      assert_equal expected.rstrip, ast.to_s
+    end
+
+    def test_formatter_complex_named
+      source = "<value>.10f"
+      ast = MacroParser.new(source).parse
+      assert_instance_of MacroAST, ast
+      assert_equal source, ast.urtext
+      assert_equal "sprintf(%Q[%<value>.10f])", ast.source
+
+      expected = <<~AST
+        (macro
+          (procedure
+            (name :sprintf))
+          (arguments
+            (tokens
+              (lparen "(")
+              (tstring-beg "%Q[")
+              (tstring-content "%<value>.10f")
+              (tstring-end "]")
+              (rparen ")"))))
+      AST
+
+      assert_equal expected.rstrip, ast.to_s
+    end
+
+    def test_callable_without_args
       source = "strip"
       ast = MacroParser.new(source).parse
       assert_instance_of MacroAST, ast
+      assert_equal source, ast.urtext
       assert_equal source, ast.source
 
       expected = <<~AST
@@ -19,10 +135,11 @@ module Fmt
       assert_equal expected.rstrip, ast.to_s
     end
 
-    def test_with_positional_args
+    def test_callable_with_positional_args
       source = "ljust(80, '.')"
       ast = MacroParser.new(source).parse
       assert_instance_of MacroAST, ast
+      assert_equal source, ast.urtext
       assert_equal source, ast.source
 
       expected = <<~AST
@@ -40,13 +157,15 @@ module Fmt
               (tstring-end "'")
               (rparen ")"))))
       AST
+
       assert_equal expected.rstrip, ast.to_s
     end
 
-    def test_with_positional_and_keyword_args
+    def test_callable_with_positional_and_keyword_args
       source = "truncate(20, omission: '&hellip;')"
       ast = MacroParser.new(source).parse
       assert_instance_of MacroAST, ast
+      assert_equal source, ast.urtext
       assert_equal source, ast.source
 
       expected = <<~AST

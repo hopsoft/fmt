@@ -7,9 +7,8 @@ module Fmt
     TYPE = :root
 
     # Constructor
-    # @rbs template_asts: Array[Fmt::TemplateAST]
-    # @rbs return: Fmt::RootAST
-    def initialize(source, *template_asts)
+    # @rbs children: Array[AST::Node]
+    def initialize(*children, **properties)
       @source = source
       super(TYPE, template_asts)
     end

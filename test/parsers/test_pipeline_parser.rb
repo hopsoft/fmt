@@ -7,7 +7,7 @@ module Fmt
     def test_one
       source = "ljust(80, '.')"
       ast = PipelineParser.new(source).parse
-      assert_instance_of PipelineAST, ast
+      assert_instance_of AST::Node, ast
       assert_equal source, ast.source
 
       expected = <<~AST
@@ -33,7 +33,7 @@ module Fmt
     def test_two
       source = "ljust(80, '.')|>cyan"
       ast = PipelineParser.new(source).parse
-      assert_instance_of PipelineAST, ast
+      assert_instance_of AST::Node, ast
       assert_equal source, ast.source
 
       expected = <<~AST
@@ -59,10 +59,49 @@ module Fmt
       assert_equal expected.rstrip, ast.to_s
     end
 
+    def test_named
+      source = "<value>.10f|>ljust(80, '.')|>cyan"
+      ast = PipelineParser.new(source).parse
+      assert_instance_of AST::Node, ast
+      assert_equal "sprintf(%Q[%<value>.10f])|>ljust(80, '.')|>cyan", ast.source
+
+      expected = <<~AST
+        (pipeline
+          (macro
+            (procedure
+              (name :sprintf))
+            (arguments
+              (tokens
+                (lparen "(")
+                (tstring-beg "%Q[")
+                (tstring-content "%<value>.10f")
+                (tstring-end "]")
+                (rparen ")"))))
+          (macro
+            (procedure
+              (name :ljust))
+            (arguments
+              (tokens
+                (lparen "(")
+                (int "80")
+                (comma ",")
+                (sp " ")
+                (tstring-beg "'")
+                (tstring-content ".")
+                (tstring-end "'")
+                (rparen ")"))))
+          (macro
+            (procedure
+              (name :cyan))))
+      AST
+
+      assert_equal expected.rstrip, ast.to_s
+    end
+
     def test_multiple
       source = "pluralize(2, locale: :en)|>titleize|>truncate(30, '.')|>red|>bold|>underline"
       ast = PipelineParser.new(source).parse
-      assert_instance_of PipelineAST, ast
+      assert_instance_of AST::Node, ast
       assert_equal source, ast.source
 
       expected = <<~AST

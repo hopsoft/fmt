@@ -5,6 +5,8 @@ module Fmt
   # @see https://rubyapi.org/3.4/o/ripper
   # @see doc/RIPPER.md (cheetsheet)
   class Token
+    include Matchable
+
     # Constructor
     #
     # @example Ripper Token
@@ -12,7 +14,6 @@ module Fmt
     #   [[Integer, Integer], Symbol, String, Object]
     #
     # @rbs ripper_token: Array[[Integer, Integer], Symbol, String, Object] -- Ripper token
-    # @rbs return: Fmt::RipperToken
     def initialize(ripper_token)
       (lineno, column), type, token, state = ripper_token
       @ripper_token = ripper_token
@@ -33,10 +34,6 @@ module Fmt
     # @note The entire data structure is considered a "token",
     #       so the embedded "token" is aliased as "value" to reduce confusion
     alias_method :value, :token
-
-    # Returns an Array representation of the token
-    # @rbs return: Array[[Integer, Integer], Symbol, String, Object]
-    alias_method :to_a, :ripper_token
 
     # Returns a Hash representation of the token
     # @rbs return: Hash[Symbol, Object]

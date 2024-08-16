@@ -12,7 +12,7 @@ module Fmt
     # @rbs keys: Array[Symbol] -- keys to include
     # @rbs return: Hash[Symbol, Object]
     def deconstruct_keys(keys = [])
-      to_h.select { |key, _| keys&.include? key }
+      to_h.select { _1 in keys }
     end
 
     # Returns an Array representation of the object

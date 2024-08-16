@@ -3,17 +3,19 @@
 # rbs_inline: enabled
 
 module Fmt
-  class ProcedureAST < AST::Node
+  class EmbedAST < AST::Node
     include Composable
 
     # Constructor
     # @rbs children: Array[AST::Node]
     # @rbs properties: Hash[Symbol, Object]
     def initialize(*children, **properties)
-      @name = children.find { _1 in [:name, *] }
-      super(:procedure, children, properties)
+      @embeds = children[0]
+      @key = :"embed_#{properties[:depth]}_#{properties[:index]}"
+      super(:embed, [key, embeds], properties)
     end
 
-    attr_reader :name # :: Symbol?
+    attr_reader :embeds # :: AST::Node?
+    attr_reader :key    # :: Symbol
   end
 end

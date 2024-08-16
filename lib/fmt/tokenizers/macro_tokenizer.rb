@@ -4,32 +4,30 @@ module Fmt
   class MacroTokenizer < Tokenizer
     # Constructor
     #
-    # @note Source should be strictly limited to an individual pipeline entry (i.e. macro)
+    # @note urtext should be restricted to an individual pipeline entry (i.e. macro)
     #
     # @example
     #   "strip"
     #   "ljust(80, '.')"
     #
-    # @rbs source: String -- source code to tokenize
-    # @rbs return: Fmt::MacroTokenizer
-    def initialize(source)
+    # @rbs urtext: String -- original source code
+    def initialize(urtext)
       super
-      @source = source.to_s
+      @urtext = urtext.to_s
     end
 
-    attr_reader :source # :: String
+    attr_reader :urtext # :: String -- original source code
 
-    # Tokenizes the source string and extracts macro tokens
-    # @rbs return: Array[[[Integer, Integer], Symbol, String, Object]] -- Ripper tokens
+    # Tokenizes the urtext (original source code) and extracts macro tokens
+    # @rbs return: Array[Fmt::Token] -- Ripper tokens
     def tokenize
-      super do
-        Ripper.lex(source).each do |token|
-          break if tokens.any?
-          token = Token.new(token)
-          next unless token.identifier?
-          tokens << token
-        end
+      Ripper.lex(urtext).each do |token|
+        break if tokens.any?
+        token = Token.new(token)
+        next unless token.identifier?
+        tokens << token
       end
+      tokens
     end
   end
 end

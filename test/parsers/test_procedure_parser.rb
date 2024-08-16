@@ -4,9 +4,22 @@ require_relative "../test_helper"
 
 module Fmt
   class TestProcedureParser < UnitTest
+    def test_formatter
+      callable = Fmt.registry[:%]
+      ast = ProcedureParser.new(callable).parse
+      assert_instance_of ProcedureAST, ast
+      assert_equal "%", ast.source
+
+      expected = <<~AST
+        (procedure
+          (name :%))
+      AST
+      assert_equal expected.rstrip, ast.to_s
+    end
+
     def test_native
-      block = Fmt.registry[:capitalize]
-      ast = ProcedureParser.new(block).parse
+      callable = Fmt.registry[:capitalize]
+      ast = ProcedureParser.new(callable).parse
       assert_instance_of ProcedureAST, ast
       assert_equal "capitalize", ast.source
 
@@ -18,8 +31,8 @@ module Fmt
     end
 
     def test_rainbow
-      block = Fmt.registry[:magenta]
-      ast = ProcedureParser.new(block).parse
+      callable = Fmt.registry[:magenta]
+      ast = ProcedureParser.new(callable).parse
       assert_instance_of ProcedureAST, ast
       assert_equal "magenta", ast.source
 
@@ -31,10 +44,10 @@ module Fmt
     end
 
     def test_custom
-      block = proc { |obj| obj.to_s.upcase }
+      callable = proc { |obj| obj.to_s.upcase }
 
-      Fmt.registry.with_overrides(custom: block) do
-        ast = ProcedureParser.new(block).parse
+      Fmt.registry.with_overrides(custom: callable) do
+        ast = ProcedureParser.new(callable).parse
         assert_instance_of ProcedureAST, ast
         assert_equal "custom", ast.source
 

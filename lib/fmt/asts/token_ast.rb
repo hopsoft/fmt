@@ -8,28 +8,13 @@ module Fmt
 
     # Constructor
     # @rbs type: Symbol -- Token type
-    # @rbs components: Array[String, Symbol] -- [type, value]
+    # @rbs children: Array[String]
     # @rbs properties: Hash[Symbol, Object]
-    # @rbs return: Fmt::TokenAST
-    def initialize(*components, **properties)
-      assemble(*components, **properties)
-      super(type || :invalid, subtree, properties)
+    def initialize(type, *children, **properties)
+      @value = children[0]
+      super(type || :invalid, children, properties)
     end
 
-    # @rbs return: Symbol?
-    def type
-      @type ||= components.find { |c| Symbol === c }
-    end
-
-    # @rbs return: String?
-    def value
-      @value ||= components.find { |c| String === c }
-    end
-
-    private
-
-    def subtree
-      [value].compact
-    end
+    attr_reader :value # :: String?
   end
 end

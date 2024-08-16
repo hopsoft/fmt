@@ -11,8 +11,7 @@ module Fmt
     # Invokes perform and returns an AST
     # @rbs return: AST::Node
     def parse
-      perform
-      ast
+      @ast ||= perform
     end
 
     protected
@@ -33,7 +32,6 @@ module Fmt
     end
 
     # Peforms parsing (internal implementation of parse)
-    # @note Should assign @ast and return it
     # @rbs return: AST::Node
     def perform
       raise NotImplementedError, "Must be implemented by subclass"

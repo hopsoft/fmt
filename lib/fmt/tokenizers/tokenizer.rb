@@ -12,21 +12,11 @@ module Fmt
   #
   class Tokenizer
     # Constructor
-    # @rbs return: Fmt::Tokenizer
     def initialize(...)
       @tokens = []
     end
 
     attr_reader :tokens # :: Array[Object] -- result of tokenization
-
-    # Tokenizes the value(s) passed to the constructor
-    # Subclasses should override this method and call super passing a block
-    # @note The block should assign values to tokens
-    # @rbs return: Array[[[Integer, Integer], Symbol, String, Object]] -- Ripper tokens
-    def tokenize(&block)
-      yield
-      tokens
-    end
 
     protected
 

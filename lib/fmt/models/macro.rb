@@ -8,6 +8,8 @@ module Fmt
     include AST::Processor::Mixin
     include Matchable
 
+    # Constructor
+    # @rbs ast: Fmt::MacroAST
     def initialize(ast)
       @args = []
       @kwargs = {}

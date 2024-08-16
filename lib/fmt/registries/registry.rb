@@ -11,7 +11,6 @@ module Fmt
     private_constant :INSTANCE_VAR
 
     # Constructor
-    # @rbs return: Fmt::Registry
     def initialize
       super
       @store = {}
@@ -40,10 +39,8 @@ module Fmt
 
     # Indicates if a key exists in the registry
     # @rbs key: String | Symbol -- key to check
-    # @rbs safe: bool -- indicates if the check should be synchronized (default: true)
-    def key?(key, safe: true)
+    def key?(key)
       key = build_key(key)
-      return store.key?(key) unless safe
       synchronize { store.key? key }
     end
 
@@ -98,15 +95,16 @@ module Fmt
 
     # Fetches a Proc from the registry
     # @rbs key: String | Symbol -- key to retrieve
-    # @rbs safe: bool -- indicates if the fetch should be synchronized (default: true)
     # @rbs callable: Proc -- Proc to use if the key is not found (optional, if block is provided)
     # @rbs block: Proc -- block to use if the key is not found (optional, if proc is provided)
     # @rbs return: Proc
-    def fetch(key, safe: true, callable: nil, &block)
+    def fetch(key, callable: nil, &block)
       key = build_key(key)
       block ||= callable
-      value = safe ? self[key] : store[key]
-      value || add(key, &block)
+      synchronize do
+        value = self[key]
+        value || add(key, &block)
+      end
     end
 
     # Merges another registry into this one

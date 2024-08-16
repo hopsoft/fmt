@@ -7,26 +7,13 @@ module Fmt
     include Composable
 
     # Constructor
-    # @rbs components: Array[Fmt::TokenAST]
+    # @rbs children: Array[AST::Node] -- tokens AST node
     # @rbs properties: Hash[Symbol, Object]
-    # @rbs return: Fmt::ArgumentsAST
-    def initialize(*components, **properties)
-      assemble(*components, **properties)
-      super(:arguments, subtree, properties)
+    def initialize(*children, **properties)
+      @tokens = children.find { _1 in [:tokens, *] }
+      super(:arguments, children, properties)
     end
 
-    # @rbs return: Array[Fmt::TokenAST]
-    def tokens
-      @tokens ||= components.select { |c| Fmt::TokenAST === c }
-    end
-
-    private
-
-    def subtree
-      case tokens
-      in Fmt::TokenAST, * then [AST::Node.new(:tokens, tokens)]
-      else []
-      end
-    end
+    attr_reader :tokens # :: Array[Fmt::TokenAST]
   end
 end

@@ -12,26 +12,31 @@ module Fmt
   #   ProcedureParser.new(p).parse #=> Fmt::ProcedureAST
   #
   class ProcedureParser < Parser
-    FILENAME_REGEX = /lib\/fmt\/.*/
-    private_constant :FILENAME_REGEX
-
     # Constructor
-    # @rbs callable: Proc -- the Proc to parse
-    # @rbs return: Fmt::ProcedureParser
+    # @rbs callable: Proc
     def initialize(callable)
-      @callable = callable
+      @callable = callable if callable in Proc
     end
 
-    # @rbs return: Proc
-    attr_reader :callable
+    attr_reader :callable # :: Proc?
 
     protected
 
     # Parses the proc (Proc)
     # @rbs return: Fmt::ProcedureAST
     def perform
-      @ast ||= cache(name || callable.hash) do
-        ProcedureAST.new AST::Node.new(:name, [name]), urtext: name&.to_s, source: name&.to_s
+      cache(name || callable.hash) do
+        # 1) assemble the AST children
+        children = []
+        children << AST::Node.new(:name, [name]) if name
+
+        # 2) build the parsed source
+        #    TODO: consider bringing back the File reader to set urtext and other properties
+        urtext = name&.to_s
+        source = name&.to_s
+
+        # 3) build the AST
+        ProcedureAST.new(*children, urtext: urtext, source: source)
       end
     end
 

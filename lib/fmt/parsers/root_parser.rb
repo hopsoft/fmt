@@ -4,11 +4,10 @@
 
 module Fmt
   class RootParser < Parser
-    TEMPLATE_PREFIX = Regexp.new("(?<=%s)" % Regexp.escape(Sigils::TEMPLATE_PREFIX)).freeze # :: Regexp -- template prefix
+    FORMAT_PREFIX = Regexp.new("(?<=%s)" % Regexp.escape(Sigils::FORMAT_PREFIX)).freeze # :: Regexp -- template prefix
 
     # Constructor
     # @rbs source: String -- source code
-    # @rbs return: Fmt::ArgsParser
     def initialize(source = "")
       @source = source.to_s
     end
@@ -20,7 +19,7 @@ module Fmt
     # Parses the source
     # @rbs return: Fmt::RootAST
     def perform
-      @ast ||= cache(source) do
+      cache source do
         asts = []
 
         scanner = StringScanner.new(source)

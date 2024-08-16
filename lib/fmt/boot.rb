@@ -31,23 +31,23 @@ require_relative "tokenizers/arguments_tokenizer"
 require_relative "tokenizers/macro_tokenizer"
 
 # 5) ASTs -- Abstract Syntax Trees (low level data structures)
+require_relative "asts/token_ast"
+require_relative "asts/procedure_ast"
 require_relative "asts/arguments_ast"
 require_relative "asts/macro_ast"
-require_relative "asts/pipeline_ast"
-require_relative "asts/procedure_ast"
-require_relative "asts/token_ast"
+require_relative "asts/embed_ast"
 require_relative "asts/template_ast"
-require_relative "asts/root_ast"
+# require_relative "asts/root_ast"
 
 # 6) Parsers -- String | Object parsers that generate ASTs
 require_relative "parsers/parser" # base class
+require_relative "parsers/procedure_parser"
 require_relative "parsers/arguments_parser"
-require_relative "parsers/embed_parser"
 require_relative "parsers/macro_parser"
 require_relative "parsers/pipeline_parser"
-require_relative "parsers/procedure_parser"
+require_relative "parsers/embed_parser"
 require_relative "parsers/template_parser"
-require_relative "parsers/root_parser"
+# require_relative "parsers/root_parser"
 
 # 7) Models -- data structures build from ASTs
 require_relative "models/arguments"

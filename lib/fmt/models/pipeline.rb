@@ -8,6 +8,8 @@ module Fmt
     include AST::Processor::Mixin
     include Matchable
 
+    # Constructor
+    # @rbs ast: AST::Node
     def initialize(ast)
       @macros = []
       process ast

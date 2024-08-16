@@ -7,6 +7,7 @@ module Fmt
     # def test_basic
     #  source = "Inspect: %p"
     #  ast = RootParser.new(source).parse
+    #  # binding.pry
     # end
 
     # def test_basic_named
