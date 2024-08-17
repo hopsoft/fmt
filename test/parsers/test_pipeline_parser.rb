@@ -7,7 +7,7 @@ module Fmt
     def test_one
       source = "ljust(80, '.')"
       ast = PipelineParser.new(source).parse
-      assert_instance_of AST::Node, ast
+      assert_instance_of Node, ast
       assert_equal source, ast.source
 
       expected = <<~AST
@@ -33,7 +33,7 @@ module Fmt
     def test_two
       source = "ljust(80, '.')|>cyan"
       ast = PipelineParser.new(source).parse
-      assert_instance_of AST::Node, ast
+      assert_instance_of Node, ast
       assert_equal source, ast.source
 
       expected = <<~AST
@@ -62,7 +62,7 @@ module Fmt
     def test_named
       source = "<value>.10f|>ljust(80, '.')|>cyan"
       ast = PipelineParser.new(source).parse
-      assert_instance_of AST::Node, ast
+      assert_instance_of Node, ast
       assert_equal "sprintf(%Q[%<value>.10f])|>ljust(80, '.')|>cyan", ast.source
 
       expected = <<~AST
@@ -101,7 +101,7 @@ module Fmt
     def test_multiple
       source = "pluralize(2, locale: :en)|>titleize|>truncate(30, '.')|>red|>bold|>underline"
       ast = PipelineParser.new(source).parse
-      assert_instance_of AST::Node, ast
+      assert_instance_of Node, ast
       assert_equal source, ast.source
 
       expected = <<~AST

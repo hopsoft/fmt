@@ -5,18 +5,7 @@
 module Fmt
   class EmbedParser < Parser
     PREFIX = Regexp.new("(?=(%s))" % Regexp.escape(Sigils::EMBED_PREFIX)).freeze # :: Regexp
-    SUFFIX = Regexp.new("(%s)" % Regexp.escape(Sigils::EMBED_SUFFIX)).freeze # :: Regexp
-
-    # #HEAD = Regexp.new("(?=%s)" % Regexp.escape(Sigils::EMBED_PREFIX)).freeze # :: Regexp
-
-    ### :: Regexp
-    # #EMBED = Regexp.new(
-    ##  "(%{embed_prefix}%{prefix}[^\\s%{embed_prefix}]+\\s*(%{embed_prefix}.*%{embed_suffix})*\\s*%{embed_suffix})" % {
-    ##    prefix: Regexp.escape(Sigils::FORMAT_PREFIX),
-    ##    embed_prefix: Regexp.escape(Sigils::EMBED_PREFIX),
-    ##    embed_suffix: Regexp.escape(Sigils::EMBED_SUFFIX)
-    ##  }
-    # #).freeze
+    SUFFIX = Regexp.new("(%s)" % Regexp.escape(Sigils::EMBED_SUFFIX)).freeze     # :: Regexp
 
     def initialize(urtext = "")
       @urtext = urtext.to_s
@@ -25,40 +14,6 @@ module Fmt
     attr_reader :urtext # : String -- original source code
 
     protected
-
-    def balanced?(text)
-      text.scan(PREFIX).size == text.scan(SUFFIX).size
-    end
-
-    def unbalanced?(text)
-      !balanced?(text)
-    end
-
-    def next_embed(scanner, depth:, index:)
-      scanner.skip_until(PREFIX)
-      return unless scanner.matched?
-
-      text = scanner.scan_until(SUFFIX)
-      return unless scanner.matched?
-
-      while scanner.matched? && unbalanced?(text)
-        match = scanner.scan_until(SUFFIX)
-        text = "#{text}#{match}" if scanner.matched?
-      end
-
-      return unless balanced?(text)
-
-      source = text
-        .delete_prefix(Sigils::EMBED_PREFIX)
-        .delete_suffix(Sigils::EMBED_SUFFIX)
-
-      embeds = EmbedParser.new(source).perform(depth: depth + 1)
-
-      children = []
-      children << embeds unless embeds.children.none?
-
-      EmbedAST.new(*children, depth: depth, index: index, urtext: text, source: source)
-    end
 
     def perform(depth: 0)
       cache urtext do
@@ -72,8 +27,78 @@ module Fmt
           embed = next_embed(scanner, depth: depth, index: index += 1)
         end
 
-        AST::Node.new(:embeds, embeds, urtext: urtext, source: urtext)
+        Node.new(:embeds, embeds, urtext: urtext, source: urtext)
       end
+    end
+
+    private
+
+    # Indicates if the text represents a balanced embed (equal prefixes and suffixes)
+    # @rbs text: String
+    # @rbs return: bool
+    def balanced?(text)
+      text.scan(PREFIX).size == text.scan(SUFFIX).size
+    end
+
+    # Indicates if the text represents an unbalanced embed (unequal prefixes and suffixes)
+    # @rbs text: String
+    # @rbs return: bool
+    def unbalanced?(text)
+      !balanced?(text)
+    end
+
+    # Extracts the embed text (handles nested embeds)
+    # @rbs scanner: StringScanner
+    # @rbs return: String?
+    def extract_text(scanner)
+      scanner.skip_until(PREFIX)
+      return unless scanner.matched?
+
+      text = scanner.scan_until(SUFFIX)
+      return unless scanner.matched?
+
+      while scanner.matched? && unbalanced?(text)
+        match = scanner.scan_until(SUFFIX)
+        text = "#{text}#{match}" if scanner.matched?
+      end
+
+      text = nil unless scanner.matched? && balanced?(text)
+      text
+    end
+
+    # Builds child AST nodes
+    # @rbs key: Symbol -- unique identifier
+    # @rbs placeholder: String -- placeholder (replaces the embed in the template)
+    # @rbs urtext: String -- original source code
+    # @rbs depth: Integer -- nesting depth
+    # @rbs return: Array[Node] -- [:key, *], [:placeholder, *], [:embeds, *]?
+    def build_children(key, placeholder, urtext, depth:)
+      [].tap do |list|
+        list << Node.new(:key, [key])
+        list << Node.new(:placeholder, [placeholder])
+
+        embeds = EmbedParser.new(urtext).perform(depth: depth)
+        list << (embeds.blank? ? nil : embeds)
+      end
+    end
+
+    # Parses and extracts the next embed
+    # @rbs scanner: StringScanner
+    # @rbs depth: Integer -- nesting depth
+    # @rbs index: Integer -- embed index (ordinal position)
+    def next_embed(scanner, depth:, index:)
+      # extract
+      text = extract_text(scanner)
+      return unless text
+
+      # parse
+      key = :"embed_#{depth}_#{index}"
+      placeholder = "#{Sigils::EMBED_PREFIX}#{key}#{Sigils::EMBED_SUFFIX}"
+      source = text.delete_prefix(Sigils::EMBED_PREFIX).delete_suffix(Sigils::EMBED_SUFFIX)
+
+      # build
+      children = build_children(key, placeholder, source, depth: depth + 1)
+      EmbedNode.new(*children, depth: depth, index: index, urtext: text, source: source)
     end
   end
 end

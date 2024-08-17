@@ -15,7 +15,7 @@ module Fmt
     protected
 
     # Parses the urtext (original source code)
-    # @rbs return: AST::Node
+    # @rbs return: Node
     def perform
       cache urtext do
         # 1) build the AST children
@@ -33,7 +33,7 @@ module Fmt
         source = macros.map(&:source).join(Sigils::PIPE_OPERATOR)
 
         # 4) build the AST
-        AST::Node.new(:pipeline, children, urtext: urtext, source: source)
+        Node.new(:pipeline, children, urtext: urtext, source: source)
       end
     end
   end

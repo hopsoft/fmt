@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 # rbs_inline: enabled
+# rubocop:disable Lint/MissingCopEnableDirective
+# rubocop:disable Layout/ExtraSpacing
 
 module Fmt
-  class TokenAST < AST::Node
-    include Composable
-
+  class TokenNode < Node
     # Constructor
     # @rbs type: Symbol -- Token type
-    # @rbs children: Array[String]
+    # @rbs children: Array[Node] -- [String]
     # @rbs properties: Hash[Symbol, Object]
     def initialize(type, *children, **properties)
       @value = children[0]

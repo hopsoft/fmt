@@ -9,7 +9,7 @@ module Fmt
     include Matchable
 
     # Constructor
-    # @rbs ast: Fmt::ArgumentsAST
+    # @rbs ast: ArgumentsNode
     def initialize(ast)
       @args = []
       @kwargs = {}
@@ -36,7 +36,7 @@ module Fmt
     # ..........................................................................
 
     # Processes the arguments node
-    # @rbs node: AST::Node -- node to process
+    # @rbs node: Node -- node to process
     # @rbs return: void
     def on_arguments(node)
       @urtext = node.urtext
@@ -45,14 +45,14 @@ module Fmt
     end
 
     # Processes the tokens node
-    # @rbs node: AST::Node -- node to process
+    # @rbs node: Node -- node to process
     # @rbs return: void
     def on_tokens(node)
       process_all node.children
     end
 
     # Processes a keyword node
-    # @rbs node: AST::Node -- node to process
+    # @rbs node: Node -- node to process
     # @rbs return: nil | true | false | Object
     def on_kw(node)
       case node.children.first
@@ -63,28 +63,28 @@ module Fmt
     end
 
     # Processes a String node
-    # @rbs node: AST::Node -- node to process
+    # @rbs node: Node -- node to process
     # @rbs return: String
     def on_tstring_content(node)
       assign node.children.first
     end
 
     # Processes a Symbol node
-    # @rbs node: AST::Node -- node to process
+    # @rbs node: Node -- node to process
     # @rbs return: Symbol
     def on_symbol(node)
       assign node.children.first.to_sym
     end
 
     # Processes the start of a Symbol identifier
-    # @rbs node: AST::Node -- node to process
+    # @rbs node: Node -- node to process
     # @rbs return: void
     def on_symbeg(node)
       @next_ident_is_symbol = true
     end
 
     # Processes identifiers
-    # @rbs node: AST::Node -- node to process
+    # @rbs node: Node -- node to process
     # @rbs return: Symbol?
     def on_ident(node)
       assign node.children.first.to_sym if @next_ident_is_symbol
@@ -93,28 +93,28 @@ module Fmt
     end
 
     # Processes an Integer node
-    # @rbs node: AST::Node -- node to process
+    # @rbs node: Node -- node to process
     # @rbs return: Integer
     def on_int(node)
       assign node.children.first.to_i
     end
 
     # Processes a Float node
-    # @rbs node: AST::Node -- node to process
+    # @rbs node: Node -- node to process
     # @rbs return: Float
     def on_float(node)
       assign node.children.first.to_f
     end
 
     # Processes a Rational node
-    # @rbs node: AST::Node -- node to process
+    # @rbs node: Node -- node to process
     # @rbs return: Rational
     def on_rational(node)
       assign Rational(node.children.first)
     end
 
     # Processes an imaginary node (Complex)
-    # @rbs node: AST::Node -- node to process
+    # @rbs node: Node -- node to process
     # @rbs return: Complex
     def on_imaginary(node)
       assign Complex(0, node.children.first.to_f)
@@ -125,21 +125,21 @@ module Fmt
     # ..........................................................................
 
     # Processes an Array node
-    # @rbs node: AST::Node -- node to process
+    # @rbs node: Node -- node to process
     # @rbs return: Array
     def on_lbracket(node)
       assign([])
     end
 
     # Processes a Hash node
-    # @rbs node: AST::Node -- node to process
+    # @rbs node: Node -- node to process
     # @rbs return: Hash
     def on_lbrace(node)
       assign({})
     end
 
     # Process a label node (Hash key)
-    # @rbs node: AST::Node -- node to process
+    # @rbs node: Node -- node to process
     # @rbs return: void
     def on_label(node)
       label = node.children.first

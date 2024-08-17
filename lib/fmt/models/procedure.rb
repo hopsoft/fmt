@@ -9,7 +9,7 @@ module Fmt
     include Matchable
 
     # Constructor
-    # @rbs ast: Fmt::ProcedureAST
+    # @rbs ast: ProcedureNode
     def initialize(ast)
       process ast
     end

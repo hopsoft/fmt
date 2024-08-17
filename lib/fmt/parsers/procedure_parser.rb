@@ -9,7 +9,7 @@ module Fmt
   #
   # @example
   #   p = ->(name) { "Hello, #{name}!" }
-  #   ProcedureParser.new(p).parse #=> Fmt::ProcedureAST
+  #   ProcedureParser.new(p).parse #=> ProcedureNode
   #
   class ProcedureParser < Parser
     # Constructor
@@ -23,12 +23,12 @@ module Fmt
     protected
 
     # Parses the proc (Proc)
-    # @rbs return: Fmt::ProcedureAST
+    # @rbs return: ProcedureNode
     def perform
       cache(name || callable.hash) do
         # 1) assemble the AST children
         children = []
-        children << AST::Node.new(:name, [name]) if name
+        children << Node.new(:name, [name]) if name
 
         # 2) build the parsed source
         #    TODO: consider bringing back the File reader to set urtext and other properties
@@ -36,7 +36,7 @@ module Fmt
         source = name&.to_s
 
         # 3) build the AST
-        ProcedureAST.new(*children, urtext: urtext, source: source)
+        ProcedureNode.new(*children, urtext: urtext, source: source)
       end
     end
 

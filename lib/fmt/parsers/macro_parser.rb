@@ -15,7 +15,7 @@ module Fmt
     protected
 
     # Parses the urtext (original source code)
-    # @rbs return: Fmt::MacroAST
+    # @rbs return: MacroNode
     def perform
       cache urtext do
         # 1) build child AST nodes
@@ -34,7 +34,7 @@ module Fmt
         source = children.map(&:source).join
 
         # 4) build the AST
-        MacroAST.new(*children, urtext: urtext, source: source)
+        MacroNode.new(*children, urtext: urtext, source: source)
       end
     end
 

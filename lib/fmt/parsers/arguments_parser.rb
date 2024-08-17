@@ -20,7 +20,7 @@ module Fmt
     protected
 
     # Parses the urtext (original source code)
-    # @rbs return: Fmt::ArgumentsAST
+    # @rbs return: ArgumentsNode
     def perform
       cache urtext do
         # 1) extract the arguments
@@ -34,18 +34,18 @@ module Fmt
 
         # 3) build the AST children
         tokens = tokens.map do |token|
-          TokenAST.new(token.type, token.value, urtext: urtext, source: token.value)
+          TokenNode.new(token.type, token.value, urtext: urtext, source: token.value)
         end
 
         # 4) assemble the AST children
         children = []
-        children << AST::Node.new(:tokens, tokens) if tokens.any?
+        children << Node.new(:tokens, tokens) if tokens.any?
 
         # 5) build the parsed source
         source = tokens.map(&:source).join
 
         # 6) build the AST
-        ArgumentsAST.new(*children, urtext: urtext, source: source)
+        ArgumentsNode.new(*children, urtext: urtext, source: source)
       end
     end
   end

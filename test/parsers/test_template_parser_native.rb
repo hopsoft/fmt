@@ -5,12 +5,12 @@ require_relative "../test_helper"
 module Fmt
   module Parsers
     class TestTemplateParserNative < UnitTest
-      def test_formatter
+      def test_simple
         source = "Inspect: %s"
         scanner = StringScanner.new(source)
         ast = TemplateParser.new(scanner).parse
 
-        assert_instance_of TemplateAST, ast
+        assert_instance_of TemplateNode, ast
         assert_equal source, ast.urtext
         assert_equal "%sprintf(%Q[%s])", ast.source
 
@@ -32,14 +32,14 @@ module Fmt
         assert_equal expected.rstrip, ast.to_s
       end
 
-      def test_formatter_named
+      def test_named
         source = "Inspect: %{obj}s"
         scanner = StringScanner.new(source)
         ast = Fmt::TemplateParser.new(scanner).parse
 
-        assert_instance_of TemplateAST, ast
+        assert_instance_of TemplateNode, ast
         assert_equal source, ast.urtext
-        assert_equal "%{obj}sprintf(%Q[%s])", ast.source
+        assert_equal "%<obj>sprintf(%Q[%s])", ast.source
 
         expected = <<~AST
           (template
@@ -60,14 +60,14 @@ module Fmt
         assert_equal expected.rstrip, ast.to_s
       end
 
-      def test_formatter_named_alt
+      def test_named_alt
         source = "Inspect: %<obj>s"
         scanner = StringScanner.new(source)
         ast = Fmt::TemplateParser.new(scanner).parse
 
-        assert_instance_of TemplateAST, ast
+        assert_instance_of TemplateNode, ast
         assert_equal source, ast.urtext
-        assert_equal "%{obj}sprintf(%Q[%s])", ast.source
+        assert_equal "%<obj>sprintf(%Q[%s])", ast.source
 
         expected = <<~AST
           (template
@@ -88,12 +88,12 @@ module Fmt
         assert_equal expected.rstrip, ast.to_s
       end
 
-      def test_formatter_complex
+      def test_complex
         source = "%.10f"
         scanner = StringScanner.new(source)
         ast = TemplateParser.new(scanner).parse
 
-        assert_instance_of TemplateAST, ast
+        assert_instance_of TemplateNode, ast
         assert_equal source, ast.urtext
         assert_equal "%sprintf(%Q[%.10f])", ast.source
 
@@ -115,14 +115,14 @@ module Fmt
         assert_equal expected.rstrip, ast.to_s
       end
 
-      def test_formatter_complex_named
+      def test_complex_named
         source = "%<value>.10f"
         scanner = StringScanner.new(source)
         ast = TemplateParser.new(scanner).parse
 
-        assert_instance_of TemplateAST, ast
+        assert_instance_of TemplateNode, ast
         assert_equal source, ast.urtext
-        assert_equal "%{value}sprintf(%Q[%.10f])", ast.source
+        assert_equal "%<value>sprintf(%Q[%.10f])", ast.source
 
         expected = <<~AST
           (template
@@ -148,9 +148,9 @@ module Fmt
         scanner = StringScanner.new(source)
         ast = TemplateParser.new(scanner).parse
 
-        assert_instance_of TemplateAST, ast
+        assert_instance_of TemplateNode, ast
         assert_equal source, ast.urtext
-        assert_equal "%{value}sprintf(%Q[%.10f])|>sprintf(%Q[%p])|>truncate(10, '.')", ast.source
+        assert_equal "%<value>sprintf(%Q[%.10f])|>sprintf(%Q[%p])|>truncate(10, '.')", ast.source
 
         expected = <<~AST
           (template
@@ -192,10 +192,6 @@ module Fmt
         AST
 
         assert_equal expected.rstrip, ast.to_s
-      end
-
-      def test_embeds
-        # todo: embeds
       end
     end
   end

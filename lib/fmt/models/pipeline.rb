@@ -9,7 +9,7 @@ module Fmt
     include Matchable
 
     # Constructor
-    # @rbs ast: AST::Node
+    # @rbs ast: Node
     def initialize(ast)
       @macros = []
       process ast
@@ -17,7 +17,7 @@ module Fmt
 
     attr_reader :urtext # :: String -- original source code
     attr_reader :source # :: String -- source code
-    attr_reader :macros # :: Array[Fmt::MacroAST]
+    attr_reader :macros # :: Array[MacroNode]
 
     # @rbs return: Hash[Symbol, Object]
     def to_h

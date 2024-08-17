@@ -23,63 +23,100 @@ module Fmt
       @urtext = scanner.rest.dup
     end
 
-    attr_reader :scanner # : StringScanner -- scanner to use
-    attr_reader :urtext   # : String -- original source code
+    attr_reader :scanner  # :: StringScanner -- scanner to use
+    attr_reader :urtext   # :: String -- original source code
 
     protected
 
+    attr_reader :key      # :: Node  -- [:key, *]
+    attr_reader :pipeline # :: Node  -- [:pipeline, *]
+    attr_reader :embeds   # :: Node? -- [:embeds, *]
+    attr_reader :children # :: Array[Node] -- [[:key, *], [:pipeline, *], [:embeds, *]]
+    attr_reader :source   # :: String
+
     # Parses the urtext (original source code)
-    # @rbs return: AST::Node[TemplateAST]
+    # @rbs return: Node[TemplateNode]
     def perform
       cache urtext do
-        source = scanner.rest
-
-        # # 1) extract embedded templates
-        embeds = EmbedParser.new(source).parse
-        embeds = nil if embeds.children.none?
-        # nested_templates = embeds.each_with_object({}) do |embed, templates|
-        # source = source.sub(embed.source, embed.placeholder)
-        # templates[embed.key] = TemplateParser.new(embed.template_source).parse
-        # end
-
-        # 2) update the source string as it may have been modified based on embeds
-        scanner.string = source
-
-        # 3) advance to the template prefix
-        #    @example "%{name}cyan" -- template prefix == "%"
+        # advance to the start of the template (prefix == "%")
         scanner.skip_until FORMAT_PREFIX
         return unless scanner.matched?
 
-        # 4) extract template key if one exists
-        #    @example "%{name}cyan" -- key == "name"
+        # @note the order of operations below is important
+        #       as we are using a StringScanner to parse the template
+
+        # parse embedded templates and update the scanner string before continuing
+        parse_embeds
+
+        # extract
+        extract_key
+        extract_pipeline
+
+        # build
+        build_children
+        # binding.pry if $nate
+        build_source
+        # source = "#{Sigils::FORMAT_PREFIX}#{scanner.string}"
+        TemplateNode.new(*children, urtext: urtext, source: source)
+      end
+    end
+
+    private
+
+    # Parses embedded (nested) templates and updates the scanner string
+    def parse_embeds
+      @embeds ||= begin
+        source = scanner.rest
+        EmbedParser.new(source).parse.tap do |embeds|
+          embeds.children.each do |embed|
+            placeholder = embed.dig(:placeholder, String)
+            scanner.string = scanner.rest.sub(embed.urtext, placeholder)
+          end
+        end
+      end
+    end
+
+    # Extracts the key (named placeholder)
+    # @rbs return: Symbol?
+    def extract_key
+      @key ||= begin
         scanner.skip_until KEY_PREFIX
         key = scanner.scan(KEY_VALUE) if scanner.matched?
         scanner.skip_until KEY_SUFFIX if scanner.matched?
+        key
+      end
+    end
 
-        # 5) extract the pipeline AST
-        #    @example "%{name}cyan|>bold|>..."
-        pipeline = scanner.scan_until(MACROS)
-        pipeline = nil if pipeline.empty?
+    # Extracts the pipeline (macros)
+    # @rbs return: String?
+    def extract_pipeline
+      @pipeline ||= scanner.scan_until(MACROS)
+    end
 
-        # 6) assemble the children
-        children = []
-        children << AST::Node.new(:key, [key]) if key
+    # Builds child AST nodes
+    # @rbs return: Array[Node, PipelineAST, EmbedNode]
+    def build_children
+      @children ||= [].tap do |children|
+        children << Node.new(:key, [key]) if key
         children << PipelineParser.new(pipeline).parse if pipeline
-        children << embeds if embeds
+        children << embeds unless embeds.empty?
+      end
+    end
 
-        # 7) build the parsed source
+    # Builds the parsed source code
+    # @rbs return: String
+    def build_source
+      @source ||= begin
         sources = children.map do |component|
           case component
-          in :key, * then "#{Sigils::KEY_PREFIXES.last}#{key}#{Sigils::KEY_SUFFIXES.last}"
-          in :pipeline, * then component.source
-          in :embeds, * then ""
-            # in [EmbedAST] then component.map(&:source).join
+          in :key, * then "#{Sigils::KEY_PREFIXES[0]}#{key}#{Sigils::KEY_SUFFIXES[0]}"
+          in :pipeline, * then component&.source
+          in :embeds, * then component.children.map { |embed| embed.dig(:placeholder, String) }.join # todo: preserve whitespace
+          else nil
           end
         end
-        source = "#{Sigils::FORMAT_PREFIX}#{sources.join}"
 
-        # 8) build the template AST
-        TemplateAST.new(*children, urtext: urtext, source: source)
+        "#{Sigils::FORMAT_PREFIX}#{sources.compact.join}"
       end
     end
   end

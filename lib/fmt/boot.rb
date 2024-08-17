@@ -14,7 +14,6 @@ require "ast"
 
 # 3) Foundational files (globals)
 require_relative "lru_cache"
-require_relative "mixins/composable"
 require_relative "mixins/matchable"
 require_relative "sigils"
 require_relative "token"
@@ -30,14 +29,15 @@ require_relative "tokenizers/tokenizer" # base class
 require_relative "tokenizers/arguments_tokenizer"
 require_relative "tokenizers/macro_tokenizer"
 
-# 5) ASTs -- Abstract Syntax Trees (low level data structures)
-require_relative "asts/token_ast"
-require_relative "asts/procedure_ast"
-require_relative "asts/arguments_ast"
-require_relative "asts/macro_ast"
-require_relative "asts/embed_ast"
-require_relative "asts/template_ast"
-# require_relative "asts/root_ast"
+# 5) AST Nodes -- used to build Abstract Syntax Trees
+require_relative "nodes/node" # base class
+require_relative "nodes/token_node"
+require_relative "nodes/procedure_node"
+require_relative "nodes/arguments_node"
+require_relative "nodes/macro_node"
+require_relative "nodes/embed_node"
+require_relative "nodes/template_node"
+# require_relative "nodes/root_ast"
 
 # 6) Parsers -- String | Object parsers that generate ASTs
 require_relative "parsers/parser" # base class

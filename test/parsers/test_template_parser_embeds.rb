@@ -9,9 +9,9 @@ module Fmt
         source = "%<one>red{{%<two>ljust(80, '.')|>green {{%<three>blue {{%<four>yellow|>underline}}}}}} {{%<five>cyan|>bold}}"
         scanner = StringScanner.new(source)
         ast = Fmt::TemplateParser.new(scanner).parse
-        assert_instance_of TemplateAST, ast
+        assert_instance_of TemplateNode, ast
         assert_equal source, ast.urtext
-        # assert_equal source, ast.source # TODO: fix this
+        #assert_equal source, ast.source # TODO: fix this
 
         expected = <<~AST
           (template
@@ -19,28 +19,25 @@ module Fmt
             (pipeline
               (macro
                 (procedure
-                  (name :red))
-                (arguments
-                  (tokens
-                    (lparen "(")
-                    (int "80")
-                    (comma ",")
-                    (sp " ")
-                    (tstring-beg "'")
-                    (tstring-content ".")
-                    (tstring-end "'")
-                    (rparen ")")))))
+                  (name :red))))
             (embeds
-              (embed :embed_0_0
+              (embed
+                (key :embed_0_0)
+                (placeholder "{{embed_0_0}}")
                 (embeds
-                  (embed :embed_1_0
+                  (embed
+                    (key :embed_1_0)
+                    (placeholder "{{embed_1_0}}")
                     (embeds
-                      (embed :embed_2_0)))))
-              (embed :embed_0_1)))
+                      (embed
+                        (key :embed_2_0)
+                        (placeholder "{{embed_2_0}}") nil)))))
+              (embed
+                (key :embed_0_1)
+                (placeholder "{{embed_0_1}}") nil)))
         AST
 
         assert_equal expected.rstrip, ast.to_s
-
         assert_equal 2, ast.embeds.children.size
         assert_equal "%<two>ljust(80, '.')|>green {{%<three>blue {{%<four>yellow|>underline}}}}", ast.embeds.children[0].source
         assert_equal "%<three>blue {{%<four>yellow|>underline}}", ast.embeds.children[0].embeds.children[0].source

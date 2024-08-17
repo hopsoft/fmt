@@ -7,7 +7,7 @@ module Fmt
     def test_with_positional_args
       source = "ljust(80, '.')"
       ast = ArgumentsParser.new(source).parse
-      assert_instance_of ArgumentsAST, ast
+      assert_instance_of ArgumentsNode, ast
       assert_equal "(80, '.')", ast.source
 
       expected = <<~AST
@@ -28,7 +28,7 @@ module Fmt
     def test_with_positional_and_keyword_args
       source = "truncate(20, omission: '&hellip;')"
       ast = ArgumentsParser.new(source).parse
-      assert_instance_of ArgumentsAST, ast
+      assert_instance_of ArgumentsNode, ast
       assert_equal "(20, omission: '&hellip;')", ast.source
 
       expected = <<~AST
