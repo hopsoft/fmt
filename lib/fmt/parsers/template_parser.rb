@@ -18,9 +18,9 @@ module Fmt
 
     # Constructor
     # @rbs scanner: StringScanner -- scanner to use
-    def initialize(scanner)
-      @scanner = scanner
-      @urtext = scanner.rest.dup
+    def initialize(urtext = "")
+      @urtext = urtext.to_s
+      @scanner = StringScanner.new(urtext)
     end
 
     attr_reader :scanner  # :: StringScanner -- scanner to use
@@ -38,15 +38,15 @@ module Fmt
     # @rbs return: Node[TemplateNode]
     def perform
       cache urtext do
-        # advance to the start of the template (prefix == "%")
-        scanner.skip_until FORMAT_PREFIX
-        return unless scanner.matched?
-
         # @note the order of operations below is important
         #       as we are using a StringScanner to parse the template
 
         # parse embedded templates and update the scanner string before continuing
         parse_embeds
+
+        # advance to the start of the template (prefix == "%")
+        scanner.scan_until FORMAT_PREFIX
+        return unless scanner.matched?
 
         # extract
         extract_key
@@ -54,9 +54,7 @@ module Fmt
 
         # build
         build_children
-        # binding.pry if $nate
         build_source
-        # source = "#{Sigils::FORMAT_PREFIX}#{scanner.string}"
         TemplateNode.new(*children, urtext: urtext, source: source)
       end
     end
@@ -107,16 +105,11 @@ module Fmt
     # @rbs return: String
     def build_source
       @source ||= begin
-        sources = children.map do |component|
-          case component
-          in :key, * then "#{Sigils::KEY_PREFIXES[0]}#{key}#{Sigils::KEY_SUFFIXES[0]}"
-          in :pipeline, * then component&.source
-          in :embeds, * then component.children.map { |embed| embed.dig(:placeholder, String) }.join # todo: preserve whitespace
-          else nil
-          end
-        end
-
-        "#{Sigils::FORMAT_PREFIX}#{sources.compact.join}"
+        list = [Sigils::FORMAT_PREFIX]
+        list << "#{Sigils::KEY_PREFIXES[0]}#{key}#{Sigils::KEY_SUFFIXES[0]}" if key
+        list << children.find { _1 in [:pipeline, *] }&.source
+        list << scanner.rest
+        list.join
       end
     end
   end

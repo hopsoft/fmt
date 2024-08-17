@@ -19,14 +19,5 @@ module Fmt
     attr_reader :key         # :: Node -- (:key, *)
     attr_reader :placeholder # :: Node -- (:placeholder, *)
     attr_reader :embeds      # :: Node? -- (:embeds, *)
-
-    def flatten
-      [].tap do |list|
-        list << self
-        embeds&.children&.each do |embed|
-          list.concat embed.flatten
-        end
-      end
-    end
   end
 end

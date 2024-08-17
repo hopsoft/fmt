@@ -7,8 +7,7 @@ module Fmt
     class TestTemplateParserNative < UnitTest
       def test_simple
         source = "Inspect: %s"
-        scanner = StringScanner.new(source)
-        ast = TemplateParser.new(scanner).parse
+        ast = TemplateParser.new(source).parse
 
         assert_instance_of TemplateNode, ast
         assert_equal source, ast.urtext
@@ -34,8 +33,7 @@ module Fmt
 
       def test_named
         source = "Inspect: %{obj}s"
-        scanner = StringScanner.new(source)
-        ast = Fmt::TemplateParser.new(scanner).parse
+        ast = Fmt::TemplateParser.new(source).parse
 
         assert_instance_of TemplateNode, ast
         assert_equal source, ast.urtext
@@ -62,8 +60,7 @@ module Fmt
 
       def test_named_alt
         source = "Inspect: %<obj>s"
-        scanner = StringScanner.new(source)
-        ast = Fmt::TemplateParser.new(scanner).parse
+        ast = Fmt::TemplateParser.new(source).parse
 
         assert_instance_of TemplateNode, ast
         assert_equal source, ast.urtext
@@ -90,8 +87,7 @@ module Fmt
 
       def test_complex
         source = "%.10f"
-        scanner = StringScanner.new(source)
-        ast = TemplateParser.new(scanner).parse
+        ast = TemplateParser.new(source).parse
 
         assert_instance_of TemplateNode, ast
         assert_equal source, ast.urtext
@@ -117,8 +113,7 @@ module Fmt
 
       def test_complex_named
         source = "%<value>.10f"
-        scanner = StringScanner.new(source)
-        ast = TemplateParser.new(scanner).parse
+        ast = TemplateParser.new(source).parse
 
         assert_instance_of TemplateNode, ast
         assert_equal source, ast.urtext
@@ -144,9 +139,8 @@ module Fmt
       end
 
       def test_pipeline_named
-        source = "Multiple: %s|><value>.10f|>p|>truncate(10, '.')"
-        scanner = StringScanner.new(source)
-        ast = TemplateParser.new(scanner).parse
+        source = "Pipleline: %s|><value>.10f|>p|>truncate(10, '.')"
+        ast = TemplateParser.new(source).parse
 
         assert_instance_of TemplateNode, ast
         assert_equal source, ast.urtext

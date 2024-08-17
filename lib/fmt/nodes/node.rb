@@ -56,19 +56,30 @@ module Fmt
     # Finds the first child node of the specified type
     # @rbs type: Symbol -- type to search for
     # @rbs return: Node?
-    def child(type)
+    def find(type)
       case type
       when Symbol then children.find {  _1 in [^type, *]  }
       when Class then children.find { _1 in type }
       end
     end
 
-    # Recursively searches for a child node for the requested types
+    # Finds all child nodes of the specified type
+    # @rbs type: Symbol -- type to search for
+    # @rbs return: Node?
+    def select(type)
+      [].concat case type
+      when Symbol then children.select {  _1 in [^type, *]  }
+      when Class then children.select { _1 in type }
+      else []
+      end
+    end
+
+    # Recursively searches the tree for a descendant node
     # @rbs types: Array[Symbol] -- types to search for
     # @rbs return: Node?
     def dig(*types)
-      node = child(types.shift) if types.any?
-      node = node.child(types.shift) while node && types.any?
+      node = find(types.shift) if types.any?
+      node = node.find(types.shift) while node && types.any?
       node
     end
 
@@ -81,9 +92,7 @@ module Fmt
     # Flattens AST nodes that have children of the same type
     # @rbs return: Array[Node]
     def flatten
-      list = [self]
-      list.concat node_descendants(self).select { _1 in [type, *] }
-      list
+      node_descendants.prepend self
     end
 
     private

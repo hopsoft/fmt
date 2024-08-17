@@ -7,8 +7,7 @@ module Fmt
     class TestTemplateParserCustom < UnitTest
       def test_simple
         source = "%cyan"
-        scanner = StringScanner.new(source)
-        ast = TemplateParser.new(scanner).parse
+        ast = TemplateParser.new(source).parse
 
         assert_instance_of TemplateNode, ast
         assert_equal source, ast.urtext
@@ -27,8 +26,7 @@ module Fmt
 
       def test_named
         source = "%{value}blue"
-        scanner = StringScanner.new(source)
-        ast = TemplateParser.new(scanner).parse
+        ast = TemplateParser.new(source).parse
 
         assert_instance_of TemplateNode, ast
         assert_equal source, ast.urtext
@@ -48,8 +46,7 @@ module Fmt
 
       def test_named_alt
         source = "%<value>blue"
-        scanner = StringScanner.new(source)
-        ast = TemplateParser.new(scanner).parse
+        ast = TemplateParser.new(source).parse
 
         assert_instance_of TemplateNode, ast
         assert_equal source, ast.urtext
@@ -69,8 +66,7 @@ module Fmt
 
       def test_named_pipeline
         source = "%{value}red|>bold|>underline"
-        scanner = StringScanner.new(source)
-        ast = TemplateParser.new(scanner).parse
+        ast = TemplateParser.new(source).parse
 
         assert_instance_of TemplateNode, ast
         assert_equal source, ast.urtext
@@ -96,8 +92,7 @@ module Fmt
 
       def test_named_with_pipeline_alt
         source = "%<value>red|>bold|>underline"
-        scanner = StringScanner.new(source)
-        ast = TemplateParser.new(scanner).parse
+        ast = TemplateParser.new(source).parse
 
         assert_instance_of TemplateNode, ast
         assert_equal source, ast.urtext

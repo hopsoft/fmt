@@ -9,9 +9,11 @@ module Fmt
 
     def initialize(urtext = "")
       @urtext = urtext.to_s
+      @scanner = StringScanner.new(urtext)
     end
 
-    attr_reader :urtext # : String -- original source code
+    attr_reader :urtext # :: String -- original source code
+    attr_reader :scanner # :: StringScanner -- scanner to use
 
     protected
 
@@ -19,12 +21,11 @@ module Fmt
       cache urtext do
         embeds = []
         index = 0
-        scanner = StringScanner.new(urtext)
-        embed = next_embed(scanner, depth: depth, index: index)
+        embed = next_embed(depth: depth, index: index)
 
         while embed
           embeds << embed
-          embed = next_embed(scanner, depth: depth, index: index += 1)
+          embed = next_embed(depth: depth, index: index += 1)
         end
 
         Node.new(:embeds, embeds, urtext: urtext, source: urtext)
@@ -48,9 +49,8 @@ module Fmt
     end
 
     # Extracts the embed text (handles nested embeds)
-    # @rbs scanner: StringScanner
     # @rbs return: String?
-    def extract_text(scanner)
+    def extract_text
       scanner.skip_until(PREFIX)
       return unless scanner.matched?
 
@@ -83,12 +83,11 @@ module Fmt
     end
 
     # Parses and extracts the next embed
-    # @rbs scanner: StringScanner
     # @rbs depth: Integer -- nesting depth
     # @rbs index: Integer -- embed index (ordinal position)
-    def next_embed(scanner, depth:, index:)
+    def next_embed(depth:, index:)
       # extract
-      text = extract_text(scanner)
+      text = extract_text
       return unless text
 
       # parse
