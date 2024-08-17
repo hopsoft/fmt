@@ -20,11 +20,9 @@ module Fmt
 
     attr_reader :callable # :: Proc?
 
-    protected
-
     # Parses the proc (Proc)
     # @rbs return: ProcedureNode
-    def perform
+    def parse
       cache(name || callable.hash) do
         # 1) assemble the AST children
         children = []

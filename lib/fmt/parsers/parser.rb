@@ -11,7 +11,7 @@ module Fmt
     # Invokes perform and returns an AST
     # @rbs return: Node
     def parse
-      @ast ||= perform
+      raise NotImplementedError, "Must be implemented by subclass"
     end
 
     protected
@@ -29,12 +29,6 @@ module Fmt
     # @rbs return: Object
     def cache(*args, &block)
       Cache.fetch(cache_key(*args)) { yield }
-    end
-
-    # Peforms parsing (internal implementation of parse)
-    # @rbs return: Node
-    def perform
-      raise NotImplementedError, "Must be implemented by subclass"
     end
   end
 end

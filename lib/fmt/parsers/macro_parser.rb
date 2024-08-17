@@ -12,11 +12,9 @@ module Fmt
 
     attr_reader :urtext # : String -- original source code
 
-    protected
-
     # Parses the urtext (original source code)
     # @rbs return: MacroNode
-    def perform
+    def parse
       cache urtext do
         # 1) build child AST nodes
         callable = Fmt.registry[key]

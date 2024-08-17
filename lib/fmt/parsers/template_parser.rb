@@ -26,17 +26,9 @@ module Fmt
     attr_reader :scanner  # :: StringScanner -- scanner to use
     attr_reader :urtext   # :: String -- original source code
 
-    protected
-
-    attr_reader :key      # :: Node  -- [:key, *]
-    attr_reader :pipeline # :: Node  -- [:pipeline, *]
-    attr_reader :embeds   # :: Node? -- [:embeds, *]
-    attr_reader :children # :: Array[Node] -- [[:key, *], [:pipeline, *], [:embeds, *]]
-    attr_reader :source   # :: String
-
     # Parses the urtext (original source code)
     # @rbs return: Node[TemplateNode]
-    def perform
+    def parse
       cache urtext do
         # @note the order of operations below is important
         #       as we are using a StringScanner to parse the template
@@ -58,6 +50,14 @@ module Fmt
         TemplateNode.new(*children, urtext: urtext, source: source)
       end
     end
+
+    protected
+
+    attr_reader :key      # :: Node  -- [:key, *]
+    attr_reader :pipeline # :: Node  -- [:pipeline, *]
+    attr_reader :embeds   # :: Node? -- [:embeds, *]
+    attr_reader :children # :: Array[Node] -- [[:key, *], [:pipeline, *], [:embeds, *]]
+    attr_reader :source   # :: String
 
     private
 

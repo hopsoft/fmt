@@ -12,11 +12,9 @@ module Fmt
 
     attr_reader :urtext # : String -- original source code
 
-    protected
-
     # Parses the urtext (original source code)
     # @rbs return: Node
-    def perform
+    def parse
       cache urtext do
         # 1) build the AST children
         list = urtext.split(Sigils::PIPE_OPERATOR)

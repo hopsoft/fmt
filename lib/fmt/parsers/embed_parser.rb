@@ -15,9 +15,7 @@ module Fmt
     attr_reader :urtext # :: String -- original source code
     attr_reader :scanner # :: StringScanner -- scanner to use
 
-    protected
-
-    def perform(depth: 0)
+    def parse(depth: 0)
       cache urtext do
         embeds = []
         index = 0
@@ -77,7 +75,7 @@ module Fmt
         list << Node.new(:key, [key])
         list << Node.new(:placeholder, [placeholder])
 
-        embeds = EmbedParser.new(urtext).perform(depth: depth)
+        embeds = EmbedParser.new(urtext).parse(depth: depth)
         list << (embeds.blank? ? nil : embeds)
       end
     end

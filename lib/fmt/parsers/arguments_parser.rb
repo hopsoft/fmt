@@ -17,11 +17,9 @@ module Fmt
 
     attr_reader :urtext # : String -- original source code
 
-    protected
-
     # Parses the urtext (original source code)
     # @rbs return: ArgumentsNode
-    def perform
+    def parse
       cache urtext do
         # 1) extract the arguments
         # scanner = StringScanner.new(urtext)
