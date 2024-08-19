@@ -13,26 +13,28 @@ module Fmt
     attr_reader :urtext # : String -- original source code
 
     # Parses the urtext (original source code)
-    # @rbs return: Node
+    # @rbs return: Node -- (pipeline (macro (procedure (name Symbol)) (arguments (tokens (Symbol, String), *))), *)
     def parse
-      cache urtext do
-        # 1) build the AST children
-        list = urtext.split(Sigils::PIPE_OPERATOR)
-        macros = list.each_with_object([]) do |entry, memo|
-          next if entry.empty?
-          memo << MacroParser.new(entry).parse
-        end
+      cache(urtext) { super }
+    end
 
-        # 2) assemble the AST children
-        children = []
-        children.concat macros if macros.any?
+    protected
 
-        # 3) build the parsed source
-        source = macros.map(&:source).join(Sigils::PIPE_OPERATOR)
+    # Extracts components for building the AST (Abstract Syntax Tree)
+    # @rbs return: Hash[Symbol, Object] -- extracted components
+    def extract
+      {macros: urtext.split(Sigils::PIPE_OPERATOR)}
+    end
 
-        # 4) build the AST
-        Node.new(:pipeline, children, urtext: urtext, source: source)
-      end
+    # Transforms extracted components into an AST (Abstract Syntax Tree)
+    # @rbs macros: Array[String] -- extracted components
+    # @rbs return: Node -- (pipeline (macro (procedure (name Symbol)) (arguments (tokens (Symbol, String), *))), *)
+    def transform(macros:)
+      macros = macros.map { |m| MacroParser.new(m).parse }.reject(&:empty?)
+
+      Node.new :pipeline, macros,
+        urtext: urtext,
+        source: macros.map(&:source).join(Sigils::PIPE_OPERATOR)
     end
   end
 end

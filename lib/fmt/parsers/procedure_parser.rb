@@ -9,7 +9,7 @@ module Fmt
   #
   # @example
   #   p = ->(name) { "Hello, #{name}!" }
-  #   ProcedureParser.new(p).parse #=> ProcedureNode
+  #   ProcedureParser.new(p).parse
   #
   class ProcedureParser < Parser
     # Constructor
@@ -18,32 +18,31 @@ module Fmt
       @callable = callable if callable in Proc
     end
 
-    attr_reader :callable # :: Proc?
-
     # Parses the proc (Proc)
-    # @rbs return: ProcedureNode
+    # @rbs return: Node -- (procedure (name Symbol))
     def parse
-      cache(name || callable.hash) do
-        # 1) assemble the AST children
-        children = []
-        children << Node.new(:name, [name]) if name
-
-        # 2) build the parsed source
-        #    TODO: consider bringing back the File reader to set urtext and other properties
-        urtext = name&.to_s
-        source = name&.to_s
-
-        # 3) build the AST
-        ProcedureNode.new(*children, urtext: urtext, source: source)
-      end
+      cache(callable.hash) { super }
     end
 
-    private
+    protected
 
-    # Proc name (registry key)
-    # @rbs return: Symbol
-    def name
-      Fmt.registry.key_for callable
+    attr_reader :callable # :: Proc?
+
+    # Extracts components for building the AST (Abstract Syntax Tree)
+    # @rbs return: Hash[Symbol, Symbol?]
+    def extract
+      {key: Fmt.registry.key_for(callable)}
+    end
+
+    # Transforms extracted components into an AST (Abstract Syntax Tree)
+    # @rbs key: Symbol -- registry key for the callable (method name)
+    # @rbs return: Node -- (procedure (name Symbol))
+    def transform(key:)
+      return Node.new(:procedure) unless key
+
+      Node.new :procedure, [Node.new(:name, [key])],
+        urtext: key.to_s,
+        source: key.to_s
     end
   end
 end

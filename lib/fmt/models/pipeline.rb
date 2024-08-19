@@ -17,7 +17,7 @@ module Fmt
 
     attr_reader :urtext # :: String -- original source code
     attr_reader :source # :: String -- source code
-    attr_reader :macros # :: Array[MacroNode]
+    attr_reader :macros # :: Array[Node]
 
     # @rbs return: Hash[Symbol, Object]
     def to_h

@@ -13,42 +13,41 @@ module Fmt
     attr_reader :urtext # : String -- original source code
 
     # Parses the urtext (original source code)
-    # @rbs return: MacroNode
+    # @rbs return: Node -- (macro (procedure (name Symbol)) (arguments (tokens (Symbol, String), *)))
     def parse
-      cache urtext do
-        # 1) build child AST nodes
-        callable = Fmt.registry[key]
-        procedure = ProcedureParser.new(callable).parse
-        procedure = nil if procedure.source.empty?
-        arguments = ArgumentsParser.new(args_text).parse
-        arguments = nil if arguments.source.empty?
-
-        # 2) assemble the AST children
-        children = []
-        children << procedure if procedure
-        children << arguments if arguments
-
-        # 3) build the parsed source
-        source = children.map(&:source).join
-
-        # 4) build the AST
-        MacroNode.new(*children, urtext: urtext, source: source)
-      end
+      cache(urtext) { super }
     end
 
-    private
+    protected
 
+    # Extracts components for building the AST (Abstract Syntax Tree)
+    # @rbs return: Array[Node?, Node?] -- [procedure, arguments]
+    def extract
+      {
+        procedure: ProcedureParser.new(callable).parse,
+        arguments: ArgumentsParser.new(arguments).parse
+      }
+    end
+
+    # Transforms extracted components into an AST (Abstract Syntax Tree)
+    # @rbs procedure: Node? -- (procedure (name Symbol))
+    # @rbs arguments: Node? -- (arguments (tokens (Symbol, String), *))
+    # @rbs return: Node -- (macro (procedure (name Symbol)) (arguments (tokens (Symbol, String), *)))
+    def transform(procedure:, arguments:)
+      children = [procedure, arguments].reject(&:empty?)
+
+      Node.new :macro, children,
+        urtext: urtext,
+        source: children.map(&:source).join
+    end
+
+    # Indicates if the callable is a String formatter
+    # @rbs return: bool
     def formatter?
       key == Sigils::FORMAT_METHOD
     end
 
-    def args_text
-      # TODO: detect key in formatter text
-      return "#{Sigils::ARGS_PREFIX}%Q[#{Sigils::FORMAT_PREFIX}#{urtext}]#{Sigils::ARGS_SUFFIX}" if formatter?
-      urtext
-    end
-
-    # Returns the registry key for the callable in the registry
+    # Registry key for the callable
     # @rbs return: Symbol?
     def key
       @key ||= begin
@@ -58,6 +57,20 @@ module Fmt
         key = Sigils::FORMAT_METHOD unless key && Fmt.registry.key?(key)
         key
       end
+    end
+
+    # Callable Proc for the key
+    # @rbs return: Proc?
+    def callable
+      Fmt.registry[key]
+    end
+
+    # Arguments string
+    # @rbs return: String
+    def arguments
+      @arguments ||= formatter? ?
+        "#{Sigils::ARGS_PREFIX}%Q[#{Sigils::FORMAT_PREFIX}#{urtext}]#{Sigils::ARGS_SUFFIX}" : # TODO: detect key in formatter text
+        urtext
     end
   end
 end

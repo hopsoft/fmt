@@ -9,7 +9,7 @@ module Fmt
     include Matchable
 
     # Constructor
-    # @rbs ast: MacroNode
+    # @rbs ast: Node
     def initialize(ast)
       @args = []
       @kwargs = {}

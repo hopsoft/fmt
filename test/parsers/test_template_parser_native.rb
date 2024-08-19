@@ -9,7 +9,7 @@ module Fmt
         source = "Inspect: %s"
         ast = TemplateParser.new(source).parse
 
-        assert_instance_of TemplateNode, ast
+        assert_instance_of Node, ast
         assert_equal source, ast.urtext
         assert_equal "%sprintf(%Q[%s])", ast.source
 
@@ -35,7 +35,7 @@ module Fmt
         source = "Inspect: %{obj}s"
         ast = Fmt::TemplateParser.new(source).parse
 
-        assert_instance_of TemplateNode, ast
+        assert_instance_of Node, ast
         assert_equal source, ast.urtext
         assert_equal "%<obj>sprintf(%Q[%s])", ast.source
 
@@ -62,7 +62,7 @@ module Fmt
         source = "Inspect: %<obj>s"
         ast = Fmt::TemplateParser.new(source).parse
 
-        assert_instance_of TemplateNode, ast
+        assert_instance_of Node, ast
         assert_equal source, ast.urtext
         assert_equal "%<obj>sprintf(%Q[%s])", ast.source
 
@@ -89,7 +89,7 @@ module Fmt
         source = "%.10f"
         ast = TemplateParser.new(source).parse
 
-        assert_instance_of TemplateNode, ast
+        assert_instance_of Node, ast
         assert_equal source, ast.urtext
         assert_equal "%sprintf(%Q[%.10f])", ast.source
 
@@ -115,7 +115,7 @@ module Fmt
         source = "%<value>.10f"
         ast = TemplateParser.new(source).parse
 
-        assert_instance_of TemplateNode, ast
+        assert_instance_of Node, ast
         assert_equal source, ast.urtext
         assert_equal "%<value>sprintf(%Q[%.10f])", ast.source
 
@@ -142,7 +142,7 @@ module Fmt
         source = "Pipleline: %s|><value>.10f|>p|>truncate(10, '.')"
         ast = TemplateParser.new(source).parse
 
-        assert_instance_of TemplateNode, ast
+        assert_instance_of Node, ast
         assert_equal source, ast.urtext
         assert_equal "%<value>sprintf(%Q[%.10f])|>sprintf(%Q[%p])|>truncate(10, '.')", ast.source
 

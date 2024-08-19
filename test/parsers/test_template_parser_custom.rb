@@ -9,7 +9,7 @@ module Fmt
         source = "%cyan"
         ast = TemplateParser.new(source).parse
 
-        assert_instance_of TemplateNode, ast
+        assert_instance_of Node, ast
         assert_equal source, ast.urtext
         assert_equal source, ast.source
 
@@ -28,7 +28,7 @@ module Fmt
         source = "%{value}blue"
         ast = TemplateParser.new(source).parse
 
-        assert_instance_of TemplateNode, ast
+        assert_instance_of Node, ast
         assert_equal source, ast.urtext
         assert_equal "%<value>blue", ast.source
 
@@ -48,7 +48,7 @@ module Fmt
         source = "%<value>blue"
         ast = TemplateParser.new(source).parse
 
-        assert_instance_of TemplateNode, ast
+        assert_instance_of Node, ast
         assert_equal source, ast.urtext
         assert_equal source, ast.source
 
@@ -68,7 +68,7 @@ module Fmt
         source = "%{value}red|>bold|>underline"
         ast = TemplateParser.new(source).parse
 
-        assert_instance_of TemplateNode, ast
+        assert_instance_of Node, ast
         assert_equal source, ast.urtext
         assert_equal "%<value>red|>bold|>underline", ast.source
 
@@ -94,7 +94,7 @@ module Fmt
         source = "%<value>red|>bold|>underline"
         ast = TemplateParser.new(source).parse
 
-        assert_instance_of TemplateNode, ast
+        assert_instance_of Node, ast
         assert_equal source, ast.urtext
         assert_equal source, ast.source
 

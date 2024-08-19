@@ -4,47 +4,43 @@
 
 module Fmt
   class ArgumentsParser < Parser
-    ## TODO: move all logic to the tokenizer and remove use of StringScanner in this class
-    ##       update the tokenizer to work for string formatting specifiers and (...)
-    # PREFIX = /(?=\()/
-    # SUFFIX = /\)/
-
     # Constructor
     # @rbs urtext: String -- original source code
     def initialize(urtext = "")
       @urtext = urtext.to_s
+      @tokenizer = ArgumentsTokenizer.new(urtext)
     end
 
     attr_reader :urtext # : String -- original source code
 
     # Parses the urtext (original source code)
-    # @rbs return: ArgumentsNode
+    # @rbs return: Node -- (arguments (tokens (Symbol, String), *))
     def parse
-      cache urtext do
-        # 1) extract the arguments
-        # scanner = StringScanner.new(urtext)
-        # scanner.skip_until PREFIX
-        # parsed = scanner.scan_until(SUFFIX) if scanner.matched?
+      cache(urtext) { super }
+    end
 
-        # 2) tokenize the arguments
-        tokenizer = ArgumentsTokenizer.new(urtext)
-        tokens = tokenizer.tokenize
+    protected
 
-        # 3) build the AST children
-        tokens = tokens.map do |token|
-          TokenNode.new(token.type, token.value, urtext: urtext, source: token.value)
-        end
+    attr_reader :tokenizer # :: ArgumentsTokenizer
 
-        # 4) assemble the AST children
-        children = []
-        children << Node.new(:tokens, tokens) if tokens.any?
+    # Extracts components for building the AST (Abstract Syntax Tree)
+    # @rbs return: Array[Token]
+    def extract
+      {tokens: tokenizer.tokenize}
+    end
 
-        # 5) build the parsed source
-        source = tokens.map(&:source).join
+    # Transforms extracted components into an AST (Abstract Syntax Tree)
+    # @rbs tokens: Array[Token] -- extracted tokens
+    # @rbs return: Node -- (arguments (tokens (Symbol, String), *))
+    def transform(tokens:)
+      return Node.new(:arguments) if tokens.none?
 
-        # 6) build the AST
-        ArgumentsNode.new(*children, urtext: urtext, source: source)
-      end
+      tokens = tokens.map { |t| Node.new(t.type, [t.value], urtext: t.value, source: t.value) }
+      tokens = Node.new(:tokens, tokens, urtext: urtext, source: tokens.map(&:source).join)
+
+      Node.new :arguments, [tokens],
+        urtext: urtext,
+        source: tokens.source
     end
   end
 end

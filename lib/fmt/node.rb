@@ -7,6 +7,8 @@
 module Fmt
   # Superclass for custom AST nodes
   class Node < AST::Node
+    extend Forwardable
+
     class << self
       # Finds all Node child nodes
       # @rbs node: Node -- node to search
@@ -37,20 +39,33 @@ module Fmt
     # @rbs children: Array[Node]
     # @rbs properties: Hash[Symbol, Object]
     def initialize(type, children = [], properties = {})
+      @properties = properties
       define_properties properties
       super
     end
 
-    # Finds all Node child nodes
-    # @rbs return: Array[Node]
-    def node_children
-      self.class.node_children self
-    end
+    attr_reader :properties # :: Hash[Symbol, Object]
 
-    # Recursively finds all Node nodes in the tree
-    # @rbs return: Array[Node]
-    def node_descendants
-      self.class.node_descendants self
+    # Returns the child at the specified index
+    # @rbs index: Integer -- index of child node
+    # @rbs return: Node? | Object?
+    def_delegator :children, :[]
+
+    # Indicates if the node does not have children
+    # @rbs return: bool
+    def_delegator :children, :empty?
+
+    # Returns the number of children
+    # @rbs return: Integer
+    def_delegator :children, :size
+
+    # Recursively searches the tree for a descendant node
+    # @rbs types: Array[Symbol] -- types to search for
+    # @rbs return: Node?
+    def dig(*types)
+      node = find(types.shift) if types.any?
+      node = node.find(types.shift) while node && types.any?
+      node
     end
 
     # Finds the first child node of the specified type
@@ -61,6 +76,12 @@ module Fmt
       when Symbol then children.find {  _1 in [^type, *]  }
       when Class then children.find { _1 in type }
       end
+    end
+
+    # Flattens AST nodes that have children of the same type
+    # @rbs return: Array[Node]
+    def flatten
+      node_descendants.prepend self
     end
 
     # Finds all child nodes of the specified type
@@ -74,28 +95,19 @@ module Fmt
       end
     end
 
-    # Recursively searches the tree for a descendant node
-    # @rbs types: Array[Symbol] -- types to search for
-    # @rbs return: Node?
-    def dig(*types)
-      node = find(types.shift) if types.any?
-      node = node.find(types.shift) while node && types.any?
-      node
-    end
-
-    # Indicates if the node does not have any children
-    # @rbs return: bool
-    def empty?
-      children.empty?
-    end
-
-    # Flattens AST nodes that have children of the same type
-    # @rbs return: Array[Node]
-    def flatten
-      node_descendants.prepend self
-    end
-
     private
+
+    # Finds all Node child nodes
+    # @rbs return: Array[Node]
+    def node_children
+      self.class.node_children self
+    end
+
+    # Recursively finds all Node nodes in the tree
+    # @rbs return: Array[Node]
+    def node_descendants
+      self.class.node_descendants self
+    end
 
     # Defines accessor methods for properties on the receiver
     # @rbs properties: Hash[Symbol, Object] -- exposed as instance methods
