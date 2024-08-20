@@ -3,32 +3,24 @@
 # rbs_inline: enabled
 
 module Fmt
-  class Pipeline < Model
-    # Constructor
-    # @rbs ast: Node
-    def initialize(ast)
-      @macros = []
-      super
-    end
+  class Template < Model
+    attr_reader :pipeline # :: Pipeline
 
-    attr_reader :macros # :: Array[Node]
-
-    # Hash representation of the model (required for pattern matching)
     # @rbs return: Hash[Symbol, Object]
     def to_h
-      super.merge macros: macros.map(&:to_h)
+      super.merge pipeline: pipeline.to_h
     end
 
     # ..........................................................................
     # @!group AST Processors
     # ..........................................................................
 
-    def on_pipeline(node)
+    def on_template(node)
       process_all node.children
     end
 
-    def on_macro(node)
-      @macros << Macro.new(node)
+    def on_pipeline(node)
+      @pipeline = Pipeline.new(node)
     end
   end
 end

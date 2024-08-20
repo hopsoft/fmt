@@ -95,6 +95,14 @@ module Fmt
       end
     end
 
+    # String representation of the node (AST)
+    # @rbs squish: bool -- remove extra whitespace
+    # @rbs return: String
+    def to_s(squish: false)
+      return to_s.gsub(/\s{2,}/, " ") if squish
+      super()
+    end
+
     private
 
     # Finds all Node child nodes

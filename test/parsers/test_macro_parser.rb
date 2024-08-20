@@ -14,7 +14,7 @@ module Fmt
       expected = <<~AST
         (macro
           (procedure
-            (name :sprintf))
+            (key :sprintf))
           (arguments
             (tokens
               (lparen "(")
@@ -37,7 +37,7 @@ module Fmt
       expected = <<~AST
         (macro
           (procedure
-            (name :sprintf))
+            (key :sprintf))
           (arguments
             (tokens
               (lparen "(")
@@ -60,7 +60,7 @@ module Fmt
       expected = <<~AST
         (macro
           (procedure
-            (name :sprintf))
+            (key :sprintf))
           (arguments
             (tokens
               (lparen "(")
@@ -83,7 +83,7 @@ module Fmt
       expected = <<~AST
         (macro
           (procedure
-            (name :sprintf))
+            (key :sprintf))
           (arguments
             (tokens
               (lparen "(")
@@ -106,7 +106,7 @@ module Fmt
       expected = <<~AST
         (macro
           (procedure
-            (name :sprintf))
+            (key :sprintf))
           (arguments
             (tokens
               (lparen "(")
@@ -129,7 +129,7 @@ module Fmt
       expected = <<~AST
         (macro
           (procedure
-            (name :strip)))
+            (key :strip)))
       AST
 
       assert_equal expected.rstrip, ast.to_s
@@ -145,7 +145,7 @@ module Fmt
       expected = <<~AST
         (macro
           (procedure
-            (name :ljust))
+            (key :ljust))
           (arguments
             (tokens
               (lparen "(")
@@ -171,7 +171,7 @@ module Fmt
       expected = <<~AST
         (macro
           (procedure
-            (name :truncate))
+            (key :truncate))
           (arguments
             (tokens
               (lparen "(")

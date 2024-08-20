@@ -12,13 +12,14 @@ module Fmt
         assert_instance_of Node, ast
         assert_equal source, ast.urtext
         assert_equal "%sprintf(%Q[%s])", ast.source
+        assert_equal "sprintf(%Q[%s])", ast.find(:pipeline).source
 
         expected = <<~AST
           (template
             (pipeline
               (macro
                 (procedure
-                  (name :sprintf))
+                  (key :sprintf))
                 (arguments
                   (tokens
                     (lparen "(")
@@ -37,20 +38,20 @@ module Fmt
 
         assert_instance_of Node, ast
         assert_equal source, ast.urtext
-        assert_equal "%<obj>sprintf(%Q[%s])", ast.source
+        assert_equal "%sprintf(%Q[%{obj}s])", ast.source
+        assert_equal "sprintf(%Q[%{obj}s])", ast.find(:pipeline).source
 
         expected = <<~AST
           (template
-            (key "obj")
             (pipeline
               (macro
                 (procedure
-                  (name :sprintf))
+                  (key :sprintf))
                 (arguments
                   (tokens
                     (lparen "(")
                     (tstring-beg "%Q[")
-                    (tstring-content "%s")
+                    (tstring-content "%{obj}s")
                     (tstring-end "]")
                     (rparen ")"))))))
         AST
@@ -64,20 +65,20 @@ module Fmt
 
         assert_instance_of Node, ast
         assert_equal source, ast.urtext
-        assert_equal "%<obj>sprintf(%Q[%s])", ast.source
+        assert_equal "%sprintf(%Q[%<obj>s])", ast.source
+        assert_equal "sprintf(%Q[%<obj>s])", ast.find(:pipeline).source
 
         expected = <<~AST
           (template
-            (key "obj")
             (pipeline
               (macro
                 (procedure
-                  (name :sprintf))
+                  (key :sprintf))
                 (arguments
                   (tokens
                     (lparen "(")
                     (tstring-beg "%Q[")
-                    (tstring-content "%s")
+                    (tstring-content "%<obj>s")
                     (tstring-end "]")
                     (rparen ")"))))))
         AST
@@ -92,13 +93,14 @@ module Fmt
         assert_instance_of Node, ast
         assert_equal source, ast.urtext
         assert_equal "%sprintf(%Q[%.10f])", ast.source
+        assert_equal "sprintf(%Q[%.10f])", ast.find(:pipeline).source
 
         expected = <<~AST
           (template
             (pipeline
               (macro
                 (procedure
-                  (name :sprintf))
+                  (key :sprintf))
                 (arguments
                   (tokens
                     (lparen "(")
@@ -117,20 +119,20 @@ module Fmt
 
         assert_instance_of Node, ast
         assert_equal source, ast.urtext
-        assert_equal "%<value>sprintf(%Q[%.10f])", ast.source
+        assert_equal "%sprintf(%Q[%<value>.10f])", ast.source
+        assert_equal "sprintf(%Q[%<value>.10f])", ast.find(:pipeline).source
 
         expected = <<~AST
           (template
-            (key "value")
             (pipeline
               (macro
                 (procedure
-                  (name :sprintf))
+                  (key :sprintf))
                 (arguments
                   (tokens
                     (lparen "(")
                     (tstring-beg "%Q[")
-                    (tstring-content "%.10f")
+                    (tstring-content "%<value>.10f")
                     (tstring-end "]")
                     (rparen ")"))))))
         AST
@@ -144,25 +146,35 @@ module Fmt
 
         assert_instance_of Node, ast
         assert_equal source, ast.urtext
-        assert_equal "%<value>sprintf(%Q[%.10f])|>sprintf(%Q[%p])|>truncate(10, '.')", ast.source
+        assert_equal "%sprintf(%Q[%s])|>sprintf(%Q[%<value>.10f])|>sprintf(%Q[%p])|>truncate(10, '.')", ast.source
+        assert_equal "sprintf(%Q[%s])|>sprintf(%Q[%<value>.10f])|>sprintf(%Q[%p])|>truncate(10, '.')", ast.find(:pipeline).source
 
         expected = <<~AST
           (template
-            (key "value")
             (pipeline
               (macro
                 (procedure
-                  (name :sprintf))
+                  (key :sprintf))
                 (arguments
                   (tokens
                     (lparen "(")
                     (tstring-beg "%Q[")
-                    (tstring-content "%.10f")
+                    (tstring-content "%s")
                     (tstring-end "]")
                     (rparen ")"))))
               (macro
                 (procedure
-                  (name :sprintf))
+                  (key :sprintf))
+                (arguments
+                  (tokens
+                    (lparen "(")
+                    (tstring-beg "%Q[")
+                    (tstring-content "%<value>.10f")
+                    (tstring-end "]")
+                    (rparen ")"))))
+              (macro
+                (procedure
+                  (key :sprintf))
                 (arguments
                   (tokens
                     (lparen "(")
@@ -172,7 +184,7 @@ module Fmt
                     (rparen ")"))))
               (macro
                 (procedure
-                  (name :truncate))
+                  (key :truncate))
                 (arguments
                   (tokens
                     (lparen "(")

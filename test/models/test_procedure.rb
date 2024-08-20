@@ -14,7 +14,7 @@ module Fmt
         procedure => {
           urtext: "capitalize",
           source: "capitalize",
-          name: :capitalize,
+          key: :capitalize,
           callable: Proc
         }
       }
@@ -30,7 +30,7 @@ module Fmt
         procedure => {
           urtext: "cyan",
           source: "cyan",
-          name: :cyan,
+          key: :cyan,
           callable: Proc
         }
       }
@@ -48,7 +48,7 @@ module Fmt
           procedure => {
             urtext: "custom",
             source: "custom",
-            name: :custom,
+            key: :custom,
             callable: Proc
           }
         }

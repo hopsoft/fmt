@@ -3,30 +3,17 @@
 # rbs_inline: enabled
 
 module Fmt
-  class Procedure
-    # @see http://whitequark.github.io/ast/AST/Processor/Mixin.html
-    include AST::Processor::Mixin
-    include Matchable
+  class Procedure < Model
+    attr_reader :key      # :: Symbol -- key for the Proc in the registry
+    attr_reader :callable # :: Proc -- Proc from the registry
 
-    # Constructor
-    # @rbs ast: Node
-    def initialize(ast)
-      process ast
-    end
-
-    attr_reader :urtext # :: String -- original source code
-    attr_reader :source # :: String -- source code
-    attr_reader :name   # :: Symbol -- key for the Proc in the registry
-    attr_reader :callable    # :: Proc -- Proc from the registry
-
+    # Hash representation of the model (required for pattern matching)
     # @rbs return: Hash[Symbol, Object]
     def to_h
-      {
-        urtext: urtext,
-        source: source,
-        name: name,
+      super.merge(
+        key: key,
         callable: callable
-      }
+      )
     end
 
     # ..........................................................................
@@ -34,14 +21,12 @@ module Fmt
     # ..........................................................................
 
     def on_procedure(node)
-      @urtext = node.urtext
-      @source = node.source
       process_all node.children
     end
 
-    def on_name(node)
-      @name = node.children.first
-      @callable = Fmt.registry[name]
+    def on_key(node)
+      @key = node.find(Symbol)
+      @callable = Fmt.registry[key]
     end
   end
 end

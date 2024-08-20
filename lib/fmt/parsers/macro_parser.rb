@@ -23,54 +23,37 @@ module Fmt
     # Extracts components for building the AST (Abstract Syntax Tree)
     # @rbs return: Array[Node?, Node?] -- [procedure, arguments]
     def extract
+      tokenizer = Tokenizer.new(urtext)
+      tokenizer.tokenize
+
+      identifiers = tokenizer.identifier_tokens.map(&:value)
+      key = identifiers.last&.to_sym
+      key = Sigils::FORMAT_METHOD unless key && Fmt.registry.key?(key)
+
       {
-        procedure: ProcedureParser.new(callable).parse,
-        arguments: ArgumentsParser.new(arguments).parse
+        key: key,
+        tokens: tokenizer.tokens
       }
     end
 
     # Transforms extracted components into an AST (Abstract Syntax Tree)
-    # @rbs procedure: Node? -- (procedure (name Symbol))
-    # @rbs arguments: Node? -- (arguments (tokens (Symbol, String), *))
+    # @rbs key: Symbol?
+    # @rbs tokens: Array[Token]
     # @rbs return: Node -- (macro (procedure (name Symbol)) (arguments (tokens (Symbol, String), *)))
-    def transform(procedure:, arguments:)
-      children = [procedure, arguments].reject(&:empty?)
-
-      Node.new :macro, children,
-        urtext: urtext,
-        source: children.map(&:source).join
-    end
-
-    # Indicates if the callable is a String formatter
-    # @rbs return: bool
-    def formatter?
-      key == Sigils::FORMAT_METHOD
-    end
-
-    # Registry key for the callable
-    # @rbs return: Symbol?
-    def key
-      @key ||= begin
-        tokenizer = MacroTokenizer.new(urtext)
-        tokens = tokenizer.tokenize
-        key = tokens.first.value.to_sym if tokens.one?
-        key = Sigils::FORMAT_METHOD unless key && Fmt.registry.key?(key)
-        key
+    def transform(key:, tokens:)
+      source = case key
+      in Sigils::FORMAT_METHOD then "#{key}(%Q[%#{urtext}])"
+      else urtext
       end
-    end
 
-    # Callable Proc for the key
-    # @rbs return: Proc?
-    def callable
-      Fmt.registry[key]
-    end
+      children = [
+        ProcedureParser.new(Fmt.registry[key]).parse,
+        ArgumentsParser.new(source).parse
+      ]
 
-    # Arguments string
-    # @rbs return: String
-    def arguments
-      @arguments ||= formatter? ?
-        "#{Sigils::ARGS_PREFIX}%Q[#{Sigils::FORMAT_PREFIX}#{urtext}]#{Sigils::ARGS_SUFFIX}" : # TODO: detect key in formatter text
-        urtext
+      Node.new :macro, children.reject(&:empty?),
+        urtext: urtext,
+        source: source
     end
   end
 end

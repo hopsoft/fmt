@@ -14,25 +14,24 @@ module Fmt
 
         expected = <<~AST
           (template
-            (key "one")
             (pipeline
               (macro
                 (procedure
-                  (name :red))))
+                  (key :red))))
             (embeds
               (embed
-                (key :embed_0_0)
+                (name "embed_0_0")
                 (placeholder "{{embed_0_0}}")
                 (embeds
                   (embed
-                    (key :embed_1_0)
+                    (name "embed_1_0")
                     (placeholder "{{embed_1_0}}")
                     (embeds
                       (embed
-                        (key :embed_2_0)
+                        (name "embed_2_0")
                         (placeholder "{{embed_2_0}}"))))))
               (embed
-                (key :embed_0_1)
+                (name "embed_0_1")
                 (placeholder "{{embed_0_1}}"))))
         AST
 

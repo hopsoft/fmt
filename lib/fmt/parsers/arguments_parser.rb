@@ -8,7 +8,6 @@ module Fmt
     # @rbs urtext: String -- original source code
     def initialize(urtext = "")
       @urtext = urtext.to_s
-      @tokenizer = ArgumentsTokenizer.new(urtext)
     end
 
     attr_reader :urtext # : String -- original source code
@@ -21,12 +20,12 @@ module Fmt
 
     protected
 
-    attr_reader :tokenizer # :: ArgumentsTokenizer
-
     # Extracts components for building the AST (Abstract Syntax Tree)
     # @rbs return: Array[Token]
     def extract
-      {tokens: tokenizer.tokenize}
+      tokenizer = Tokenizer.new(urtext)
+      tokenizer.tokenize
+      {tokens: tokenizer.argument_tokens}
     end
 
     # Transforms extracted components into an AST (Abstract Syntax Tree)

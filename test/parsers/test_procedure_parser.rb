@@ -12,7 +12,7 @@ module Fmt
 
       expected = <<~AST
         (procedure
-          (name :%))
+          (key :%))
       AST
       assert_equal expected.rstrip, ast.to_s
     end
@@ -25,7 +25,7 @@ module Fmt
 
       expected = <<~AST
         (procedure
-          (name :capitalize))
+          (key :capitalize))
       AST
       assert_equal expected.rstrip, ast.to_s
     end
@@ -38,7 +38,7 @@ module Fmt
 
       expected = <<~AST
         (procedure
-          (name :magenta))
+          (key :magenta))
       AST
       assert_equal expected.rstrip, ast.to_s
     end
@@ -53,7 +53,7 @@ module Fmt
 
         expected = <<~AST
           (procedure
-            (name :custom))
+            (key :custom))
         AST
         assert_equal expected.rstrip, ast.to_s
       end

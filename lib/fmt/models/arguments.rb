@@ -3,32 +3,25 @@
 # rbs_inline: enabled
 
 module Fmt
-  class Arguments
-    # @see http://whitequark.github.io/ast/AST/Processor/Mixin.html
-    include AST::Processor::Mixin
-    include Matchable
-
+  class Arguments < Model
     # Constructor
-    # @rbs ast: ArgumentsNode
+    # @rbs ast: Node
     def initialize(ast)
       @args = []
       @kwargs = {}
-      process ast
+      super
     end
 
-    attr_reader :urtext # :: String -- original source code
-    attr_reader :source # :: String -- source code
     attr_reader :args   # :: Array[Object] -- positional arguments
     attr_reader :kwargs # :: Hash[Symbol, Object] -- keyword arguments
 
+    # Hash representation of the model (required for pattern matching)
     # @rbs return: Hash[Symbol, Object]
     def to_h
-      {
-        urtext: urtext,
-        source: source,
+      super.merge(
         args: args,
         kwargs: kwargs
-      }
+      )
     end
 
     # ..........................................................................
@@ -39,8 +32,6 @@ module Fmt
     # @rbs node: Node -- node to process
     # @rbs return: void
     def on_arguments(node)
-      @urtext = node.urtext
-      @source = node.source
       process_all node.children
     end
 

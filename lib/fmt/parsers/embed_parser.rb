@@ -19,7 +19,7 @@ module Fmt
     attr_reader :urtext # :: String -- original source code
 
     # Parses the urtext (original source code)
-    # @rbs return: EmbedNode -- [[:key, *], [:placeholder, *], [:embeds, [:embed, *]]]
+    # @rbs return: EmbedNode --
     def parse
       cache urtext do
         super
@@ -67,13 +67,13 @@ module Fmt
 
     def transform(embeds:)
       children = embeds.each_with_object([]).with_index do |(embed, memo), index|
-        key = :"embed_#{depth}_#{index}"
-        placeholder = "#{Sigils::EMBED_PREFIX}#{key}#{Sigils::EMBED_SUFFIX}"
+        name = "embed_#{depth}_#{index}"
+        placeholder = "#{Sigils::EMBED_PREFIX}#{name}#{Sigils::EMBED_SUFFIX}"
         template_urtext = embed.delete_prefix(Sigils::EMBED_PREFIX).delete_suffix(Sigils::EMBED_SUFFIX)
         nested_embeds = EmbedParser.new(template_urtext, depth: depth + 1).parse
 
         nodes = []
-        nodes << Node.new(:key, [key])
+        nodes << Node.new(:name, [name])
         nodes << Node.new(:placeholder, [placeholder])
         nodes << nested_embeds unless nested_embeds.empty?
 

@@ -40,7 +40,7 @@ module Fmt
     def transform(key:)
       return Node.new(:procedure) unless key
 
-      Node.new :procedure, [Node.new(:name, [key])],
+      Node.new :procedure, [Node.new(:key, [key])],
         urtext: key.to_s,
         source: key.to_s
     end

@@ -17,7 +17,7 @@ module Fmt
           macros: [{
             urtext: "ljust(80, '.')",
             source: "ljust(80, '.')",
-            name: :ljust,
+            key: :ljust,
             callable: Proc,
             args: [80, "."],
             kwargs: {}
@@ -41,7 +41,7 @@ module Fmt
             {
               urtext: "ljust(80, '.')",
               source: "ljust(80, '.')",
-              name: :ljust,
+              key: :ljust,
               callable: Proc,
               args: [80, "."],
               kwargs: {}
@@ -49,7 +49,7 @@ module Fmt
             {
               urtext: "cyan",
               source: "cyan",
-              name: :cyan,
+              key: :cyan,
               callable: Proc,
               args: [],
               kwargs: {}
@@ -78,7 +78,7 @@ module Fmt
             {
               urtext: "pluralize(2, locale: :en)",
               source: "pluralize(2, locale: :en)",
-              name: :pluralize,
+              key: :pluralize,
               callable: Proc,
               args: [2],
               kwargs: {locale: :en}
@@ -86,7 +86,7 @@ module Fmt
             {
               urtext: "titleize",
               source: "titleize",
-              name: :titleize,
+              key: :titleize,
               callable: Proc,
               args: [],
               kwargs: {}
@@ -94,7 +94,7 @@ module Fmt
             {
               urtext: "truncate(30, '.')",
               source: "truncate(30, '.')",
-              name: :truncate,
+              key: :truncate,
               callable: Proc,
               args: [30, "."],
               kwargs: {}
@@ -102,7 +102,7 @@ module Fmt
             {
               urtext: "red",
               source: "red",
-              name: :red,
+              key: :red,
               callable: Proc,
               args: [],
               kwargs: {}
@@ -110,7 +110,7 @@ module Fmt
             {
               urtext: "bold",
               source: "bold",
-              name: :bold,
+              key: :bold,
               callable: Proc,
               args: [],
               kwargs: {}
@@ -118,7 +118,7 @@ module Fmt
             {
               urtext: "underline",
               source: "underline",
-              name: :underline,
+              key: :underline,
               callable: Proc,
               args: [],
               kwargs: {}

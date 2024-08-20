@@ -14,7 +14,7 @@ module Fmt
         (pipeline
           (macro
             (procedure
-              (name :ljust))
+              (key :ljust))
             (arguments
               (tokens
                 (lparen "(")
@@ -40,7 +40,7 @@ module Fmt
         (pipeline
           (macro
             (procedure
-              (name :ljust))
+              (key :ljust))
             (arguments
               (tokens
                 (lparen "(")
@@ -53,7 +53,7 @@ module Fmt
                 (rparen ")"))))
           (macro
             (procedure
-              (name :cyan))))
+              (key :cyan))))
       AST
 
       assert_equal expected.rstrip, ast.to_s
@@ -69,7 +69,7 @@ module Fmt
         (pipeline
           (macro
             (procedure
-              (name :sprintf))
+              (key :sprintf))
             (arguments
               (tokens
                 (lparen "(")
@@ -79,7 +79,7 @@ module Fmt
                 (rparen ")"))))
           (macro
             (procedure
-              (name :ljust))
+              (key :ljust))
             (arguments
               (tokens
                 (lparen "(")
@@ -92,7 +92,7 @@ module Fmt
                 (rparen ")"))))
           (macro
             (procedure
-              (name :cyan))))
+              (key :cyan))))
       AST
 
       assert_equal expected.rstrip, ast.to_s
@@ -108,7 +108,7 @@ module Fmt
         (pipeline
           (macro
             (procedure
-              (name :pluralize))
+              (key :pluralize))
             (arguments
               (tokens
                 (lparen "(")
@@ -122,10 +122,10 @@ module Fmt
                 (rparen ")"))))
           (macro
             (procedure
-              (name :titleize)))
+              (key :titleize)))
           (macro
             (procedure
-              (name :truncate))
+              (key :truncate))
             (arguments
               (tokens
                 (lparen "(")
@@ -138,13 +138,13 @@ module Fmt
                 (rparen ")"))))
           (macro
             (procedure
-              (name :red)))
+              (key :red)))
           (macro
             (procedure
-              (name :bold)))
+              (key :bold)))
           (macro
             (procedure
-              (name :underline))))
+              (key :underline))))
       AST
 
       assert_equal expected.rstrip, ast.to_s

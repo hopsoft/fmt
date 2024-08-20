@@ -4,15 +4,11 @@
 
 module Fmt
   class TemplateParser < Parser
-    FORMAT_PREFIX = Regexp.new(Regexp.escape(Sigils::FORMAT_PREFIX)).freeze       # :: Regexp -- template prefix
-    KEY_PREFIX = Regexp.new("(?<!\\s|%%)[%s]" % Sigils::KEY_PREFIXES.join).freeze # :: Regexp -- named-template key prefix
-    KEY_VALUE = /\w+/                                                             # :: Regexp -- named-template key value
-    KEY_SUFFIX = Regexp.new("[%s]" % Sigils::KEY_SUFFIXES.join).freeze            # :: Regexp -- named-template key suffix
+    FORMAT_PREFIX = Regexp.new(Regexp.escape(Sigils::FORMAT_PREFIX)).freeze # :: Regexp -- template prefix
 
-    # :: Regexp -- macros
+    # @rbs return: Regexp -- macros
     MACROS = Regexp.new("(?=\\s|%%|%{embed_prefix}|$)(.*[%{args_suffix}])*" % {
       embed_prefix: Regexp.escape(Sigils::EMBED_PREFIX),
-      embed_suffix: Regexp.escape(Sigils::EMBED_SUFFIX),
       args_suffix: Sigils::ARGS_SUFFIX
     }).freeze
 
@@ -23,7 +19,7 @@ module Fmt
       @scanner = StringScanner.new(urtext)
     end
 
-    attr_reader :urtext   # :: String -- original source code
+    attr_reader :urtext # :: String -- original source code
 
     # Parses the urtext (original source code)
     # @rbs return: Node[TemplateNode]
@@ -41,30 +37,21 @@ module Fmt
 
     def extract
       scanner.scan_until FORMAT_PREFIX
-      return {key: nil, pipeline: nil, embeds: nil} unless scanner.matched?
-
-      key = begin
-        scanner.skip_until KEY_PREFIX
-        key = scanner.scan(KEY_VALUE) if scanner.matched?
-        scanner.skip_until KEY_SUFFIX if scanner.matched?
-        key
-      end
+      return {embeds: nil, pipeline: nil} unless scanner.matched?
 
       {
-        key: key,
+        embeds: embeds,
         pipeline: scanner.scan_until(MACROS)
       }
     end
 
-    def transform(key:, pipeline:)
+    def transform(embeds:, pipeline:)
       children = []
-      children << Node.new(:key, [key]) if key
-      children << PipelineParser.new(pipeline).parse if pipeline
+      children << PipelineParser.new(pipeline).parse if pipeline&.size&.positive?
       children << embeds unless embeds.empty?
 
       source = begin
         list = [Sigils::FORMAT_PREFIX]
-        list << "#{Sigils::KEY_PREFIXES[0]}#{key}#{Sigils::KEY_SUFFIXES[0]}" if key
         list << children.find { _1 in [:pipeline, *] }&.source
         list << scanner.rest
         list.join

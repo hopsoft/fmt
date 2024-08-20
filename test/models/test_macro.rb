@@ -14,7 +14,7 @@ module Fmt
         macro => {
           urtext: "strip",
           source: "strip",
-          name: :strip,
+          key: :strip,
           callable: Proc,
           args: [],
           kwargs: {}
@@ -32,7 +32,7 @@ module Fmt
         macro => {
           urtext: "ljust(80, '.')",
           source: "ljust(80, '.')",
-          name: :ljust,
+          key: :ljust,
           callable: Proc,
           args: [80, "."],
           kwargs: {}
@@ -50,7 +50,7 @@ module Fmt
         macro => {
           urtext: "truncate(20, omission: '&hellip;')",
           source: "truncate(20, omission: '&hellip;')",
-          name: :truncate,
+          key: :truncate,
           callable: Proc,
           args: [20],
           kwargs: {omission: "&hellip;"}

@@ -22,6 +22,7 @@ module Fmt
       @type = type.to_s.delete_prefix("on_").to_sym # strip Ripper's "on_" prefix for parser semantics
       @token = token
       @state = state
+      freeze
     end
 
     attr_reader :ripper_token # :: Array[[Integer, Integer], Symbol, String, Object]
@@ -63,6 +64,13 @@ module Fmt
     # --------------------------------------------------------------------------
     # @!group Helpers
     # --------------------------------------------------------------------------
+
+    # Indicates if the token is a native String format specifier
+    # @rbs return: bool
+    def specifier?
+      identifier? && Sigils::FORMAT_SPECIFIERS.any?(value)
+    end
+
     # Indicates if the token is a variable or method name
     # @rbs return: bool
     def identifier?
