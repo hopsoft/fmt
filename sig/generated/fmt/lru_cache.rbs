@@ -21,8 +21,9 @@ module Fmt
     DEFAULT_CAPACITY: ::Integer
 
     # Constructor
+    # @rbs capacity: Integer -- max capacity (negative values are uncapped, default: 5_000)
     # @rbs return: Fmt::Cache
-    def initialize: (?capacity: untyped) -> Fmt::Cache
+    def initialize: (?capacity: Integer) -> Fmt::Cache
 
     # The cache max capacity (number of entries)
     # @rbs return: Integer
@@ -32,6 +33,10 @@ module Fmt
     # @rbs capacity: Integer -- new max capacity
     # @rbs return: Integer -- new max capacity
     def capacity=: (Integer capacity) -> Integer
+
+    # Indicates if the cache is capped
+    # @rbs return: bool
+    def capped?: () -> bool
 
     # Clears the cache
     # @rbs return: void
@@ -49,6 +54,10 @@ module Fmt
     # @rbs block: Proc -- block to call to get the default value
     # @rbs return: Object -- value
     def fetch: (String | Symbol key, ?Object default) ?{ (?) -> untyped } -> Object
+
+    # Indicates if the cache is full
+    # @rbs return: bool
+    def full?: () -> bool
 
     # Retrieves the value for the specified key
     # @rbs key: String | Symbol -- key to retrieve

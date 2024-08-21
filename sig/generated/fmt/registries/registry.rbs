@@ -5,12 +5,10 @@ module Fmt
   class Registry
     extend Forwardable
 
-    DEFAULT_CAPACITY: ::Integer
-
     INSTANCE_VAR: ::Symbol
 
     # Constructor
-    def initialize: (?capacity: untyped) -> untyped
+    def initialize: () -> untyped
 
     # Retrieves a Proc from the registry
     # @rbs key: String | Symbol -- key to retrieve
