@@ -23,6 +23,7 @@ module Fmt
     DEFAULT_CAPACITY = 5_000 # :: Integer -- default capacity
 
     # Constructor
+    # @rbs capacity: Integer -- max capacity (negative values are uncapped, default: 5_000)
     # @rbs return: Fmt::Cache
     def initialize(capacity: DEFAULT_CAPACITY)
       super()
@@ -41,6 +42,12 @@ module Fmt
     # @rbs return: Integer -- new max capacity
     def capacity=(capacity)
       synchronize { @capacity = capacity.to_i }
+    end
+
+    # Indicates if the cache is capped
+    # @rbs return: bool
+    def capped?
+      synchronize { capacity >= 0 }
     end
 
     # Clears the cache
@@ -66,6 +73,12 @@ module Fmt
       return get(key) if key?(key)
       default ||= block&.call
       synchronize { put key, default }
+    end
+
+    # Indicates if the cache is full
+    # @rbs return: bool
+    def full?
+      synchronize { capped? && store.size > capacity }
     end
 
     # Retrieves the value for the specified key
@@ -96,13 +109,9 @@ module Fmt
     # @rbs return: Object -- value
     def put(key, value)
       synchronize do
-        # reposition the key/value pair
-        delete key
+        delete key if capped? # keep keey fresh if capped
         store[key] = value
-
-        # resize the cache if necessary
-        store.shift if size > capacity
-
+        store.shift if full? # resize the cache if necessary
         value
       end
     end

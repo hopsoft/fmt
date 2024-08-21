@@ -7,14 +7,12 @@ module Fmt
   class Registry
     extend Forwardable
 
-    DEFAULT_CAPACITY = 1_000_000 # :: Integer -- default capacity
-
     INSTANCE_VAR = :@fmt_registry_key # :: Symbol -- instance variable set on registered Procs
     private_constant :INSTANCE_VAR
 
     # Constructor
-    def initialize(capacity: DEFAULT_CAPACITY)
-      @store = LRUCache.new(capacity: capacity)
+    def initialize
+      @store = LRUCache.new(capacity: -1)
     end
 
     def_delegator :store, :to_h # :: Hash[Symbol, Proc]
