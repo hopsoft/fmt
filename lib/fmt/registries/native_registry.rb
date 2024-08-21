@@ -40,6 +40,8 @@ module Fmt
       method_names.each do |method_name|
         add(method_name) { |*args| public_send(method_name, *args) }
       end
+    rescue => error
+      puts "#{self.class.name} - Error adding filters! #{error.inspect}"
     end
   end
 end

@@ -1,0 +1,17 @@
+# Generated from lib/fmt/parsers/root_parser.rb with RBS::Inline
+
+module Fmt
+  class RootParser < Parser
+    FORMAT_PREFIX: untyped
+
+    # Constructor
+    # @rbs source: String -- source code
+    def initialize: (?String source) -> untyped
+
+    attr_reader source: untyped
+
+    # Parses the source
+    # @rbs return: Fmt::RootAST
+    def perform: () -> Fmt::RootAST
+  end
+end

@@ -32,7 +32,7 @@ require_relative "parsers/procedure_parser"
 require_relative "parsers/arguments_parser"
 require_relative "parsers/macro_parser"
 require_relative "parsers/pipeline_parser"
-require_relative "parsers/embed_parser"
+require_relative "parsers/embeds_parser"
 require_relative "parsers/template_parser"
 # require_relative "parsers/root_parser"
 

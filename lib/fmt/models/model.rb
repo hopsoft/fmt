@@ -3,6 +3,8 @@
 # rbs_inline: enabled
 
 module Fmt
+  # Superclass for all models
+  # @note Models are constructed from AST nodes
   class Model
     # @see http://whitequark.github.io/ast/AST/Processor/Mixin.html
     include AST::Processor::Mixin

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rbs_inline: enabled
+
 module Fmt
   # Ruby source code token extractor
   #
@@ -9,9 +11,11 @@ module Fmt
   #
   # @example Ripper token
   #   [[lineno, column], type, token, state]
+  #   [[Integer, Integer], Symbol, String, Object]
   #
   class Tokenizer
     # Constructor
+    # @rbs urtext: String -- original source code
     def initialize(urtext)
       @urtext = urtext.to_s
       @tokens = []
@@ -20,8 +24,8 @@ module Fmt
     attr_reader :urtext # :: String -- original source code
     attr_reader :tokens # :: Array[Object] -- result of tokenization
 
-    # Tokenizes the urtext (original source code) and extracts macro tokens
-    # @rbs return: Array[Token] -- Ripper tokens
+    # Tokenizes the urtext (original source code)
+    # @rbs return: Array[Token] -- wrapped ripper tokens
     def tokenize
       Ripper.lex(urtext).each do |token|
         tokens << Token.new(token)

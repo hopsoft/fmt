@@ -4,7 +4,7 @@
 
 module Fmt
   class RootParser < Parser
-    FORMAT_PREFIX = Regexp.new("(?<=%s)" % Regexp.escape(Sigils::FORMAT_PREFIX)).freeze # :: Regexp -- template prefix
+    FORMAT_PREFIX = Regexp.new("(?<=%s)" % Sigils::FORMAT_PREFIX).freeze # :: Regexp -- template prefix
 
     # Constructor
     # @rbs source: String -- source code

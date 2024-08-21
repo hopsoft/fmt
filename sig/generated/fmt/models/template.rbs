@@ -1,0 +1,44 @@
+# Generated from lib/fmt/models/template.rb with RBS::Inline
+
+module Fmt
+  # Represents a formattable string
+  #
+  # A Template is comprised of:
+  # 1. pipeline :: Pipeline -- series of Macros
+  # 2. embeds: Array[Template] -- embedded templates
+  #
+  # @note Embeds are processed in sequence (inner to outer)
+  #
+  # @examples
+  #   %s
+  #   %.10f
+  #   %{value}s
+  #   %<value>.10f
+  #   %{value}
+  #   %<value>
+  #   %<value>.12f|>p|>truncate(10, '.')
+  #   %{value}red|>bold|>underline
+  #   %<one>red{{%<two>ljust(80, '.')|>green {{%<three>blue}}}}
+  class Template < Model
+    # Constructor
+    # @rbs ast: Node
+    def initialize: (Node ast) -> untyped
+
+    attr_reader pipeline: untyped
+
+    attr_reader embeds: untyped
+
+    # @rbs return: Hash[Symbol, Object]
+    def to_h: () -> Hash[Symbol, Object]
+
+    def self?: (untyped node) -> untyped
+
+    def on_template: (untyped node) -> untyped
+
+    def on_pipeline: (untyped node) -> untyped
+
+    # @note The embeds node has template children
+    #       processing children (re)triggers the on_template handler for each embedded template
+    def on_embeds: (untyped node) -> untyped
+  end
+end

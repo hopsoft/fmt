@@ -1,0 +1,6 @@
+# Generated from lib/fmt/formatter.rb with RBS::Inline
+
+module Fmt
+  class Formatter
+  end
+end

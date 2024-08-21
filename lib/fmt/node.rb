@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 # rbs_inline: enabled
-# rubocop:disable Lint/MissingCopEnableDirective
-# rubocop:disable Layout/ExtraSpacing
 
 module Fmt
-  # Superclass for custom AST nodes
+  # Extends behavior of AST::Node
   class Node < AST::Node
     extend Forwardable
 
@@ -51,7 +49,7 @@ module Fmt
     # @rbs return: Node? | Object?
     def_delegator :children, :[]
 
-    # Indicates if the node does not have children
+    # Indicates if no children exist
     # @rbs return: bool
     def_delegator :children, :empty?
 
@@ -60,7 +58,7 @@ module Fmt
     def_delegator :children, :size
 
     # Recursively searches the tree for a descendant node
-    # @rbs types: Array[Symbol] -- types to search for
+    # @rbs types: Array[Object] -- node types to find
     # @rbs return: Node?
     def dig(*types)
       node = find(types.shift) if types.any?
@@ -69,27 +67,27 @@ module Fmt
     end
 
     # Finds the first child node of the specified type
-    # @rbs type: Symbol -- type to search for
+    # @rbs type: Object -- node type to find
     # @rbs return: Node?
     def find(type)
       case type
-      when Symbol then children.find {  _1 in [^type, *]  }
+      when Symbol then children.find { _1 in [^type, *] }
       when Class then children.find { _1 in type }
       end
     end
 
-    # Flattens AST nodes that have children of the same type
+    # Flattens Node descendants into a one dimensional array
     # @rbs return: Array[Node]
     def flatten
       node_descendants.prepend self
     end
 
     # Finds all child nodes of the specified type
-    # @rbs type: Symbol -- type to search for
+    # @rbs type: Object -- node type to select
     # @rbs return: Node?
     def select(type)
       [].concat case type
-      when Symbol then children.select {  _1 in [^type, *]  }
+      when Symbol then children.select { _1 in [^type, *] }
       when Class then children.select { _1 in type }
       else []
       end
@@ -99,8 +97,9 @@ module Fmt
     # @rbs squish: bool -- remove extra whitespace
     # @rbs return: String
     def to_s(squish: false)
-      return to_s.gsub(/\s{2,}/, " ") if squish
-      super()
+      value = super()
+      return value unless squish
+      value.gsub(/\s{2,}/, " ")
     end
 
     private

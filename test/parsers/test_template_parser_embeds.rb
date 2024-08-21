@@ -10,7 +10,23 @@ module Fmt
         ast = Fmt::TemplateParser.new(source).parse
         assert_instance_of Node, ast
         assert_equal source, ast.urtext
-        assert_equal "%<one>red{{embed_0_0}} {{embed_0_1}}", ast.source
+        assert_equal source, ast.source
+
+        # first level embeds
+        assert_equal 2, ast.find(:embeds).size
+        assert_equal "%<two>ljust(80, '.')|>green {{%<three>blue {{%<four>yellow|>underline}}}}", ast.find(:embeds)[0].urtext
+        assert_equal "%<two>ljust(80, '.')|>green {{%<three>blue {{%<four>yellow|>underline}}}}", ast.find(:embeds)[0].source
+        assert_equal "%<five>cyan|>bold", ast.find(:embeds)[1].source
+
+        # second level embeds (nested)
+        assert_equal 1, ast.find(:embeds)[0].find(:embeds).size
+        assert_equal "%<three>blue {{%<four>yellow|>underline}}", ast.find(:embeds)[0].find(:embeds)[0].urtext
+        assert_equal "%<three>blue {{%<four>yellow|>underline}}", ast.find(:embeds)[0].find(:embeds)[0].source
+
+        # third level embeds (deepest)
+        assert_equal 1, ast.find(:embeds)[0].find(:embeds)[0].find(:embeds).size
+        assert_equal "%<four>yellow|>underline", ast.find(:embeds)[0].find(:embeds)[0].find(:embeds)[0].urtext
+        assert_equal "%<four>yellow|>underline", ast.find(:embeds)[0].find(:embeds)[0].find(:embeds)[0].source
 
         expected = <<~AST
           (template
@@ -19,42 +35,50 @@ module Fmt
                 (procedure
                   (key :red))))
             (embeds
-              (embed
-                (name "embed_0_0")
-                (placeholder "{{embed_0_0}}")
+              (template
+                (pipeline
+                  (macro
+                    (procedure
+                      (key :ljust))
+                    (arguments
+                      (tokens
+                        (lparen "(")
+                        (int "80")
+                        (comma ",")
+                        (sp " ")
+                        (tstring-beg "'")
+                        (tstring-content ".")
+                        (tstring-end "'")
+                        (rparen ")"))))
+                  (macro
+                    (procedure
+                      (key :green))))
                 (embeds
-                  (embed
-                    (name "embed_1_0")
-                    (placeholder "{{embed_1_0}}")
+                  (template
+                    (pipeline
+                      (macro
+                        (procedure
+                          (key :blue))))
                     (embeds
-                      (embed
-                        (name "embed_2_0")
-                        (placeholder "{{embed_2_0}}"))))))
-              (embed
-                (name "embed_0_1")
-                (placeholder "{{embed_0_1}}"))))
+                      (template
+                        (pipeline
+                          (macro
+                            (procedure
+                              (key :yellow)))
+                          (macro
+                            (procedure
+                              (key :underline)))))))))
+              (template
+                (pipeline
+                  (macro
+                    (procedure
+                      (key :cyan)))
+                  (macro
+                    (procedure
+                      (key :bold)))))))
         AST
 
         assert_equal expected.rstrip, ast.to_s
-
-        embeds = ast.find(:embeds)
-
-        assert_equal 2, embeds.size
-        assert_equal "%<one>red{{embed_0_0}} {{embed_0_1}}", embeds.source
-        assert_equal "{{%<two>ljust(80, '.')|>green {{%<three>blue {{%<four>yellow|>underline}}}}}}", embeds[0].source
-        assert_equal "{{%<five>cyan|>bold}}", embeds[1].source
-
-        embeds = embeds[0].find(:embeds)
-        assert_equal 1, embeds.size
-        assert_equal "%<two>ljust(80, '.')|>green {{embed_1_0}}", embeds.source
-        assert_equal "{{%<three>blue {{%<four>yellow|>underline}}}}", embeds[0].source
-
-        embeds = embeds[0].find(:embeds)
-        assert_equal 1, embeds.size
-        assert_equal "%<three>blue {{embed_2_0}}", embeds.source
-        assert_equal "{{%<four>yellow|>underline}}", embeds[0].source
-
-        assert_nil ast.find(:embeds)[1].find(:embeds)
       end
     end
   end

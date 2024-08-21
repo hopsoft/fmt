@@ -1,18 +1,21 @@
 # frozen_string_literal: true
 
+# rbs_inline: enabled
+
 module Fmt
   # Convenience wrapper for Ripper tokens
+  #
   # @see https://rubyapi.org/3.4/o/ripper
   # @see doc/RIPPER.md (cheetsheet)
+  #
+  # @example Ripper Token
+  #   [[lineno, column], type, token, state]
+  #   [[Integer, Integer], Symbol, String, Object]
+  #
   class Token
     include Matchable
 
     # Constructor
-    #
-    # @example Ripper Token
-    #   [[lineno, column], type, token, state]
-    #   [[Integer, Integer], Symbol, String, Object]
-    #
     # @rbs ripper_token: Array[[Integer, Integer], Symbol, String, Object] -- Ripper token
     def initialize(ripper_token)
       (lineno, column), type, token, state = ripper_token
@@ -32,8 +35,8 @@ module Fmt
     attr_reader :token        # :: String
     attr_reader :state        # :: Object
 
-    # @note The entire data structure is considered a "token",
-    #       so the embedded "token" is aliased as "value" to reduce confusion
+    # @note The entire data structure is considered a "token"
+    #       Alias the embedded "token" as "value" to reduce confusion
     alias_method :value, :token
 
     # Returns a Hash representation of the token
@@ -66,36 +69,25 @@ module Fmt
     # --------------------------------------------------------------------------
 
     # Indicates if the token is a native String format specifier
+    # @see Sigils::FORMAT_SPECIFIERS
     # @rbs return: bool
     def specifier?
       identifier? && Sigils::FORMAT_SPECIFIERS.any?(value)
     end
 
-    # Indicates if the token is a variable or method name
+    # Indicates if the token is an identifier (e.g. method name, format specifier, variable name, etc.)
     # @rbs return: bool
     def identifier?
       type == :ident
     end
 
-    # Indicates if the token is a String
-    # @rbs return: bool
-    def string?
-      type == :tstring_content
-    end
-
-    # Indicates if the token is a Symbol
-    # @rbs return: bool
-    def symbol?
-      type == :symbeg
-    end
-
-    # Indicates if the token begins arguments for a method definition or call
+    # Indicates if the token is a left paren (i.e. start of arguments)
     # @rbs return: bool
     def arguments_start?
       type == :lparen
     end
 
-    # Indicates if the token finishes arguments for a method definition or call
+    # Indicates if the token is a right paren (i.e. end of arguments)
     # @rbs return: bool
     def arguments_finish?
       type == :rparen

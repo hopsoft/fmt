@@ -28,7 +28,7 @@ module Fmt
         end
       end
     rescue => error
-      puts "Error adding Rainbow filters! #{error.inspect}"
+      puts "#{self.class.name} - Error adding filters! #{error.inspect}"
     end
   end
 end

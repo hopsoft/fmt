@@ -1,0 +1,25 @@
+# Generated from lib/fmt/parsers/arguments_parser.rb with RBS::Inline
+
+module Fmt
+  # Parses arguments from a string and builds an AST (Abstract Syntax Tree)
+  class ArgumentsParser < Parser
+    # Constructor
+    # @rbs urtext: String -- original source code
+    def initialize: (?String urtext) -> untyped
+
+    attr_reader urtext: untyped
+
+    # Parses the urtext (original source code)
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    def parse: () -> Node
+
+    # Extracts components for building the AST (Abstract Syntax Tree)
+    # @rbs return: Hash[Symbol, Object] -- extracted components
+    def extract: () -> Hash[Symbol, Object]
+
+    # Transforms extracted components into an AST (Abstract Syntax Tree)
+    # @rbs tokens: Array[Token] -- extracted tokens
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    def transform: (tokens: Array[Token]) -> Node
+  end
+end

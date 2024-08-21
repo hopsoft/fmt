@@ -3,6 +3,7 @@
 # rbs_inline: enabled
 
 module Fmt
+  # Parses a macro from a string and builds an AST (Abstract Syntax Tree)
   class MacroParser < Parser
     # Constructor
     # @rbs urtext: String -- original source code
@@ -13,7 +14,7 @@ module Fmt
     attr_reader :urtext # : String -- original source code
 
     # Parses the urtext (original source code)
-    # @rbs return: Node -- (macro (procedure (name Symbol)) (arguments (tokens (Symbol, String), *)))
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
     def parse
       cache(urtext) { super }
     end
@@ -21,7 +22,7 @@ module Fmt
     protected
 
     # Extracts components for building the AST (Abstract Syntax Tree)
-    # @rbs return: Array[Node?, Node?] -- [procedure, arguments]
+    # @rbs return: Hash[Symbol, Object] -- extracted components
     def extract
       tokenizer = Tokenizer.new(urtext)
       tokenizer.tokenize
@@ -30,19 +31,16 @@ module Fmt
       key = identifiers.last&.to_sym
       key = Sigils::FORMAT_METHOD unless key && Fmt.registry.key?(key)
 
-      {
-        key: key,
-        tokens: tokenizer.tokens
-      }
+      {key: key, tokens: tokenizer.tokens}
     end
 
     # Transforms extracted components into an AST (Abstract Syntax Tree)
     # @rbs key: Symbol?
     # @rbs tokens: Array[Token]
-    # @rbs return: Node -- (macro (procedure (name Symbol)) (arguments (tokens (Symbol, String), *)))
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
     def transform(key:, tokens:)
       source = case key
-      in Sigils::FORMAT_METHOD then "#{key}(%Q[%#{urtext}])"
+      in Sigils::FORMAT_METHOD then "%s(%%Q[%s%s])" % [key, Sigils::FORMAT_PREFIX, urtext]
       else urtext
       end
 

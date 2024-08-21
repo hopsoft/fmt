@@ -1,0 +1,57 @@
+# Generated from lib/fmt/token.rb with RBS::Inline
+
+module Fmt
+  # Convenience wrapper for Ripper tokens
+  #
+  # @see https://rubyapi.org/3.4/o/ripper
+  # @see doc/RIPPER.md (cheetsheet)
+  #
+  # @example Ripper Token
+  #   [[lineno, column], type, token, state]
+  #   [[Integer, Integer], Symbol, String, Object]
+  class Token
+    include Matchable
+
+    # Constructor
+    # @rbs ripper_token: Array[[Integer, Integer], Symbol, String, Object] -- Ripper token
+    def initialize: (Array[[ Integer, Integer ], Symbol, String, Object] ripper_token) -> untyped
+
+    attr_reader ripper_token: untyped
+
+    attr_reader lineno: untyped
+
+    attr_reader column: untyped
+
+    attr_reader type: untyped
+
+    attr_reader token: untyped
+
+    attr_reader state: untyped
+
+    # Returns a Hash representation of the token
+    # @rbs return: Hash[Symbol, Object]
+    def to_h: () -> Hash[Symbol, Object]
+
+    # Returns a Hash representation of the token limited to the given keys
+    # @rbs keys: Array[Symbol] -- keys to include
+    # @rbs return: Hash[Symbol, Object]
+    def deconstruct_keys: (?Array[Symbol] keys) -> Hash[Symbol, Object]
+
+    # Indicates if the token is a native String format specifier
+    # @see Sigils::FORMAT_SPECIFIERS
+    # @rbs return: bool
+    def specifier?: () -> bool
+
+    # Indicates if the token is an identifier (e.g. method name, format specifier, variable name, etc.)
+    # @rbs return: bool
+    def identifier?: () -> bool
+
+    # Indicates if the token is a left paren (i.e. start of arguments)
+    # @rbs return: bool
+    def arguments_start?: () -> bool
+
+    # Indicates if the token is a right paren (i.e. end of arguments)
+    # @rbs return: bool
+    def arguments_finish?: () -> bool
+  end
+end

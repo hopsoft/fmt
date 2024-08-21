@@ -1,0 +1,27 @@
+# Generated from lib/fmt/models/procedure.rb with RBS::Inline
+
+module Fmt
+  # Represents a callable (i.e. Proc)
+  #
+  # A Procedure is comprised of:
+  # 1. key: Symbol
+  # 2. callable: Proc
+  class Procedure < Model
+    attr_reader key: untyped
+
+    attr_reader callable: untyped
+
+    # Hash representation of the model (required for pattern matching)
+    # @rbs return: Hash[Symbol, Object]
+    def to_h: () -> Hash[Symbol, Object]
+
+    # Processes a procedure AST node
+    # @rbs node: Node
+    # @rbs return: void
+    def on_procedure: (Node node) -> void
+
+    # Processes a key AST node
+    # @rbs node: Node
+    def on_key: (Node node) -> untyped
+  end
+end

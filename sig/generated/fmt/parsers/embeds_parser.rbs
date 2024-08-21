@@ -1,0 +1,49 @@
+# Generated from lib/fmt/parsers/embeds_parser.rb with RBS::Inline
+
+module Fmt
+  # Parses embeds from a string and builds an AST (Abstract Syntax Tree)
+  class EmbedsParser < Parser
+    PREFIX: untyped
+
+    SUFFIX: untyped
+
+    # Constructor
+    # @rbs urtext: String -- original source code
+    def initialize: (?String urtext) -> untyped
+
+    attr_reader urtext: untyped
+
+    # Parses the urtext (original source code)
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    def parse: () -> Node
+
+    attr_reader scanner: untyped
+
+    # Extracts components for building the AST (Abstract Syntax Tree)
+    # @rbs return: Hash[Symbol, Object] -- extracted components
+    def extract: () -> Hash[Symbol, Object]
+
+    # Extracts all embed strings
+    # @rbs return: Array[String]
+    def extract_embeds: () -> Array[String]
+
+    # Extracts the next embed string
+    # @rbs return: String?
+    def extract_embed: () -> String?
+
+    # Transforms extracted components into an AST (Abstract Syntax Tree)
+    # @rbs embeds: Array[String] -- extracted embeds
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    def transform: (embeds: Array[String]) -> Node
+
+    # Indicates if the text represents a balanced embed (equal prefixes and suffixes)
+    # @rbs text: String
+    # @rbs return: bool
+    def balanced?: (String text) -> bool
+
+    # Indicates if the text represents an unbalanced embed (unequal prefixes and suffixes)
+    # @rbs text: String
+    # @rbs return: bool
+    def unbalanced?: (String text) -> bool
+  end
+end

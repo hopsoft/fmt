@@ -1,0 +1,31 @@
+# Generated from lib/fmt/parsers/template_parser.rb with RBS::Inline
+
+module Fmt
+  # Parses a template from a string and builds an AST (Abstract Syntax Tree)
+  class TemplateParser < Parser
+    FORMAT_START: untyped
+
+    PIPELINE: untyped
+
+    # Constructor
+    # @rbs urtext: String -- original source code
+    def initialize: (?String urtext) -> untyped
+
+    attr_reader urtext: untyped
+
+    # Parses the urtext (original source code)
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    def parse: () -> Node
+
+    attr_reader scanner: untyped
+
+    # Extracts components for building the AST (Abstract Syntax Tree)
+    # @rbs return: Hash[Symbol, Object] -- extracted components
+    def extract: () -> Hash[Symbol, Object]
+
+    # Transforms extracted components into an AST (Abstract Syntax Tree)
+    # @rbs pipeline: String -- extracted pipeline
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    def transform: (pipeline: String) -> Node
+  end
+end

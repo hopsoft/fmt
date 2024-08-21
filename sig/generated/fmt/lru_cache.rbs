@@ -1,6 +1,4 @@
-# frozen_string_literal: true
-
-# rbs_inline: enabled
+# Generated from lib/fmt/lru_cache.rb with RBS::Inline
 
 module Fmt
   # A threadsafe fixed-size LRU in-memory cache
@@ -20,41 +18,29 @@ module Fmt
   class LRUCache
     include MonitorMixin
 
-    DEFAULT_CAPACITY = 5_000 # :: Integer -- default capacity
+    DEFAULT_CAPACITY: ::Integer
 
     # Constructor
     # @rbs return: Fmt::Cache
-    def initialize(capacity: DEFAULT_CAPACITY)
-      super()
-      @capacity = capacity
-      @store = {}
-    end
+    def initialize: (?capacity: untyped) -> Fmt::Cache
 
     # The cache max capacity (number of entries)
     # @rbs return: Integer
-    def capacity
-      synchronize { @capacity }
-    end
+    def capacity: () -> Integer
 
     # Set the max capacity (number of entries)
     # @rbs capacity: Integer -- new max capacity
     # @rbs return: Integer -- new max capacity
-    def capacity=(capacity)
-      synchronize { @capacity = capacity.to_i }
-    end
+    def capacity=: (Integer capacity) -> Integer
 
     # Clears the cache
     # @rbs return: void
-    def clear
-      synchronize { store.clear }
-    end
+    def clear: () -> void
 
     # Deletes the entry for the specified key
     # @rbs key: String | Symbol -- key to delete
     # @rbs return: Object? -- the deleted value
-    def delete(key)
-      synchronize { store.delete key }
-    end
+    def delete: (String | Symbol key) -> Object?
 
     # Fetches the value for the specified key
     # Writes the default value if the key is not found
@@ -62,101 +48,59 @@ module Fmt
     # @rbs default: Object -- default value to write
     # @rbs block: Proc -- block to call to get the default value
     # @rbs return: Object -- value
-    def fetch(key, default = nil, &block)
-      return get(key) if key?(key)
-      default ||= block&.call
-      synchronize { put key, default }
-    end
+    def fetch: (String | Symbol key, ?Object default) ?{ (?) -> untyped } -> Object
 
     # Retrieves the value for the specified key
     # @rbs key: String | Symbol -- key to retrieve
-    def get(key)
-      synchronize do
-        reposition(key) if key?(key)
-        store[key]
-      end
-    end
+    def get: (String | Symbol key) -> untyped
 
     # Cache keys
     # @rbs return: Array[Symbol]
-    def keys
-      synchronize { store.keys }
-    end
+    def keys: () -> Array[Symbol]
 
     # Indicates if the cache contains the specified key
     # @rbs key: String | Symbol -- key to check
     # @rbs return: bool
-    def key?(key)
-      synchronize { store.key? key }
-    end
+    def key?: (String | Symbol key) -> bool
 
     # Stores the value for the specified key
     # @rbs key: String | Symbol -- key to store
     # @rbs value: Object -- value to store
     # @rbs return: Object -- value
-    def put(key, value)
-      synchronize do
-        # reposition the key/value pair
-        delete key
-        store[key] = value
-
-        # resize the cache if necessary
-        store.shift if size > capacity
-
-        value
-      end
-    end
+    def put: (String | Symbol key, Object value) -> Object
 
     # Resets the cache capacity to the default
     # @rbs return: Integer -- capacity
-    def reset_capacity
-      synchronize { @capacity = DEFAULT_CAPACITY }
-    end
+    def reset_capacity: () -> Integer
 
     # The current size of the cache (number of entries)
     # @rbs return: Integer
-    def size
-      synchronize { store.size }
-    end
+    def size: () -> Integer
 
     # Returns a Hash with only the given keys
     # @rbs keys: Array[Object] -- keys to include
     # @rbs return: Hash[Object, Object]
-    def slice(*keys)
-      synchronize { store.slice(*keys) }
-    end
+    def slice: (*untyped keys) -> Hash[Object, Object]
 
     # Hash representation of the cache
     # @rbs return: Hash[Symbol, Proc]
-    def to_h
-      synchronize { store.dup }
-    end
+    def to_h: () -> Hash[Symbol, Proc]
 
     # Cache values
     # @rbs return: Array[Object]
-    def values
-      synchronize { store.values }
-    end
+    def values: () -> Array[Object]
 
     # Executes a block with a synchronized mutex
     # @rbs block: Proc -- block to execute
-    def lock(&block)
-      synchronize(&block)
-    end
-
-    alias_method :[], :get  # :: Object -- alias for get
-    alias_method :[]=, :put # :: Object -- alias for put
+    def lock: () ?{ (?) -> untyped } -> untyped
 
     private
 
-    attr_reader :store # :: Hash[Symbol, Object]
+    attr_reader store: untyped
 
     # Moves the key to the end keeping it fresh
     # @rbs key: Symbol -- key to reposition
     # @rbs return: Object -- value
-    def reposition(key)
-      value = store.delete(key)
-      store[key] = value
-    end
+    def reposition: (Symbol key) -> Object
   end
 end

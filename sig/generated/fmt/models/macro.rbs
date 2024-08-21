@@ -1,0 +1,46 @@
+# Generated from lib/fmt/models/macro.rb with RBS::Inline
+
+module Fmt
+  # Represents an uninvoked method call
+  #
+  # A Macro is comprised of:
+  # 1. procedure: Procedure
+  # 2. arguments: Arguments
+  class Macro < Model
+    # Constructor
+    # @rbs ast: Node
+    def initialize: (Node ast) -> untyped
+
+    attr_reader procedure: untyped
+
+    attr_reader arguments: untyped
+
+    # TODO: revisit this and determine if we want to keep it or force going through the other models
+    attr_reader key: untyped
+
+    attr_reader callable: untyped
+
+    attr_reader args: untyped
+
+    attr_reader kwargs: untyped
+
+    # Hash representation of the model (required for pattern matching)
+    # @rbs return: Hash[Symbol, Object]
+    def to_h: () -> Hash[Symbol, Object]
+
+    # Processes a macro AST node
+    # @rbs node: Node
+    # @rbs return: void
+    def on_macro: (Node node) -> void
+
+    # Processes a procedure AST node
+    # @rbs node: Node
+    # @rbs return: void
+    def on_procedure: (Node node) -> void
+
+    # Processes an arguments AST node
+    # @rbs node: Node
+    # @rbs return: void
+    def on_arguments: (Node node) -> void
+  end
+end

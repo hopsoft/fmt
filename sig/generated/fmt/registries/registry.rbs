@@ -1,0 +1,71 @@
+# Generated from lib/fmt/registries/registry.rb with RBS::Inline
+
+module Fmt
+  # Registry for storing and retrieving String formatters i.e. Procs
+  class Registry
+    extend Forwardable
+
+    DEFAULT_CAPACITY: ::Integer
+
+    INSTANCE_VAR: ::Symbol
+
+    # Constructor
+    def initialize: (?capacity: untyped) -> untyped
+
+    # Retrieves a Proc from the registry
+    # @rbs key: String | Symbol -- key to retrieve
+    # @rbs return: Proc?
+    def []: (String | Symbol key) -> Proc?
+
+    # Retrieves an Array of supported method names for the given classes
+    # @rbs klasses: Array[Class]
+    # @rbs return: Array[Symbol]
+    def supported_method_names: (*untyped klasses) -> Array[Symbol]
+
+    # Indicates if a key exists in the registry
+    # @rbs key: String | Symbol -- key to check
+    def key?: (String | Symbol key) -> untyped
+
+    # Retrieves the registered key for a Proc
+    # @rbs callable: Proc -- Proc to retrieve the key for
+    # @rbs return: Symbol?
+    def key_for: (Proc callable) -> Symbol?
+
+    # Adds a keypair to the registry
+    # @rbs key: String | Symbol -- key to use
+    # @rbs overwrite: bool -- overwrite the existing keypair (default: false)
+    # @rbs block: Proc -- Proc to add (optional, if proc is provided)
+    # @rbs return: Proc
+    def add: (String | Symbol key, ?overwrite: bool) ?{ (?) -> untyped } -> Proc
+
+    # Deletes a keypair from the registry
+    # @rbs key: String | Symbol -- key to delete
+    # @rbs return: Proc?
+    def delete: (String | Symbol key) -> Proc?
+
+    # Fetches a Proc from the registry
+    # @rbs key: String | Symbol -- key to retrieve
+    # @rbs callable: Proc -- Proc to use if the key is not found (optional, if block is provided)
+    # @rbs block: Proc -- block to use if the key is not found (optional, if proc is provided)
+    # @rbs return: Proc
+    def fetch: (String | Symbol key, ?callable: Proc) ?{ (?) -> untyped } -> Proc
+
+    # Merges another registry into this one
+    # @rbs other: Fmt::Registry -- other registry to merge
+    # @rbs return: Fmt::Registry
+    def merge!: (Fmt::Registry other) -> Fmt::Registry
+
+    # Executes a block with registry overrides
+    #
+    # @note Overrides will temporarily be added to the registry
+    #       and will overwrite existing entries for the duration of the block
+    #       Non overriden entries remain unchanged
+    #
+    # @rbs overrides: Hash[String | Symbol, Proc] -- overrides to apply
+    # @rbs block: Proc -- block to execute with overrides
+    # @rbs return: void
+    def with_overrides: (Hash[String | Symbol, Proc] overrides) ?{ (?) -> untyped } -> void
+
+    attr_reader store: untyped
+  end
+end

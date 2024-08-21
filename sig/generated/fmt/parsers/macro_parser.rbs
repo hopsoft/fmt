@@ -1,0 +1,26 @@
+# Generated from lib/fmt/parsers/macro_parser.rb with RBS::Inline
+
+module Fmt
+  # Parses a macro from a string and builds an AST (Abstract Syntax Tree)
+  class MacroParser < Parser
+    # Constructor
+    # @rbs urtext: String -- original source code
+    def initialize: (?String urtext) -> untyped
+
+    attr_reader urtext: untyped
+
+    # Parses the urtext (original source code)
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    def parse: () -> Node
+
+    # Extracts components for building the AST (Abstract Syntax Tree)
+    # @rbs return: Hash[Symbol, Object] -- extracted components
+    def extract: () -> Hash[Symbol, Object]
+
+    # Transforms extracted components into an AST (Abstract Syntax Tree)
+    # @rbs key: Symbol?
+    # @rbs tokens: Array[Token]
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    def transform: (key: Symbol?, tokens: Array[Token]) -> Node
+  end
+end

@@ -3,6 +3,7 @@
 # rbs_inline: enabled
 
 module Fmt
+  # Parses arguments from a string and builds an AST (Abstract Syntax Tree)
   class ArgumentsParser < Parser
     # Constructor
     # @rbs urtext: String -- original source code
@@ -10,10 +11,10 @@ module Fmt
       @urtext = urtext.to_s
     end
 
-    attr_reader :urtext # : String -- original source code
+    attr_reader :urtext # :: String -- original source code
 
     # Parses the urtext (original source code)
-    # @rbs return: Node -- (arguments (tokens (Symbol, String), *))
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
     def parse
       cache(urtext) { super }
     end
@@ -21,7 +22,7 @@ module Fmt
     protected
 
     # Extracts components for building the AST (Abstract Syntax Tree)
-    # @rbs return: Array[Token]
+    # @rbs return: Hash[Symbol, Object] -- extracted components
     def extract
       tokenizer = Tokenizer.new(urtext)
       tokenizer.tokenize
@@ -30,7 +31,7 @@ module Fmt
 
     # Transforms extracted components into an AST (Abstract Syntax Tree)
     # @rbs tokens: Array[Token] -- extracted tokens
-    # @rbs return: Node -- (arguments (tokens (Symbol, String), *))
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
     def transform(tokens:)
       return Node.new(:arguments) if tokens.none?
 

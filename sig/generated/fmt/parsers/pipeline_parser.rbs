@@ -1,41 +1,25 @@
-# frozen_string_literal: true
-
-# rbs_inline: enabled
+# Generated from lib/fmt/parsers/pipeline_parser.rb with RBS::Inline
 
 module Fmt
   # Parses a pipeline from a string and builds an AST (Abstract Syntax Tree)
   class PipelineParser < Parser
     # Constructor
     # @rbs urtext: String -- original source code
-    def initialize(urtext = "")
-      @urtext = urtext.to_s
-    end
+    def initialize: (?String urtext) -> untyped
 
-    attr_reader :urtext # : String -- original source code
+    attr_reader urtext: untyped
 
     # Parses the urtext (original source code)
     # @rbs return: Node -- AST (Abstract Syntax Tree)
-    def parse
-      cache(urtext) { super }
-    end
-
-    protected
+    def parse: () -> Node
 
     # Extracts components for building the AST (Abstract Syntax Tree)
     # @rbs return: Hash[Symbol, Object] -- extracted components
-    def extract
-      {macros: urtext.split(Sigils::PIPE_OPERATOR)}
-    end
+    def extract: () -> Hash[Symbol, Object]
 
     # Transforms extracted components into an AST (Abstract Syntax Tree)
     # @rbs macros: Array[String] -- extracted components
     # @rbs return: Node -- AST (Abstract Syntax Tree)
-    def transform(macros:)
-      macros = macros.map { |m| MacroParser.new(m).parse }.reject(&:empty?)
-
-      Node.new :pipeline, macros,
-        urtext: urtext,
-        source: macros.map(&:source).join(Sigils::PIPE_OPERATOR)
-    end
+    def transform: (macros: Array[String]) -> Node
   end
 end

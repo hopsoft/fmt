@@ -3,6 +3,12 @@
 # rbs_inline: enabled
 
 module Fmt
+  # Represents arguments for a method call
+  #
+  # Arguments are comprised of:
+  # 1. args: Array[Object]
+  # 2. kwargs: Hash[Symbol, Object]
+  #
   class Arguments < Model
     # Constructor
     # @rbs ast: Node
@@ -28,22 +34,22 @@ module Fmt
     # @!group AST Processors
     # ..........................................................................
 
-    # Processes the arguments node
-    # @rbs node: Node -- node to process
+    # Processes an arguments AST node
+    # @rbs node: Node
     # @rbs return: void
     def on_arguments(node)
       process_all node.children
     end
 
-    # Processes the tokens node
-    # @rbs node: Node -- node to process
+    # Processes a tokens AST node
+    # @rbs node: Node
     # @rbs return: void
     def on_tokens(node)
       process_all node.children
     end
 
-    # Processes a keyword node
-    # @rbs node: Node -- node to process
+    # Processes a keyword AST node
+    # @rbs node: Node
     # @rbs return: nil | true | false | Object
     def on_kw(node)
       case node.children.first
@@ -53,29 +59,29 @@ module Fmt
       end
     end
 
-    # Processes a String node
-    # @rbs node: Node -- node to process
+    # Processes a string AST node
+    # @rbs node: Node
     # @rbs return: String
     def on_tstring_content(node)
       assign node.children.first
     end
 
-    # Processes a Symbol node
-    # @rbs node: Node -- node to process
+    # Processes a symbol AST Node
+    # @rbs node: Node
     # @rbs return: Symbol
     def on_symbol(node)
       assign node.children.first.to_sym
     end
 
-    # Processes the start of a Symbol identifier
-    # @rbs node: Node -- node to process
+    # Processes a symbol start AST Node
+    # @rbs node: Node
     # @rbs return: void
     def on_symbeg(node)
       @next_ident_is_symbol = true
     end
 
-    # Processes identifiers
-    # @rbs node: Node -- node to process
+    # Processes an identifier AST Node
+    # @rbs node: Node
     # @rbs return: Symbol?
     def on_ident(node)
       assign node.children.first.to_sym if @next_ident_is_symbol
@@ -83,29 +89,29 @@ module Fmt
       @next_ident_is_symbol = false
     end
 
-    # Processes an Integer node
-    # @rbs node: Node -- node to process
+    # Processes an integer AST node
+    # @rbs node: Node
     # @rbs return: Integer
     def on_int(node)
       assign node.children.first.to_i
     end
 
-    # Processes a Float node
-    # @rbs node: Node -- node to process
+    # Processes a float AST node
+    # @rbs node: Node
     # @rbs return: Float
     def on_float(node)
       assign node.children.first.to_f
     end
 
-    # Processes a Rational node
-    # @rbs node: Node -- node to process
+    # Processes a rational AST node
+    # @rbs node: Node
     # @rbs return: Rational
     def on_rational(node)
       assign Rational(node.children.first)
     end
 
-    # Processes an imaginary node (Complex)
-    # @rbs node: Node -- node to process
+    # Processes an imaginary (complex) AST node
+    # @rbs node: Node
     # @rbs return: Complex
     def on_imaginary(node)
       assign Complex(0, node.children.first.to_f)
@@ -115,22 +121,22 @@ module Fmt
     # @!group Composite Data Types (Arrays, Hashes, Sets)
     # ..........................................................................
 
-    # Processes an Array node
-    # @rbs node: Node -- node to process
+    # Processes a left bracket AST node
+    # @rbs node: Node
     # @rbs return: Array
     def on_lbracket(node)
       assign([])
     end
 
-    # Processes a Hash node
-    # @rbs node: Node -- node to process
+    # Processes a left brace AST node
+    # @rbs node: Node
     # @rbs return: Hash
     def on_lbrace(node)
       assign({})
     end
 
-    # Process a label node (Hash key)
-    # @rbs node: Node -- node to process
+    # Process a label (hash key) AST node
+    # @rbs node: Node
     # @rbs return: void
     def on_label(node)
       label = node.children.first
@@ -177,8 +183,6 @@ module Fmt
       else nil
       end
     end
-
-    private
 
     # Indicates if the value is a composite type (Array or Hash)
     # @rbs value: Object -- value to check

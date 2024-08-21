@@ -3,75 +3,55 @@
 # rbs_inline: enabled
 
 module Fmt
+  # Parses a template from a string and builds an AST (Abstract Syntax Tree)
   class TemplateParser < Parser
-    FORMAT_PREFIX = Regexp.new(Regexp.escape(Sigils::FORMAT_PREFIX)).freeze # :: Regexp -- template prefix
-
-    # @rbs return: Regexp -- macros
-    MACROS = Regexp.new("(?=\\s|%%|%{embed_prefix}|$)(.*[%{args_suffix}])*" % {
-      embed_prefix: Regexp.escape(Sigils::EMBED_PREFIX),
-      args_suffix: Sigils::ARGS_SUFFIX
-    }).freeze
+    FORMAT_START = Regexp.new(Sigils::FORMAT_PREFIX).freeze # :: Regexp
+    PIPELINE = Regexp.new("(?=%s|%s|$)" % [Sigils::FORMAT_PREFIX, Regexp.escape(Sigils::EMBED_PREFIX)]).freeze # :: Regexp
 
     # Constructor
-    # @rbs scanner: StringScanner -- scanner to use
+    # @rbs urtext: String -- original source code
     def initialize(urtext = "")
       @urtext = urtext.to_s
-      @scanner = StringScanner.new(urtext)
+      @scanner = StringScanner.new(@urtext)
     end
 
     attr_reader :urtext # :: String -- original source code
 
     # Parses the urtext (original source code)
-    # @rbs return: Node[TemplateNode]
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
     def parse
-      cache(urtext) do
-        @embeds = parse_embeds # pre-builds embeds AST
-        super
-      end
+      cache(urtext) { super }
     end
 
     protected
 
-    attr_reader :scanner # :: StringScanner -- scanner to use
-    attr_reader :embeds  # :: Node?
+    attr_reader :scanner # :: StringScanner
 
+    # Extracts components for building the AST (Abstract Syntax Tree)
+    # @rbs return: Hash[Symbol, Object] -- extracted components
     def extract
-      scanner.scan_until FORMAT_PREFIX
-      return {embeds: nil, pipeline: nil} unless scanner.matched?
+      scanner.scan_until FORMAT_START
+      return {pipeline: Node.new(:pipeline)} unless scanner.matched?
 
-      {
-        embeds: embeds,
-        pipeline: scanner.scan_until(MACROS)
-      }
+      {pipeline: scanner.scan_until(PIPELINE).to_s}
     end
 
-    def transform(embeds:, pipeline:)
+    # Transforms extracted components into an AST (Abstract Syntax Tree)
+    # @rbs pipeline: String -- extracted pipeline
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    def transform(pipeline:)
       children = []
-      children << PipelineParser.new(pipeline).parse if pipeline&.size&.positive?
-      children << embeds unless embeds.empty?
+      children << PipelineParser.new(pipeline).parse
+      children << EmbedsParser.new(urtext).parse
+      children.reject!(&:empty?)
 
-      source = begin
-        list = [Sigils::FORMAT_PREFIX]
-        list << children.find { _1 in [:pipeline, *] }&.source
-        list << scanner.rest
-        list.join
-      end
+      source = [
+        Sigils::FORMAT_PREFIX,
+        children.find { _1 in [:pipeline, *] }&.source,
+        scanner.rest
+      ].join
 
       Node.new(:template, children, urtext: urtext, source: source)
-    end
-
-    # Parses embedded (nested) templates and updates the scanner string
-    def parse_embeds
-      return if @embeds_parsed
-      @embeds_parsed = true
-
-      source = scanner.rest
-      EmbedParser.new(source).parse.tap do |embeds|
-        embeds.children.each do |embed|
-          placeholder = embed.dig(:placeholder, String)
-          scanner.string = scanner.rest.sub(embed.urtext, placeholder)
-        end
-      end
     end
   end
 end

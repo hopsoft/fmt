@@ -1,16 +1,7 @@
 # frozen_string_literal: true
 
 module Fmt
-  # Parser
-  #
-  # 1) Parses input (Proc) so it can be tokenized
-  # 2) Uses a tokenizer to tokenize the parsed value
-  # 3) Returns the tokenized AST
-  #
-  # @example
-  #   p = ->(name) { "Hello, #{name}!" }
-  #   ProcedureParser.new(p).parse
-  #
+  # Parses a procedure from a callable (Proc) and builds an AST (Abstract Syntax Tree)
   class ProcedureParser < Parser
     # Constructor
     # @rbs callable: Proc
@@ -19,7 +10,7 @@ module Fmt
     end
 
     # Parses the proc (Proc)
-    # @rbs return: Node -- (procedure (name Symbol))
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
     def parse
       cache(callable.hash) { super }
     end
@@ -36,7 +27,7 @@ module Fmt
 
     # Transforms extracted components into an AST (Abstract Syntax Tree)
     # @rbs key: Symbol -- registry key for the callable (method name)
-    # @rbs return: Node -- (procedure (name Symbol))
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
     def transform(key:)
       return Node.new(:procedure) unless key
 
