@@ -53,9 +53,9 @@ module Fmt
     # @rbs return: nil | true | false | Object
     def on_kw(node)
       case node.children.first
-      when "nil" then assign(nil)
-      when "true" then assign(true)
-      when "false" then assign(false)
+      in "nil" then assign(nil)
+      in "true" then assign(true)
+      in "false" then assign(false)
       end
     end
 
@@ -153,8 +153,8 @@ module Fmt
     def assign(value, label: nil)
       receiver(label: label).tap do |rec|
         case rec
-        when Array then rec << value
-        when Hash then rec[label || rec.keys.last] = value
+        in Array then rec << value
+        in Hash then rec[label || rec.keys.last] = value
         end
       end
     end

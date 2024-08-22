@@ -71,8 +71,8 @@ module Fmt
     # @rbs return: Node?
     def find(type)
       case type
-      when Symbol then children.find { _1 in [^type, *] }
-      when Class then children.find { _1 in type }
+      in Symbol then children.find { _1 in [^type, *] }
+      in Class then children.find { _1 in ^type }
       end
     end
 
@@ -87,8 +87,8 @@ module Fmt
     # @rbs return: Node?
     def select(type)
       [].concat case type
-      when Symbol then children.select { _1 in [^type, *] }
-      when Class then children.select { _1 in type }
+      in Symbol then children.select { _1 in [^type, *] }
+      in Class then children.select { _1 in ^type }
       else []
       end
     end

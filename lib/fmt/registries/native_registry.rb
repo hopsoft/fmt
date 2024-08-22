@@ -49,7 +49,7 @@ module Fmt
     # @rbs return: Array[Symbol]
     def supported_method_names(klass)
       klass.public_instance_methods.each_with_object(Set.new) do |name, memo|
-        next if name in Sigils::FORMAT_SPECIFIERS[*]
+        next if name in Sigils::FORMAT_SPECIFIERS
         next if name.start_with?("_") || name.end_with?("!")
         memo << name
       end

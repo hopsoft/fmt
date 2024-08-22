@@ -72,7 +72,7 @@ module Fmt
     # @see Sigils::FORMAT_SPECIFIERS
     # @rbs return: bool
     def specifier?
-      identifier? && Sigils::FORMAT_SPECIFIERS.any?(value)
+      identifier? && value in Sigils::FORMAT_SPECIFIERS
     end
 
     # Indicates if the token is an identifier (e.g. method name, format specifier, variable name, etc.)
