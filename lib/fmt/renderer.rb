@@ -31,6 +31,7 @@ module Fmt
         end
       end
 
+      # final result
       template.urtext.sub template.source, output.to_s
     end
 
