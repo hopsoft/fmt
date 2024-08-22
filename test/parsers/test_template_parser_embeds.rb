@@ -32,14 +32,12 @@ module Fmt
           (template
             (pipeline
               (macro
-                (procedure
-                  (key :red))))
+                (name :red)))
             (embeds
               (template
                 (pipeline
                   (macro
-                    (procedure
-                      (key :ljust))
+                    (name :ljust)
                     (arguments
                       (tokens
                         (lparen "(")
@@ -51,31 +49,25 @@ module Fmt
                         (tstring-end "'")
                         (rparen ")"))))
                   (macro
-                    (procedure
-                      (key :green))))
+                    (name :green)))
                 (embeds
                   (template
                     (pipeline
                       (macro
-                        (procedure
-                          (key :blue))))
+                        (name :blue)))
                     (embeds
                       (template
                         (pipeline
                           (macro
-                            (procedure
-                              (key :yellow)))
+                            (name :yellow))
                           (macro
-                            (procedure
-                              (key :underline)))))))))
+                            (name :underline))))))))
               (template
                 (pipeline
                   (macro
-                    (procedure
-                      (key :cyan)))
+                    (name :cyan))
                   (macro
-                    (procedure
-                      (key :bold)))))))
+                    (name :bold))))))
         AST
 
         assert_equal expected.rstrip, ast.to_s

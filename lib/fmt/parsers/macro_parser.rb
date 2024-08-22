@@ -26,32 +26,34 @@ module Fmt
     def extract
       tokenizer = Tokenizer.new(urtext)
       tokenizer.tokenize
+      token = tokenizer.identifier_tokens.last
+      value = token&.value&.to_sym
 
-      identifiers = tokenizer.identifier_tokens.map(&:value)
-      key = identifiers.last&.to_sym
-      key = Sigils::FORMAT_METHOD unless key && Fmt.registry.key?(key)
+      method_name = case value
+      in Symbol if Fmt.registry.any?(value) then value
+      else Sigils::FORMAT_METHOD
+      end
 
-      {key: key, tokens: tokenizer.tokens}
-    end
-
-    # Transforms extracted components into an AST (Abstract Syntax Tree)
-    # @rbs key: Symbol?
-    # @rbs tokens: Array[Token]
-    # @rbs return: Node -- AST (Abstract Syntax Tree)
-    def transform(key:, tokens:)
-      source = case key
-      in Sigils::FORMAT_METHOD then "%s(%%Q[%s%s])" % [key, Sigils::FORMAT_PREFIX, urtext]
+      # source code used to tokenize arguments
+      code = case method_name
+      in Sigils::FORMAT_METHOD then "%s(%%Q[%s%s])" % [method_name, Sigils::FORMAT_PREFIX, urtext]
       else urtext
       end
 
+      {method_name: method_name, code: code}
+    end
+
+    # Transforms extracted components into an AST (Abstract Syntax Tree)
+    # @rbs method_name: Symbol?
+    # @rbs code: String -- code used to tokenize arguments
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    def transform(method_name:, code:)
       children = [
-        ProcedureParser.new(Fmt.registry[key]).parse,
-        ArgumentsParser.new(source).parse
+        Node.new(:name, [method_name]),
+        ArgumentsParser.new(code).parse
       ]
 
-      Node.new :macro, children.reject(&:empty?),
-        urtext: urtext,
-        source: source
+      Node.new :macro, children.reject(&:empty?), urtext: urtext, source: urtext
     end
   end
 end

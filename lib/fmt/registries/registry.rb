@@ -16,47 +16,23 @@ module Fmt
     end
 
     def_delegator :store, :to_h # :: Hash[Symbol, Proc]
+    def_delegator :store, :[]   # :: Proc -- retrieves a Proc from the registry
+    def_delegator :store, :key? # :: bool -- indicates if a key exists in the registry
 
-    # Retrieves a Proc from the registry
-    # @rbs key: String | Symbol -- key to retrieve
-    # @rbs return: Proc?
-    def [](key)
-      store[key.to_sym]
-    end
-
-    # Retrieves an Array of supported method names for the given classes
-    # @rbs klasses: Array[Class]
-    # @rbs return: Array[Symbol]
-    def supported_method_names(*klasses)
-      method_names = klasses.each_with_object(Set.new) do |klass, set|
-        klass.public_instance_methods.each do |name|
-          next if name.to_s.start_with?("_") || name.to_s.end_with?("!")
-          set << name
-        end
-      end
-      method_names.to_a.sort
-    end
-
-    # Indicates if a key exists in the registry
-    # @rbs key: String | Symbol -- key to check
-    def key?(key)
-      store.key? key.to_sym
-    end
-
-    # Retrieves the registered key for a Proc
-    # @rbs callable: Proc -- Proc to retrieve the key for
-    # @rbs return: Symbol?
-    def key_for(callable)
-      callable&.instance_variable_get INSTANCE_VAR
+    # Indicates if a method name is registered for at least one Class
+    # @rbs method_name: Symbol -- method name to check
+    # @rbs return: bool
+    def any?(method_name)
+      !!method_names[method_name]
     end
 
     # Adds a keypair to the registry
-    # @rbs key: String | Symbol -- key to use
+    # @rbs key: Array[Class | Module, Symbol] -- key to use
     # @rbs overwrite: bool -- overwrite the existing keypair (default: false)
     # @rbs block: Proc -- Proc to add (optional, if proc is provided)
     # @rbs return: Proc
     def add(key, overwrite: false, &block)
-      key = key.to_sym
+      raise Error, "key must be an Array[Class | Module, Symbol]" unless key in [Class | Module, Symbol]
 
       return store[key] if store.key?(key) && !overwrite
 
@@ -69,24 +45,30 @@ module Fmt
     end
 
     # Deletes a keypair from the registry
-    # @rbs key: String | Symbol -- key to delete
+    # @rbs key: Array[Class | Module, Symbol] -- key to delete
     # @rbs return: Proc?
     def delete(key)
       store.lock do
-        callable = store.delete(key.to_sym)
+        callable = store.delete(key)
         callable&.remove_instance_variable INSTANCE_VAR
       end
     end
 
     # Fetches a Proc from the registry
-    # @rbs key: String | Symbol -- key to retrieve
+    # @rbs key: Array[Class | Module, Symbol] -- key to retrieve
     # @rbs callable: Proc -- Proc to use if the key is not found (optional, if block is provided)
     # @rbs block: Proc -- block to use if the key is not found (optional, if proc is provided)
     # @rbs return: Proc
     def fetch(key, callable: nil, &block)
       callable ||= block
-      raise Error, "callable must be a proc" unless callable in Proc
-      store[key.to_sym] || add(key, &callable)
+      store[key] || add(key, &callable)
+    end
+
+    # Retrieves the registered key for a Proc
+    # @rbs callable: Proc -- Proc to retrieve the key for
+    # @rbs return: Symbol?
+    def key_for(callable)
+      callable&.instance_variable_get INSTANCE_VAR
     end
 
     # Merges another registry into this one
@@ -94,7 +76,7 @@ module Fmt
     # @rbs return: Fmt::Registry
     def merge!(other)
       raise Error, "other must be a registry" unless other in Registry
-      other.to_h.each { |key, block| add(key, &block) }
+      other.to_h.each { add(_1, &_2) }
       self
     end
 
@@ -104,31 +86,35 @@ module Fmt
     #       and will overwrite existing entries for the duration of the block
     #       Non overriden entries remain unchanged
     #
-    # @rbs overrides: Hash[String | Symbol, Proc] -- overrides to apply
+    # @rbs overrides: Hash[Array[Class | Module, Symbol], Proc] -- overrides to apply
     # @rbs block: Proc -- block to execute with overrides
     # @rbs return: void
     def with_overrides(overrides, &block)
-      return yield if overrides.nil? || overrides.empty?
+      return yield unless overrides in Hash
+      return yield unless overrides&.any?
 
-      overrides = overrides.transform_keys(&:to_sym)
+      overrides.select! { [_1, _2] in [[Class | Module, Symbol], Proc] }
       originals = store.slice(*(store.keys & overrides.keys))
 
       store.lock do
-        overrides.each do |key, callable|
-          raise Error, "override values must be procs" unless callable in Proc
-          add(key, overwrite: true, &callable)
-        end
+        overrides.each { add(_1, overwrite: true, &_2) }
         yield
       end
     ensure
       store.lock do
-        overrides&.each { |key, _| delete key }
-        originals&.each { |key, callable| add(key, overwrite: true, &callable) }
+        overrides&.each { delete _1 }
+        originals&.each { add(_1, overwrite: true, &_2) }
       end
     end
 
     protected
 
     attr_reader :store # :: LRUCache
+
+    # Hash of registered method names
+    # @rbs return: Hash[Symbol, TrueClass]
+    def method_names
+      store.keys.each_with_object({}) { _2[_1.last] = true }
+    end
   end
 end

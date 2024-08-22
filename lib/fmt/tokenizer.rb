@@ -37,7 +37,6 @@ module Fmt
     def identifier_tokens
       tokens.each_with_object([]) do |token, memo|
         break memo if token.arguments_start?
-        break memo if token.specifier?
         memo << token if token.identifier?
       end
     end

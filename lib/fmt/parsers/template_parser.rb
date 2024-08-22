@@ -45,11 +45,13 @@ module Fmt
       children << EmbedsParser.new(urtext).parse
       children.reject!(&:empty?)
 
-      source = [
-        Sigils::FORMAT_PREFIX,
-        children.find { _1 in [:pipeline, *] }&.source,
-        scanner.rest
-      ].join
+      source = "%s%s%s" % [Sigils::FORMAT_PREFIX, pipeline, scanner.rest]
+
+      # source = [
+      #   Sigils::FORMAT_PREFIX,
+      #   children.find { _1 in [:pipeline, *] }&.source,
+      #   scanner.rest
+      # ].join
 
       Node.new(:template, children, urtext: urtext, source: source)
     end

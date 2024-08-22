@@ -9,12 +9,12 @@ module Fmt
       ast = MacroParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.urtext
-      assert_equal "sprintf(%Q[%s])", ast.source
+      assert_equal source, ast.source
+      assert_equal "(%Q[%s])", ast.find(:arguments).source
 
       expected = <<~AST
         (macro
-          (procedure
-            (key :sprintf))
+          (name :sprintf)
           (arguments
             (tokens
               (lparen "(")
@@ -32,12 +32,12 @@ module Fmt
       ast = MacroParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.urtext
-      assert_equal "sprintf(%Q[%.10f])", ast.source
+      assert_equal source, ast.source
+      assert_equal "(%Q[%.10f])", ast.find(:arguments).source
 
       expected = <<~AST
         (macro
-          (procedure
-            (key :sprintf))
+          (name :sprintf)
           (arguments
             (tokens
               (lparen "(")
@@ -51,21 +51,21 @@ module Fmt
     end
 
     def test_formatter_named
-      source = "{value}s"
+      source = "{value}"
       ast = MacroParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.urtext
-      assert_equal "sprintf(%Q[%{value}s])", ast.source
+      assert_equal source, ast.source
+      assert_equal "(%Q[%{value}])", ast.find(:arguments).source
 
       expected = <<~AST
         (macro
-          (procedure
-            (key :sprintf))
+          (name :sprintf)
           (arguments
             (tokens
               (lparen "(")
               (tstring-beg "%Q[")
-              (tstring-content "%{value}s")
+              (tstring-content "%{value}")
               (tstring-end "]")
               (rparen ")"))))
       AST
@@ -78,12 +78,12 @@ module Fmt
       ast = MacroParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.urtext
-      assert_equal "sprintf(%Q[%<value>s])", ast.source
+      assert_equal source, ast.source
+      assert_equal "(%Q[%<value>s])", ast.find(:arguments).source
 
       expected = <<~AST
         (macro
-          (procedure
-            (key :sprintf))
+          (name :sprintf)
           (arguments
             (tokens
               (lparen "(")
@@ -101,12 +101,12 @@ module Fmt
       ast = MacroParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.urtext
-      assert_equal "sprintf(%Q[%<value>.10f])", ast.source
+      assert_equal source, ast.source
+      assert_equal "(%Q[%<value>.10f])", ast.find(:arguments).source
 
       expected = <<~AST
         (macro
-          (procedure
-            (key :sprintf))
+          (name :sprintf)
           (arguments
             (tokens
               (lparen "(")
@@ -119,7 +119,7 @@ module Fmt
       assert_equal expected.rstrip, ast.to_s
     end
 
-    def test_callable_without_args
+    def test_methdo_without_args
       source = "strip"
       ast = MacroParser.new(source).parse
       assert_instance_of Node, ast
@@ -128,8 +128,7 @@ module Fmt
 
       expected = <<~AST
         (macro
-          (procedure
-            (key :strip)))
+          (name :strip))
       AST
 
       assert_equal expected.rstrip, ast.to_s
@@ -144,8 +143,7 @@ module Fmt
 
       expected = <<~AST
         (macro
-          (procedure
-            (key :ljust))
+          (name :ljust)
           (arguments
             (tokens
               (lparen "(")
@@ -170,8 +168,7 @@ module Fmt
 
       expected = <<~AST
         (macro
-          (procedure
-            (key :truncate))
+          (name :truncate)
           (arguments
             (tokens
               (lparen "(")

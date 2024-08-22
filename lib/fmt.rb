@@ -12,6 +12,10 @@ module Fmt
 
   class Error < StandardError; end
 
+  class FormatError < Error; end
+
+  class MacroError < Error; end
+
   class << self
     def registry
       @registry ||= LOCK.synchronize do

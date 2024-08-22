@@ -8,16 +8,16 @@ module Fmt
       source = "strip"
       ast = MacroParser.new(source).parse
       macro = Macro.new(ast)
-      assert_equal Fmt.registry[:strip], macro.callable
 
       assert_pattern {
         macro => {
           urtext: "strip",
           source: "strip",
-          key: :strip,
-          callable: Proc,
-          args: [],
-          kwargs: {}
+          name: :strip,
+          arguments: {
+            args: [],
+            kwargs: {}
+          }
         }
       }
     end
@@ -27,15 +27,15 @@ module Fmt
       ast = MacroParser.new(source).parse
       macro = Macro.new(ast)
 
-      assert_equal Fmt.registry[:ljust], macro.callable
       assert_pattern {
         macro => {
           urtext: "ljust(80, '.')",
           source: "ljust(80, '.')",
-          key: :ljust,
-          callable: Proc,
-          args: [80, "."],
-          kwargs: {}
+          name: :ljust,
+          arguments: {
+            args: [80, "."],
+            kwargs: {}
+          }
         }
       }
     end
@@ -45,15 +45,15 @@ module Fmt
       ast = MacroParser.new(source).parse
       macro = Macro.new(ast)
 
-      assert_equal Fmt.registry[:truncate], macro.callable
       assert_pattern {
         macro => {
           urtext: "truncate(20, omission: '&hellip;')",
           source: "truncate(20, omission: '&hellip;')",
-          key: :truncate,
-          callable: Proc,
-          args: [20],
-          kwargs: {omission: "&hellip;"}
+          name: :truncate,
+          arguments: {
+            args: [20],
+            kwargs: {omission: "&hellip;"}
+          }
         }
       }
     end

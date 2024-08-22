@@ -13,8 +13,7 @@ module Fmt
       expected = <<~AST
         (pipeline
           (macro
-            (procedure
-              (key :ljust))
+            (name :ljust)
             (arguments
               (tokens
                 (lparen "(")
@@ -39,8 +38,7 @@ module Fmt
       expected = <<~AST
         (pipeline
           (macro
-            (procedure
-              (key :ljust))
+            (name :ljust)
             (arguments
               (tokens
                 (lparen "(")
@@ -52,8 +50,7 @@ module Fmt
                 (tstring-end "'")
                 (rparen ")"))))
           (macro
-            (procedure
-              (key :cyan))))
+            (name :cyan)))
       AST
 
       assert_equal expected.rstrip, ast.to_s
@@ -63,13 +60,12 @@ module Fmt
       source = "<value>.10f|>ljust(80, '.')|>cyan"
       ast = PipelineParser.new(source).parse
       assert_instance_of Node, ast
-      assert_equal "sprintf(%Q[%<value>.10f])|>ljust(80, '.')|>cyan", ast.source
+      assert_equal source, ast.source
 
       expected = <<~AST
         (pipeline
           (macro
-            (procedure
-              (key :sprintf))
+            (name :sprintf)
             (arguments
               (tokens
                 (lparen "(")
@@ -78,8 +74,7 @@ module Fmt
                 (tstring-end "]")
                 (rparen ")"))))
           (macro
-            (procedure
-              (key :ljust))
+            (name :ljust)
             (arguments
               (tokens
                 (lparen "(")
@@ -91,8 +86,7 @@ module Fmt
                 (tstring-end "'")
                 (rparen ")"))))
           (macro
-            (procedure
-              (key :cyan))))
+            (name :cyan)))
       AST
 
       assert_equal expected.rstrip, ast.to_s
@@ -107,8 +101,7 @@ module Fmt
       expected = <<~AST
         (pipeline
           (macro
-            (procedure
-              (key :pluralize))
+            (name :pluralize)
             (arguments
               (tokens
                 (lparen "(")
@@ -121,11 +114,9 @@ module Fmt
                 (ident "en")
                 (rparen ")"))))
           (macro
-            (procedure
-              (key :titleize)))
+            (name :titleize))
           (macro
-            (procedure
-              (key :truncate))
+            (name :truncate)
             (arguments
               (tokens
                 (lparen "(")
@@ -137,14 +128,11 @@ module Fmt
                 (tstring-end "'")
                 (rparen ")"))))
           (macro
-            (procedure
-              (key :red)))
+            (name :red))
           (macro
-            (procedure
-              (key :bold)))
+            (name :bold))
           (macro
-            (procedure
-              (key :underline))))
+            (name :underline)))
       AST
 
       assert_equal expected.rstrip, ast.to_s

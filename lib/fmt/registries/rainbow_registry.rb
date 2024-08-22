@@ -12,19 +12,19 @@ module Fmt
       super
 
       if defined? Rainbow
-        add(:rainbow) { |obj| Rainbow obj }
+        add([Object, :rainbow]) { Rainbow self }
 
-        methods = Rainbow::Presenter.public_instance_methods(false).select do |method|
-          Rainbow::Presenter.public_instance_method(method).arity == 0
+        methods = Rainbow::Presenter.public_instance_methods(false).select do
+          Rainbow::Presenter.public_instance_method(_1).arity == 0
         end
 
         method_names = methods
-          .map { |m| m.name.to_sym }
+          .map { _1.name.to_sym }
           .concat(Rainbow::X11ColorNames::NAMES.keys)
           .sort
 
         method_names.each do |name|
-          add(name) { Rainbow(self).public_send name }
+          add([Object, name]) { Rainbow(self).public_send name }
         end
       end
     rescue => error

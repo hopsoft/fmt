@@ -32,10 +32,7 @@ module Fmt
     # @rbs return: Node -- AST (Abstract Syntax Tree)
     def transform(macros:)
       macros = macros.map { |m| MacroParser.new(m).parse }.reject(&:empty?)
-
-      Node.new :pipeline, macros,
-        urtext: urtext,
-        source: macros.map(&:source).join(Sigils::PIPE_OPERATOR)
+      Node.new :pipeline, macros, urtext: urtext, source: urtext
     end
   end
 end

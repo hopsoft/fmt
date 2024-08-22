@@ -23,5 +23,15 @@ Minitest::Reporters.use! [
 
 require_relative "../lib/fmt"
 
-class UnitTest < Minitest::Test
+module Fmt
+  class UnitTest < Minitest::Test
+    # Builds a Renderer for a string
+    # @rbs string: String -- string to build the renderer for
+    # @rbs return: Renderer
+    def build_renderer(string)
+      ast = TemplateParser.new(string).parse
+      template = Template.new(ast)
+      Renderer.new template
+    end
+  end
 end

@@ -57,7 +57,7 @@ module Fmt
     end
 
     # Deletes the entry for the specified key
-    # @rbs key: String | Symbol -- key to delete
+    # @rbs key: Object -- key to delete
     # @rbs return: Object? -- the deleted value
     def delete(key)
       synchronize { store.delete key }
@@ -65,7 +65,7 @@ module Fmt
 
     # Fetches the value for the specified key
     # Writes the default value if the key is not found
-    # @rbs key: String | Symbol -- key to fetch
+    # @rbs key: Object -- key to fetch
     # @rbs default: Object -- default value to write
     # @rbs block: Proc -- block to call to get the default value
     # @rbs return: Object -- value
@@ -82,7 +82,7 @@ module Fmt
     end
 
     # Retrieves the value for the specified key
-    # @rbs key: String | Symbol -- key to retrieve
+    # @rbs key: Object -- key to retrieve
     def get(key)
       synchronize do
         reposition(key) if key?(key)
@@ -91,20 +91,20 @@ module Fmt
     end
 
     # Cache keys
-    # @rbs return: Array[Symbol]
+    # @rbs return: Array[Object]
     def keys
       synchronize { store.keys }
     end
 
     # Indicates if the cache contains the specified key
-    # @rbs key: String | Symbol -- key to check
+    # @rbs key: Object -- key to check
     # @rbs return: bool
     def key?(key)
       synchronize { store.key? key }
     end
 
     # Stores the value for the specified key
-    # @rbs key: String | Symbol -- key to store
+    # @rbs key: Object -- key to store
     # @rbs value: Object -- value to store
     # @rbs return: Object -- value
     def put(key, value)
@@ -136,7 +136,7 @@ module Fmt
     end
 
     # Hash representation of the cache
-    # @rbs return: Hash[Symbol, Proc]
+    # @rbs return: Hash[Object, Proc]
     def to_h
       synchronize { store.dup }
     end
@@ -158,10 +158,10 @@ module Fmt
 
     private
 
-    attr_reader :store # :: Hash[Symbol, Object]
+    attr_reader :store # :: Hash[Object, Object]
 
     # Moves the key to the end keeping it fresh
-    # @rbs key: Symbol -- key to reposition
+    # @rbs key: Object -- key to reposition
     # @rbs return: Object -- value
     def reposition(key)
       value = store.delete(key)

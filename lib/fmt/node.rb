@@ -36,7 +36,7 @@ module Fmt
     # @rbs type: Symbol
     # @rbs children: Array[Node]
     # @rbs properties: Hash[Symbol, Object]
-    def initialize(type, children = [], properties = {})
+    def initialize(type, children = [], properties = {urtext: "", source: ""})
       @properties = properties
       define_properties properties
       super

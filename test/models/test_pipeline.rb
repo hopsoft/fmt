@@ -9,7 +9,6 @@ module Fmt
       ast = PipelineParser.new(source).parse
       pipeline = Pipeline.new(ast)
 
-      assert_equal Fmt.registry[:ljust], pipeline.macros[0].callable
       assert_pattern {
         pipeline => {
           urtext: "ljust(80, '.')",
@@ -17,10 +16,11 @@ module Fmt
           macros: [{
             urtext: "ljust(80, '.')",
             source: "ljust(80, '.')",
-            key: :ljust,
-            callable: Proc,
-            args: [80, "."],
-            kwargs: {}
+            name: :ljust,
+            arguments: {
+              args: [80, "."],
+              kwargs: {}
+            }
           }]
         }
       }
@@ -31,8 +31,6 @@ module Fmt
       ast = PipelineParser.new(source).parse
       pipeline = Pipeline.new(ast)
 
-      assert_equal Fmt.registry[:ljust], pipeline.macros[0].callable
-      assert_equal Fmt.registry[:cyan], pipeline.macros[1].callable
       assert_pattern {
         pipeline => {
           urtext: "ljust(80, '.')|>cyan",
@@ -41,18 +39,20 @@ module Fmt
             {
               urtext: "ljust(80, '.')",
               source: "ljust(80, '.')",
-              key: :ljust,
-              callable: Proc,
-              args: [80, "."],
-              kwargs: {}
+              name: :ljust,
+              arguments: {
+                args: [80, "."],
+                kwargs: {}
+              },
             },
             {
               urtext: "cyan",
               source: "cyan",
-              key: :cyan,
-              callable: Proc,
-              args: [],
-              kwargs: {}
+              name: :cyan,
+              arguments: {
+                args: [],
+                kwargs: {}
+              }
             }
           ]
         }
@@ -64,12 +64,6 @@ module Fmt
       ast = PipelineParser.new(source).parse
       pipeline = Pipeline.new(ast)
 
-      assert_equal Fmt.registry[:pluralize], pipeline.macros[0].callable
-      assert_equal Fmt.registry[:titleize], pipeline.macros[1].callable
-      assert_equal Fmt.registry[:truncate], pipeline.macros[2].callable
-      assert_equal Fmt.registry[:red], pipeline.macros[3].callable
-      assert_equal Fmt.registry[:bold], pipeline.macros[4].callable
-      assert_equal Fmt.registry[:underline], pipeline.macros[5].callable
       assert_pattern {
         pipeline => {
           urtext: "pluralize(2, locale: :en)|>titleize|>truncate(30, '.')|>red|>bold|>underline",
@@ -78,50 +72,56 @@ module Fmt
             {
               urtext: "pluralize(2, locale: :en)",
               source: "pluralize(2, locale: :en)",
-              key: :pluralize,
-              callable: Proc,
-              args: [2],
-              kwargs: {locale: :en}
+              name: :pluralize,
+              arguments: {
+                args: [2],
+                kwargs: {locale: :en}
+              }
             },
             {
               urtext: "titleize",
               source: "titleize",
-              key: :titleize,
-              callable: Proc,
-              args: [],
-              kwargs: {}
+              name: :titleize,
+              arguments: {
+                args: [],
+                kwargs: {}
+              }
             },
             {
               urtext: "truncate(30, '.')",
               source: "truncate(30, '.')",
-              key: :truncate,
-              callable: Proc,
-              args: [30, "."],
-              kwargs: {}
+              name: :truncate,
+              arguments: {
+                args: [30, "."],
+                kwargs: {}
+              }
             },
             {
               urtext: "red",
               source: "red",
-              key: :red,
-              callable: Proc,
-              args: [],
-              kwargs: {}
+              name: :red,
+              arguments: {
+                args: [],
+                kwargs: {}
+              }
             },
             {
               urtext: "bold",
               source: "bold",
-              key: :bold,
-              callable: Proc,
-              args: [],
-              kwargs: {}
+              name: :bold,
+              arguments: {
+                args: [],
+                kwargs: {}
+              }
             },
             {
               urtext: "underline",
               source: "underline",
-              key: :underline,
-              callable: Proc,
-              args: [],
-              kwargs: {}
+              name: :underline,
+              arguments: {
+                args: [],
+                kwargs: {}
+              }
             }
           ]
         }

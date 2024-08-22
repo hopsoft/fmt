@@ -38,9 +38,7 @@ module Fmt
       tokens = tokens.map { |t| Node.new(t.type, [t.value], urtext: t.value, source: t.value) }
       tokens = Node.new(:tokens, tokens, urtext: urtext, source: tokens.map(&:source).join)
 
-      Node.new :arguments, [tokens],
-        urtext: urtext,
-        source: tokens.source
+      Node.new :arguments, [tokens], urtext: urtext, source: tokens.source
     end
   end
 end

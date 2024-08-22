@@ -17,8 +17,7 @@ module Fmt
           (template
             (pipeline
               (macro
-                (procedure
-                  (key :cyan)))))
+                (name :cyan))))
         AST
 
         assert_equal expected.rstrip, ast.to_s
@@ -36,8 +35,7 @@ module Fmt
           (template
             (pipeline
               (macro
-                (procedure
-                  (key :blue)))))
+                (name :blue))))
         AST
 
         assert_equal expected.rstrip, ast.to_s
@@ -55,8 +53,7 @@ module Fmt
           (template
             (pipeline
               (macro
-                (procedure
-                  (key :blue)))))
+                (name :blue))))
         AST
 
         assert_equal expected.rstrip, ast.to_s
@@ -74,14 +71,11 @@ module Fmt
           (template
             (pipeline
               (macro
-                (procedure
-                  (key :red)))
+                (name :red))
               (macro
-                (procedure
-                  (key :bold)))
+                (name :bold))
               (macro
-                (procedure
-                  (key :underline)))))
+                (name :underline))))
         AST
 
         assert_equal expected.rstrip, ast.to_s
@@ -99,14 +93,11 @@ module Fmt
           (template
             (pipeline
               (macro
-                (procedure
-                  (key :red)))
+                (name :red))
               (macro
-                (procedure
-                  (key :bold)))
+                (name :bold))
               (macro
-                (procedure
-                  (key :underline)))))
+                (name :underline))))
         AST
 
         assert_equal expected.rstrip, ast.to_s
