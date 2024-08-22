@@ -163,12 +163,12 @@ module Fmt
     # @rbs label: Symbol? -- label to use (if applicable)
     # @rbs return: Array | Hash
     def receiver(label: nil)
-      rec = find_receiver(kwargs) if kwargs.any?
-      rec ||= find_receiver(args) || args
+      obj = find_receiver(kwargs) if kwargs.any?
+      obj ||= find_receiver(args) || args
 
-      case [rec, label]
-      in [[*], Symbol] then kwargs # <- 1) Array with label
-      else rec # <--------------------- 2) Composite without label
+      case [obj, label]
+      in [*, Symbol] then kwargs # <- 1) Array with label
+      else obj # <------------------- 2) Composite without label
       end
     end
 
@@ -177,9 +177,9 @@ module Fmt
     # @rbs return: Array? | Hash?
     def find_receiver(obj)
       case obj
-      in [*, [*] | {**}] then find_receiver(obj.last) # <----------------------- 1) Array with composite last entry
-      in { ** } if composite?(obj.values.last) then find_receiver(obj.last) # <- 2) Hash with composite last entry
-      in [*] | { ** } then obj # <---------------------------------------------- 3) Composite (empty or last entry is a primitive)
+      in [] | {} then obj # <------------------------------------------ 1) empty array/hash
+      in [*, [*] | {**}] => array then find_receiver(array.last) # <--- 2) array with array/hash last entry
+      in {**} => hash then find_receiver(hash.values.last) || hash # <- 3) hash with values
       else nil
       end
     end
