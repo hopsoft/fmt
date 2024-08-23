@@ -76,17 +76,17 @@ module Fmt
     end
 
     # Indicates if the text represents a balanced embed (equal prefixes and suffixes)
-    # @rbs text: String
+    # @rbs embed: String
     # @rbs return: bool
-    def balanced?(text)
-      text.scan(PREFIX).size == text.scan(SUFFIX).size
+    def balanced?(embed)
+      embed.scan(PREFIX).size == embed.scan(SUFFIX).size
     end
 
     # Indicates if the text represents an unbalanced embed (unequal prefixes and suffixes)
-    # @rbs text: String
+    # @rbs embed: String
     # @rbs return: bool
-    def unbalanced?(text)
-      !balanced?(text)
+    def unbalanced?(embed)
+      !balanced?(embed)
     end
   end
 end

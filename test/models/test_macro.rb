@@ -11,8 +11,6 @@ module Fmt
 
       assert_pattern {
         macro => {
-          urtext: "strip",
-          source: "strip",
           name: :strip,
           arguments: {
             args: [],
@@ -29,8 +27,6 @@ module Fmt
 
       assert_pattern {
         macro => {
-          urtext: "ljust(80, '.')",
-          source: "ljust(80, '.')",
           name: :ljust,
           arguments: {
             args: [80, "."],
@@ -47,8 +43,6 @@ module Fmt
 
       assert_pattern {
         macro => {
-          urtext: "truncate(20, omission: '&hellip;')",
-          source: "truncate(20, omission: '&hellip;')",
           name: :truncate,
           arguments: {
             args: [20],

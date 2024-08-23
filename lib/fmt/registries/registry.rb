@@ -19,11 +19,18 @@ module Fmt
     def_delegator :store, :[]   # :: Proc -- retrieves a Proc from the registry
     def_delegator :store, :key? # :: bool -- indicates if a key exists in the registry
 
-    # Indicates if a method name is registered for at least one Class
+    # Indicates if a method name is registered for any Class
     # @rbs method_name: Symbol -- method name to check
     # @rbs return: bool
     def any?(method_name)
       !!method_names[method_name]
+    end
+
+    # Indicates if a method name is unregistered
+    # @rbs method_name: Symbol -- method name to check
+    # @rbs return: bool
+    def none?(method_name)
+      !any?(method_name)
     end
 
     # Adds a keypair to the registry

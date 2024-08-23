@@ -6,98 +6,195 @@ module Fmt
   module Parsers
     class TestTemplateParserCustom < UnitTest
       def test_simple
-        source = "%cyan"
-        ast = TemplateParser.new(source).parse
+        template = "%cyan"
+        ast = TemplateParser.new(template).parse
 
         assert_instance_of Node, ast
-        assert_equal source, ast.urtext
-        assert_equal source, ast.source
+        assert_equal template, ast.urtext
+        assert_equal template, ast.source
 
         expected = <<~AST
           (template
-            (pipeline
-              (macro
-                (name :cyan))))
+            (pipelines
+              (pipeline
+                (macro
+                  (name :cyan)))))
         AST
 
         assert_equal expected.rstrip, ast.to_s
       end
 
       def test_named
-        source = "%{value}blue"
-        ast = TemplateParser.new(source).parse
+        template = "%{value}blue"
+        ast = TemplateParser.new(template).parse
 
         assert_instance_of Node, ast
-        assert_equal source, ast.urtext
-        assert_equal "%{value}blue", ast.source
+        assert_equal template, ast.urtext
+        assert_equal template, ast.source
 
         expected = <<~AST
           (template
-            (pipeline
-              (macro
-                (name :blue))))
+            (pipelines
+              (pipeline
+                (macro
+                  (name :sprintf)
+                  (arguments
+                    (tokens
+                      (lparen "(")
+                      (tstring-beg "%Q[")
+                      (tstring-content "%{value}")
+                      (tstring-end "]")
+                      (rparen ")"))))
+                (macro
+                  (name :blue)))))
         AST
 
         assert_equal expected.rstrip, ast.to_s
       end
 
       def test_named_alt
-        source = "%<value>blue"
-        ast = TemplateParser.new(source).parse
+        template = "%<value>blue"
+        ast = TemplateParser.new(template).parse
 
         assert_instance_of Node, ast
-        assert_equal source, ast.urtext
-        assert_equal source, ast.source
+        assert_equal template, ast.urtext
+        assert_equal template, ast.source
 
         expected = <<~AST
           (template
-            (pipeline
-              (macro
-                (name :blue))))
+            (pipelines
+              (pipeline
+                (macro
+                  (name :sprintf)
+                  (arguments
+                    (tokens
+                      (lparen "(")
+                      (tstring-beg "%Q[")
+                      (tstring-content "%<value>")
+                      (tstring-end "]")
+                      (rparen ")"))))
+                (macro
+                  (name :blue)))))
         AST
 
         assert_equal expected.rstrip, ast.to_s
       end
 
       def test_named_pipeline
-        source = "%{value}red|>bold|>underline"
-        ast = TemplateParser.new(source).parse
+        template = "%{value}red|>bold|>underline"
+        ast = TemplateParser.new(template).parse
 
         assert_instance_of Node, ast
-        assert_equal source, ast.urtext
-        assert_equal "%{value}red|>bold|>underline", ast.source
+        assert_equal template, ast.urtext
+        assert_equal template, ast.source
 
         expected = <<~AST
           (template
-            (pipeline
-              (macro
-                (name :red))
-              (macro
-                (name :bold))
-              (macro
-                (name :underline))))
+            (pipelines
+              (pipeline
+                (macro
+                  (name :sprintf)
+                  (arguments
+                    (tokens
+                      (lparen "(")
+                      (tstring-beg "%Q[")
+                      (tstring-content "%{value}")
+                      (tstring-end "]")
+                      (rparen ")"))))
+                (macro
+                  (name :red))
+                (macro
+                  (name :bold))
+                (macro
+                  (name :underline)))))
         AST
 
         assert_equal expected.rstrip, ast.to_s
       end
 
       def test_named_with_pipeline_alt
-        source = "%<value>red|>bold|>underline"
-        ast = TemplateParser.new(source).parse
+        template = "%<value>red|>bold|>underline"
+        ast = TemplateParser.new(template).parse
 
         assert_instance_of Node, ast
-        assert_equal source, ast.urtext
-        assert_equal source, ast.source
+        assert_equal template, ast.urtext
+        assert_equal template, ast.source
 
         expected = <<~AST
           (template
-            (pipeline
-              (macro
-                (name :red))
-              (macro
-                (name :bold))
-              (macro
-                (name :underline))))
+            (pipelines
+              (pipeline
+                (macro
+                  (name :sprintf)
+                  (arguments
+                    (tokens
+                      (lparen "(")
+                      (tstring-beg "%Q[")
+                      (tstring-content "%<value>")
+                      (tstring-end "]")
+                      (rparen ")"))))
+                (macro
+                  (name :red))
+                (macro
+                  (name :bold))
+                (macro
+                  (name :underline)))))
+        AST
+
+        assert_equal expected.rstrip, ast.to_s
+      end
+
+      def test_multiple
+        template = "One: %s|>red Two: %{two}blue|>underline Three: %<three>green|>italic|>bold"
+        ast = TemplateParser.new(template).parse
+        assert_equal template, ast.urtext
+        assert_equal template, ast.source
+
+        expected = <<~AST
+          (template
+            (pipelines
+              (pipeline
+                (macro
+                  (name :sprintf)
+                  (arguments
+                    (tokens
+                      (lparen "(")
+                      (tstring-beg "%Q[")
+                      (tstring-content "%s")
+                      (tstring-end "]")
+                      (rparen ")"))))
+                (macro
+                  (name :red)))
+              (pipeline
+                (macro
+                  (name :sprintf)
+                  (arguments
+                    (tokens
+                      (lparen "(")
+                      (tstring-beg "%Q[")
+                      (tstring-content "%{two}")
+                      (tstring-end "]")
+                      (rparen ")"))))
+                (macro
+                  (name :blue))
+                (macro
+                  (name :underline)))
+              (pipeline
+                (macro
+                  (name :sprintf)
+                  (arguments
+                    (tokens
+                      (lparen "(")
+                      (tstring-beg "%Q[")
+                      (tstring-content "%<three>")
+                      (tstring-end "]")
+                      (rparen ")"))))
+                (macro
+                  (name :green))
+                (macro
+                  (name :italic))
+                (macro
+                  (name :bold)))))
         AST
 
         assert_equal expected.rstrip, ast.to_s

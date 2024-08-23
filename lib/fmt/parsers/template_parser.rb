@@ -5,17 +5,19 @@
 module Fmt
   # Parses a template from a string and builds an AST (Abstract Syntax Tree)
   class TemplateParser < Parser
-    FORMAT_START = Regexp.new(Sigils::FORMAT_PREFIX).freeze # :: Regexp
-    PIPELINE = Regexp.new("(?=%s|%s|$)" % [Sigils::FORMAT_PREFIX, Regexp.escape(Sigils::EMBED_PREFIX)]).freeze # :: Regexp
+    # FORMAT_START = Regexp.new(Sigils::FORMAT_PREFIX).freeze # :: Regexp
+    # PIPELINE = Regexp.new("(?=%s|%s|$)" % [Sigils::FORMAT_PREFIX, Regexp.escape(Sigils::EMBED_PREFIX)]).freeze # :: Regexp
 
     # Constructor
     # @rbs urtext: String -- original source code
-    def initialize(urtext = "")
+    # @rbs scanner: StringScanner?
+    def initialize(urtext = "", scanner: nil)
       @urtext = urtext.to_s
-      @scanner = StringScanner.new(@urtext)
+      @scanner = scanner
     end
 
-    attr_reader :urtext # :: String -- original source code
+    attr_reader :urtext  # :: String -- original source code
+    attr_reader :scanner # :: StringScanner?
 
     # Parses the urtext (original source code)
     # @rbs return: Node -- AST (Abstract Syntax Tree)
@@ -25,29 +27,79 @@ module Fmt
 
     protected
 
-    attr_reader :scanner # :: StringScanner
-
     # Extracts components for building the AST (Abstract Syntax Tree)
-    # @rbs return: Hash[Symbol, Object] -- extracted components
+    # @note Extraction is delegated to the PipelineParser and EmbedParser in transform
+    # @rbs return: Hash
     def extract
-      scanner.scan_until FORMAT_START
-      return {pipeline: Node.new(:pipeline)} unless scanner.matched?
-
-      {pipeline: scanner.scan_until(PIPELINE).to_s}
+      {}
     end
 
     # Transforms extracted components into an AST (Abstract Syntax Tree)
-    # @rbs pipeline: String -- extracted pipeline
     # @rbs return: Node -- AST (Abstract Syntax Tree)
-    def transform(pipeline:)
+    def transform(**)
+      return Node.new(:template, [], scanner: scanner) if urtext.empty?
+
+      embeds = parse_embeds
+      pipelines = parse_pipelines(embeds)
+
       children = []
-      children << PipelineParser.new(pipeline).parse
-      children << EmbedsParser.new(urtext).parse
-      children.reject!(&:empty?)
+      children << embeds unless embeds.empty?
+      children << pipelines unless pipelines.empty?
 
-      source = "%s%s%s" % [Sigils::FORMAT_PREFIX, pipeline, scanner.rest]
+      Node.new :template, children, urtext: urtext, source: urtext
+    end
 
-      Node.new(:template, children, urtext: urtext, source: source)
+    private
+
+    # Parses all embeds contained in the urtext
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    def parse_embeds
+      embeds = []
+      scanner = StringScanner.new(urtext)
+      template = EmbedParser.new(urtext, scanner: scanner).parse
+
+      until template.empty?
+        embeds << template
+        template = EmbedParser.new(scanner.rest, scanner: scanner).parse
+        break unless scanner.matched?
+        break if scanner.eos?
+      end
+
+      Node.new :embeds, embeds, urtext: urtext, source: urtext
+    ensure
+      embeds.each { |embed| embed.properties.delete :scanner }
+    end
+
+    # Parses all pipelines contained in the urtext
+    # @rbs embeds: Node -- AST (Abstract Syntax Tree)
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    def parse_pipelines(embeds)
+      pipelines = []
+
+      scanner = StringScanner.new(pipeline_urtext(embeds))
+      pipeline = PipelineParser.new(scanner.rest, scanner: scanner).parse
+
+      until pipeline.empty?
+        pipelines << pipeline
+        break if scanner.eos?
+        pipeline = PipelineParser.new(scanner.rest, scanner: scanner).parse
+      end
+
+      Node.new :pipelines, pipelines, urtext: urtext, source: urtext
+    ensure
+      pipelines.each { |pipeline| pipeline.properties.delete :scanner }
+    end
+
+    # Removes embedded templates prior to pipeline parsing
+    # @rbs embeds: Node -- AST (Abstract Syntax Tree)
+    # @rbs return: String
+    def pipeline_urtext(embeds)
+      text = urtext
+      embeds.children.each do |embed|
+        remove = "%s%s%s" % [Sigils::EMBED_PREFIX, embed.source, Sigils::EMBED_SUFFIX]
+        text = text.sub(remove, "")
+      end
+      text
     end
   end
 end

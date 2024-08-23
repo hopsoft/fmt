@@ -18,6 +18,7 @@ FileUtils.mkdir_p "tmp"
 
 Minitest::Reporters.use! [
   Minitest::Reporters::DefaultReporter.new(color: true, fail_fast: true, location: true),
+  # Minitest::Reporters::SpecReporter.new(color: true, fail_fast: true, location: true),
   Minitest::Reporters::MeanTimeReporter.new(show_count: 1_000, show_progress: false, sort_column: :avg, previous_runs_filename: "tmp/minitest-report")
 ]
 

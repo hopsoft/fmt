@@ -5,7 +5,7 @@ require_relative "../test_helper"
 module Fmt
   class TestPipelineParser < UnitTest
     def test_one
-      source = "ljust(80, '.')"
+      source = "%ljust(80, '.')"
       ast = PipelineParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.source
@@ -30,7 +30,7 @@ module Fmt
     end
 
     def test_two
-      source = "ljust(80, '.')|>cyan"
+      source = "%ljust(80, '.')|>cyan"
       ast = PipelineParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.source
@@ -57,7 +57,7 @@ module Fmt
     end
 
     def test_named
-      source = "<value>.10f|>ljust(80, '.')|>cyan"
+      source = "%<value>.10f|>ljust(80, '.')|>cyan"
       ast = PipelineParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.source
@@ -93,7 +93,7 @@ module Fmt
     end
 
     def test_multiple
-      source = "pluralize(2, locale: :en)|>titleize|>truncate(30, '.')|>red|>bold|>underline"
+      source = "%pluralize(2, locale: :en)|>titleize|>truncate(30, '.')|>red|>bold|>underline"
       ast = PipelineParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.source

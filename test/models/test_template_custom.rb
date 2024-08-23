@@ -6,29 +6,33 @@ module Fmt
   module Models
     class TestTemplateCustom < UnitTest
       def test_simple
-        source = "%cyan"
+        source = "%s|>cyan"
         ast = TemplateParser.new(source).parse
         template = Template.new(ast)
 
         assert_pattern {
           template => {
-            urtext: "%cyan",
-            source: "%cyan",
-            pipeline: {
-              urtext: "cyan",
-              source: "cyan",
-              macros: [
-                {
-                  urtext: "cyan",
-                  source: "cyan",
-                  name: :cyan,
-                  arguments: {
-                    args: [],
-                    kwargs: {}
+            embeds: [],
+            pipelines: [
+              {
+                macros: [
+                  {
+                    name: :sprintf,
+                    arguments: {
+                      args: ["%s"],
+                      kwargs: {}
+                    }
+                  },
+                  {
+                    name: :cyan,
+                    arguments: {
+                      args: [],
+                      kwargs: {}
+                    }
                   }
-                }
-              ]
-            }
+                ]
+              }
+            ]
           }
         }
       end
@@ -40,23 +44,27 @@ module Fmt
 
         assert_pattern {
           template => {
-            urtext: "%{value}blue",
-            source: "%{value}blue",
-            pipeline: {
-              urtext: "{value}blue",
-              source: "{value}blue",
-              macros: [
-                {
-                  urtext: "{value}blue",
-                  source: "{value}blue",
-                  name: :blue,
-                  arguments: {
-                    args: [],
-                    kwargs: {}
+            embeds: [],
+            pipelines: [
+              {
+                macros: [
+                  {
+                    name: :sprintf,
+                    arguments: {
+                      args: ["%{value}"],
+                      kwargs: {}
+                    }
+                  },
+                  {
+                    name: :blue,
+                    arguments: {
+                      args: [],
+                      kwargs: {}
+                    }
                   }
-                }
-              ]
-            }
+                ]
+              }
+            ]
           }
         }
       end
@@ -68,23 +76,27 @@ module Fmt
 
         assert_pattern {
           template => {
-            urtext: "%<value>green",
-            source: "%<value>green",
-            pipeline: {
-              urtext: "<value>green",
-              source: "<value>green",
-              macros: [
-                {
-                  urtext: "<value>green",
-                  source: "<value>green",
-                  name: :green,
-                  arguments: {
-                    args: [],
-                    kwargs: {}
+            embeds: [],
+            pipelines: [
+              {
+                macros: [
+                  {
+                    name: :sprintf,
+                    arguments: {
+                      args: ["%<value>"],
+                      kwargs: {}
+                    }
+                  },
+                  {
+                    name: :green,
+                    arguments: {
+                      args: [],
+                      kwargs: {}
+                    }
                   }
-                }
-              ]
-            }
+                ]
+              }
+            ]
           }
         }
       end
@@ -96,41 +108,41 @@ module Fmt
 
         assert_pattern {
           template => {
-            urtext: "%{value}red|>bold|>underline",
-            source: "%{value}red|>bold|>underline",
-            pipeline: {
-              urtext: "{value}red|>bold|>underline",
-              source: "{value}red|>bold|>underline",
-              macros: [
-                {
-                  urtext: "{value}red",
-                  source: "{value}red",
-                  name: :red,
-                  arguments: {
-                    args: [],
-                    kwargs: {}
+            embeds: [],
+            pipelines: [
+              {
+                macros: [
+                  {
+                    name: :sprintf,
+                    arguments: {
+                      args: ["%{value}"],
+                      kwargs: {}
+                    }
+                  },
+                  {
+                    name: :red,
+                    arguments: {
+                      args: [],
+                      kwargs: {}
+                    }
+                  },
+                  {
+                    name: :bold,
+                    arguments: {
+                      args: [],
+                      kwargs: {}
+                    }
+                  },
+                  {
+                    name: :underline,
+                    arguments: {
+                      args: [],
+                      kwargs: {}
+                    }
                   }
-                },
-                {
-                  urtext: "bold",
-                  source: "bold",
-                  name: :bold,
-                  arguments: {
-                    args: [],
-                    kwargs: {}
-                  }
-                },
-                {
-                  urtext: "underline",
-                  source: "underline",
-                  name: :underline,
-                  arguments: {
-                    args: [],
-                    kwargs: {}
-                  }
-                }
-              ]
-            }
+                ]
+              }
+            ]
           }
         }
       end
@@ -142,41 +154,41 @@ module Fmt
 
         assert_pattern {
           template = {
-            urtext: "%<value>magenta|>italic|>faint",
-            source: "%<value>magenta|>italic|>faint",
-            pipeline: {
-              urtext: "<value>magenta|>italic|>faint",
-              source: "<value>magenta|>italic|>faint",
-              macros: [
-                {
-                  urtext: "<value>magenta",
-                  source: "<value>magenta",
-                  name: :magenta,
-                  arguments: {
-                    args: [],
-                    kwargs: {}
+            embeds: [],
+            pipelines: [
+              {
+                macros: [
+                  {
+                    name: :sprintf,
+                    arguments: {
+                      args: ["%<value>"],
+                      kwargs: {}
+                    }
+                  },
+                  {
+                    name: :magenta,
+                    arguments: {
+                      args: [],
+                      kwargs: {}
+                    }
+                  },
+                  {
+                    name: :italic,
+                    arguments: {
+                      args: [],
+                      kwargs: {}
+                    }
+                  },
+                  {
+                    name: :faint,
+                    arguments: {
+                      args: [],
+                      kwargs: {}
+                    }
                   }
-                },
-                {
-                  urtext: "italic",
-                  source: "italic",
-                  name: :italic,
-                  arguments: {
-                    args: [],
-                    kwargs: {}
-                  }
-                },
-                {
-                  urtext: "faint",
-                  source: "faint",
-                  name: :faint,
-                  arguments: {
-                    args: [],
-                    kwargs: {}
-                  }
-                }
-              ]
-            }
+                ]
+              }
+            ]
           }
         }
       end

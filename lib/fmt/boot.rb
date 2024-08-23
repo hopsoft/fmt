@@ -13,11 +13,11 @@ require "strscan"
 require "ast"
 
 # Foundational files (globals)
+require_relative "sigils"
 require_relative "lru_cache"
 require_relative "mixins/matchable"
 require_relative "node"
 require_relative "renderer"
-require_relative "sigils"
 require_relative "token"
 require_relative "tokenizer"
 require_relative "version"
@@ -30,8 +30,8 @@ require_relative "registries/rainbow_registry"
 # Parsers -- String | Object parsers that generate ASTs
 require_relative "parsers/parser" # <- base class
 require_relative "parsers/arguments_parser"
-require_relative "parsers/embeds_parser"
 require_relative "parsers/macro_parser"
+require_relative "parsers/embed_parser"
 require_relative "parsers/pipeline_parser"
 require_relative "parsers/template_parser"
 

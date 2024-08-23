@@ -6,36 +6,26 @@ module Fmt
   # Represents a formattable string
   #
   # A Template is comprised of:
-  # 1. pipeline :: Pipeline -- series of Macros
-  # 2. embeds: Array[Template] -- embedded templates
+  # 1. embeds: Array[Template] -- embedded templates
+  # 2. pipelines :: Array[Pipeline] -- sets of Macros
   #
-  # @note Embeds are processed in sequence (inner to outer)
-  #
-  # @examples
-  #   %s
-  #   %.10f
-  #   %{value}s
-  #   %<value>.10f
-  #   %{value}
-  #   %<value>
-  #   %<value>.12f|>p|>truncate(10, '.')
-  #   %{value}red|>bold|>underline
-  #   %<one>red{{%<two>ljust(80, '.')|>green {{%<three>blue}}}}
+  # @note Embeds are processed from inner to outer
   #
   class Template < Model
     # Constructor
     # @rbs ast: Node
     def initialize(ast)
       @embeds = []
+      @pipelines = []
       super
     end
 
-    attr_reader :pipeline # :: Pipeline
-    attr_reader :embeds   # :: Array[Template]
+    attr_reader :embeds    # :: Array[Template]
+    attr_reader :pipelines # :: Array[Pipeline]
 
     # @rbs return: Hash[Symbol, Object]
     def to_h
-      super.merge pipeline: pipeline.to_h
+      super.merge embeds: embeds.map(&:to_h), pipelines: pipelines.map(&:to_h)
     end
 
     # ..........................................................................
@@ -54,8 +44,12 @@ module Fmt
       embeds << Template.new(node)
     end
 
+    def on_pipelines(node)
+      process_all node.children
+    end
+
     def on_pipeline(node)
-      @pipeline = Pipeline.new(node)
+      pipelines << Pipeline.new(node)
     end
 
     # @note The embeds node has template children

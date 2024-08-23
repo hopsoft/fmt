@@ -5,49 +5,55 @@ require_relative "../test_helper"
 module Fmt
   class TestPipeline < UnitTest
     def test_one
-      source = "ljust(80, '.')"
+      source = "%s|>ljust(80, '.')"
       ast = PipelineParser.new(source).parse
       pipeline = Pipeline.new(ast)
 
       assert_pattern {
         pipeline => {
-          urtext: "ljust(80, '.')",
-          source: "ljust(80, '.')",
-          macros: [{
-            urtext: "ljust(80, '.')",
-            source: "ljust(80, '.')",
-            name: :ljust,
-            arguments: {
-              args: [80, "."],
-              kwargs: {}
+          macros: [
+            {
+              name: :sprintf,
+              arguments: {
+                args: ["%s"],
+                kwargs: {}
+              }
+            },
+            {
+              name: :ljust,
+              arguments: {
+                args: [80, "."],
+                kwargs: {}
+              }
             }
-          }]
+          ]
         }
       }
     end
 
     def test_two
-      source = "ljust(80, '.')|>cyan"
+      source = "%{value}|>ljust(80, '.')|>cyan"
       ast = PipelineParser.new(source).parse
       pipeline = Pipeline.new(ast)
 
       assert_pattern {
         pipeline => {
-          urtext: "ljust(80, '.')|>cyan",
-          source: "ljust(80, '.')|>cyan",
           macros: [
             {
-              urtext: "ljust(80, '.')",
-              source: "ljust(80, '.')",
+              name: :sprintf,
+              arguments: {
+                args: ["%{value}"],
+                kwargs: {}
+              }
+            },
+            {
               name: :ljust,
               arguments: {
                 args: [80, "."],
                 kwargs: {}
-              },
+              }
             },
             {
-              urtext: "cyan",
-              source: "cyan",
               name: :cyan,
               arguments: {
                 args: [],
@@ -60,18 +66,21 @@ module Fmt
     end
 
     def test_multiple
-      source = "pluralize(2, locale: :en)|>titleize|>truncate(30, '.')|>red|>bold|>underline"
+      source = "%s|>pluralize(2, locale: :en)|>titleize|>truncate(30, '.')|>red|>bold|>underline"
       ast = PipelineParser.new(source).parse
       pipeline = Pipeline.new(ast)
 
       assert_pattern {
         pipeline => {
-          urtext: "pluralize(2, locale: :en)|>titleize|>truncate(30, '.')|>red|>bold|>underline",
-          source: "pluralize(2, locale: :en)|>titleize|>truncate(30, '.')|>red|>bold|>underline",
           macros: [
             {
-              urtext: "pluralize(2, locale: :en)",
-              source: "pluralize(2, locale: :en)",
+              name: :sprintf,
+              arguments: {
+                args: ["%s"],
+                kwargs: {}
+              }
+            },
+            {
               name: :pluralize,
               arguments: {
                 args: [2],
@@ -79,8 +88,6 @@ module Fmt
               }
             },
             {
-              urtext: "titleize",
-              source: "titleize",
               name: :titleize,
               arguments: {
                 args: [],
@@ -88,8 +95,6 @@ module Fmt
               }
             },
             {
-              urtext: "truncate(30, '.')",
-              source: "truncate(30, '.')",
               name: :truncate,
               arguments: {
                 args: [30, "."],
@@ -97,8 +102,6 @@ module Fmt
               }
             },
             {
-              urtext: "red",
-              source: "red",
               name: :red,
               arguments: {
                 args: [],
@@ -106,8 +109,6 @@ module Fmt
               }
             },
             {
-              urtext: "bold",
-              source: "bold",
               name: :bold,
               arguments: {
                 args: [],
@@ -115,8 +116,6 @@ module Fmt
               }
             },
             {
-              urtext: "underline",
-              source: "underline",
               name: :underline,
               arguments: {
                 args: [],

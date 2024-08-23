@@ -35,10 +35,7 @@ module Fmt
     # @note Subclasses should override this method and call: super.merge(**)
     # @rbs return: Hash[Symbol, Object]
     def to_h
-      {
-        urtext: urtext,
-        source: source
-      }
+      {}
     end
 
     private

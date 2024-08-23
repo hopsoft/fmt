@@ -15,8 +15,8 @@ module Fmt
     end
 
     def test_pipeline
-      renderer = build_renderer("Hello %s|>truncate(10, omission: '?')|>red|>bold|>italic|>underline")
-      assert_equal "Hello \e[31m\e[1m\e[3m\e[4mTest\e[0m", renderer.render("Test")
+      renderer = build_renderer("Hello %s|>truncate(8, omission: '?')|>red|>bold|>italic|>underline")
+      assert_equal "\e[31m\e[1m\e[3m\e[4mHello T?\e[0m", renderer.render("Test")
     end
   end
 end

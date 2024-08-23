@@ -12,25 +12,20 @@ module Fmt
 
         assert_pattern {
           template => {
-            urtext: "Inspect: %s",
-            source: "%s",
-            pipeline: {
-              urtext: "s",
-              source: "s",
-              macros: [
-                {
-                  urtext: "s",
-                  source: "s",
-                  name: :sprintf,
-                  arguments: {
-                    urtext: "sprintf(%Q[%s])",
-                    source: "(%Q[%s])",
-                    args: ["%s"],
-                    kwargs: {}
+            embeds: [],
+            pipelines: [
+              {
+                macros: [
+                  {
+                    name: :sprintf,
+                    arguments: {
+                      args: ["%s"],
+                      kwargs: {}
+                    }
                   }
-                }
-              ]
-            }
+                ]
+              }
+            ]
           }
         }
       end
@@ -42,27 +37,20 @@ module Fmt
 
         assert_pattern {
           template => {
-            urtext: "Inspect: %{obj}",
-            source: "%{obj}",
-            pipeline: {
-              urtext: "{obj}",
-              source: "{obj}",
-              macros: [
-                {
-                  urtext: "{obj}",
-                  source: "{obj}",
-                  name: :sprintf,
-                  arguments: {
-                    urtext: "sprintf(%Q[%{obj}])",
-                    source: "(%Q[%{obj}])",
-                    args: [
-                      "%{obj}"
-                    ],
-                    kwargs: {}
+            embeds: [],
+            pipelines: [
+              {
+                macros: [
+                  {
+                    name: :sprintf,
+                    arguments: {
+                      args: ["%{obj}"],
+                      kwargs: {}
+                    }
                   }
-                }
-              ]
-            }
+                ]
+              }
+            ]
           }
         }
       end
@@ -74,27 +62,20 @@ module Fmt
 
         assert_pattern {
           template => {
-            urtext: "Inspect: %<obj>s",
-            source: "%<obj>s",
-            pipeline: {
-              urtext: "<obj>s",
-              source: "<obj>s",
-              macros: [
-                {
-                  urtext: "<obj>s",
-                  source: "<obj>s",
-                  name: :sprintf,
-                  arguments: {
-                    urtext: "sprintf(%Q[%<obj>s])",
-                    source: "(%Q[%<obj>s])",
-                    args: [
-                      "%<obj>s"
-                    ],
-                    kwargs: {}
+            embeds: [],
+            pipelines: [
+              {
+                macros: [
+                  {
+                    name: :sprintf,
+                    arguments: {
+                      args: ["%<obj>s"],
+                      kwargs: {}
+                    }
                   }
-                }
-              ]
-            }
+                ]
+              }
+            ]
           }
         }
       end
@@ -106,27 +87,20 @@ module Fmt
 
         assert_pattern {
           template => {
-            urtext: "%.10f",
-            source: "%.10f",
-            pipeline: {
-              urtext: ".10f",
-              source: ".10f",
-              macros: [
-                {
-                  urtext: ".10f",
-                  source: ".10f",
-                  name: :sprintf,
-                  arguments: {
-                    urtext: "sprintf(%Q[%.10f])",
-                    source: "(%Q[%.10f])",
-                    args: [
-                      "%.10f"
-                    ],
-                    kwargs: {}
+            embeds: [],
+            pipelines: [
+              {
+                macros: [
+                  {
+                    name: :sprintf,
+                    arguments: {
+                      args: ["%.10f"],
+                      kwargs: {}
+                    }
                   }
-                }
-              ]
-            }
+                ]
+              }
+            ]
           }
         }
       end
@@ -138,27 +112,20 @@ module Fmt
 
         assert_pattern {
           template => {
-            urtext: "%<value>.10f",
-            source: "%<value>.10f",
-            pipeline: {
-              urtext: "<value>.10f",
-              source: "<value>.10f",
-              macros: [
-                {
-                  urtext: "<value>.10f",
-                  source: "<value>.10f",
-                  name: :sprintf,
-                  arguments: {
-                    urtext: "sprintf(%Q[%<value>.10f])",
-                    source: "(%Q[%<value>.10f])",
-                    args: [
-                      "%<value>.10f"
-                    ],
-                    kwargs: {}
+            embeds: [],
+            pipelines: [
+              {
+                macros: [
+                  {
+                    name: :sprintf,
+                    arguments: {
+                      args: ["%<value>.10f"],
+                      kwargs: {}
+                    }
                   }
-                }
-              ]
-            }
+                ]
+              }
+            ]
           }
         }
       end
@@ -170,67 +137,99 @@ module Fmt
 
         assert_pattern {
           template => {
-            urtext: "Pipleline: %s|><value>.10f|>p|>truncate(10, '.')",
-            source: "%s|><value>.10f|>p|>truncate(10, '.')",
-            pipeline: {
-              urtext: "s|><value>.10f|>p|>truncate(10, '.')",
-              source: "s|><value>.10f|>p|>truncate(10, '.')",
-              macros: [
-                {
-                  urtext: "s",
-                  source: "s",
-                  name: :sprintf,
-                  arguments: {
-                    urtext: "sprintf(%Q[%s])",
-                    source: "(%Q[%s])",
-                    args: [
-                      "%s"
-                    ],
-                    kwargs: {}
+            embeds: [],
+            pipelines: [
+              {
+                macros: [
+                  {
+                    name: :sprintf,
+                    arguments: {
+                      args: ["%s"],
+                      kwargs: {}
+                    }
+                  },
+                  {
+                    name: :sprintf,
+                    arguments: {
+                      args: ["%<value>.10f"],
+                      kwargs: {}
+                    }
+                  },
+                  {
+                    name: :sprintf,
+                    arguments: {
+                      args: ["%p"],
+                      kwargs: {}
+                    }
+                  },
+                  {
+                    name: :truncate,
+                    arguments: {
+                      args: [10, "."],
+                      kwargs: {}
+                    }
                   }
-                },
-                {
-                  urtext: "<value>.10f",
-                  source: "<value>.10f",
-                  name: :sprintf,
-                  arguments: {
-                    urtext: "sprintf(%Q[%<value>.10f])",
-                    source: "(%Q[%<value>.10f])",
-                    args: [
-                      "%<value>.10f"
-                    ],
-                    kwargs: {}
+                ]
+              }
+            ]
+          }
+        }
+      end
+
+      def test_multiple
+        template = "One: %s Two: %.10f Three: %{value} %p"
+        ast = TemplateParser.new(template).parse
+        template = Template.new(ast)
+
+        assert_pattern {
+          template => {
+            embeds: [],
+            pipelines: [
+              {
+                macros: [
+                  {
+                    name: :sprintf,
+                    arguments: {
+                      args: ["%s"],
+                      kwargs: {}
+                    }
                   }
-                },
-                {
-                  urtext: "p",
-                  source: "p",
-                  name: :sprintf,
-                  arguments: {
-                    urtext: "sprintf(%Q[%p])",
-                    source: "(%Q[%p])",
-                    args: [
-                      "%p"
-                    ],
-                    kwargs: {}
+                ]
+              },
+              {
+                macros: [
+                  {
+                    name: :sprintf,
+                    arguments: {
+                      args: ["%.10f"],
+                      kwargs: {}
+                    }
                   }
-                },
-                {
-                  urtext: "truncate(10, '.')",
-                  source: "truncate(10, '.')",
-                  name: :truncate,
-                  arguments: {
-                    urtext: "truncate(10, '.')",
-                    source: "(10, '.')",
-                    args: [
-                      10,
-                      "."
-                    ],
-                    kwargs: {}
+                ]
+              },
+              {
+                macros: [
+                  {
+                    name: :sprintf,
+                    arguments: {
+                      args: ["%{value}"],
+                      kwargs: {}
+                    }
                   }
-                }
-              ]
-            }
+                ]
+              },
+              {
+                macros: [
+                  {
+                    name: :sprintf,
+                    arguments: {
+                      args: ["%p"],
+                      kwargs: {}
+                    }
+                  }
+                ]
+              }
+            ]
           }
         }
       end

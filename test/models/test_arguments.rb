@@ -11,8 +11,6 @@ module Fmt
 
       assert_pattern {
         model => {
-          urtext: "ljust(80, '.')",
-          source: "(80, '.')",
           args: [80, "."],
           kwargs: {}
         }
@@ -26,8 +24,6 @@ module Fmt
 
       assert_pattern {
         model => {
-          urtext: "pluralize(2, locale: :en)",
-          source: "(2, locale: :en)",
           args: [2],
           kwargs: {locale: :en}
         }

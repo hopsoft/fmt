@@ -4,6 +4,8 @@
 
 module Fmt
   class Renderer
+    PIPELINE_START = Regexp.new("(?=%s)" % [Sigils::FORMAT_PREFIX]).freeze # :: Regexp -- detects start of first pipeline
+
     # Constructor
     # @rbs template: Template
     def initialize(template)
@@ -21,13 +23,16 @@ module Fmt
       raise Error, "positional and keyword arguments are mutually exclusive" if args.any? && kwargs.any?
 
       # start with an empty string
-      output = ""
+      scanner = StringScanner.new(template.source)
+      output = scanner.scan_until(PIPELINE_START).to_s
 
-      # execute the pipeline
-      template.pipeline.macros.each do |macro|
-        output = case macro
-        in name: Sigils::FORMAT_METHOD then invoke_formatter(output, macro, *args, **kwargs)
-        else invoke_macro(output, macro)
+      # execute pipelines
+      template.pipelines.each do |pipeline|
+        pipeline.macros.each do |macro|
+          output = case macro
+          in name: Sigils::FORMAT_METHOD then invoke_formatter(output, macro, *args, **kwargs)
+          else invoke_macro(output, macro)
+          end
         end
       end
 
