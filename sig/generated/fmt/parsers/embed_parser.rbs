@@ -1,47 +1,42 @@
-# Generated from lib/fmt/parsers/embeds_parser.rb with RBS::Inline
+# Generated from lib/fmt/parsers/embed_parser.rb with RBS::Inline
 
 module Fmt
   # Parses embeds from a string and builds an AST (Abstract Syntax Tree)
-  class EmbedsParser < Parser
-    PREFIX: untyped
+  class EmbedParser < Parser
+    START: untyped
 
-    SUFFIX: untyped
+    FINISH: untyped
 
     # Constructor
     # @rbs urtext: String -- original source code
-    def initialize: (?String urtext) -> untyped
+    # @rbs scanner: StringScanner?
+    def initialize: (?String urtext, ?scanner: StringScanner?) -> untyped
 
     attr_reader urtext: untyped
+
+    attr_reader scanner: untyped
 
     # Parses the urtext (original source code)
     # @rbs return: Node -- AST (Abstract Syntax Tree)
     def parse: () -> Node
 
-    attr_reader scanner: untyped
-
     # Extracts components for building the AST (Abstract Syntax Tree)
     # @rbs return: Hash[Symbol, Object] -- extracted components
     def extract: () -> Hash[Symbol, Object]
 
-    # Extracts all embed strings
-    # @rbs return: Array[String]
-    def extract_embeds: () -> Array[String]
-
-    # Extracts the next embed string
-    # @rbs return: String?
-    def extract_embed: () -> String?
-
     # Transforms extracted components into an AST (Abstract Syntax Tree)
-    # @rbs embeds: Array[String] -- extracted embeds
+    # @rbs embed: String -- extracted embed
     # @rbs return: Node -- AST (Abstract Syntax Tree)
-    def transform: (embeds: Array[String]) -> Node
+    def transform: (embed: String) -> Node
 
-    # Indicates if the text represents a balanced embed (equal prefixes and suffixes)
+    private
+
+    # Indicates if the embed string is balanced
     # @rbs embed: String
     # @rbs return: bool
     def balanced?: (String embed) -> bool
 
-    # Indicates if the text represents an unbalanced embed (unequal prefixes and suffixes)
+    # Indicates if the embed string is unbalanced
     # @rbs embed: String
     # @rbs return: bool
     def unbalanced?: (String embed) -> bool

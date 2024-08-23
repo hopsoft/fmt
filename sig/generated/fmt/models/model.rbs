@@ -18,9 +18,23 @@ module Fmt
 
     attr_reader source: untyped
 
+    # Model inspection
+    # @rbs return: String
+    def inspect: () -> String
+
     # Hash representation of the model (required for pattern matching)
     # @note Subclasses should override this method and call: super.merge(**)
     # @rbs return: Hash[Symbol, Object]
     def to_h: () -> Hash[Symbol, Object]
+
+    private
+
+    # Hash of instance variables for inspection
+    # @rbs return: Hash[String, Object]
+    def inspectable_properties: () -> Hash[String, Object]
+
+    # String of inspectable properties for inspection
+    # @rbs return: String
+    def inspect_properties: () -> String
   end
 end

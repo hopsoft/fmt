@@ -4,7 +4,16 @@ module Fmt
   # Extends native Ruby String format specifications with native Ruby methods
   # @see https://ruby-doc.org/3.3.4/format_specifications_rdoc.html
   class NativeRegistry < Registry
+    SUPPORTED_CLASSES: untyped
+
     # Constructor
     def initialize: () -> untyped
+
+    private
+
+    # Array of supported method names for a Class
+    # @rbs klass: Class
+    # @rbs return: Array[Symbol]
+    def supported_method_names: (Class klass) -> Array[Symbol]
   end
 end

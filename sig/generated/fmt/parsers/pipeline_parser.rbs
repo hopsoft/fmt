@@ -3,11 +3,29 @@
 module Fmt
   # Parses a pipeline from a string and builds an AST (Abstract Syntax Tree)
   class PipelineParser < Parser
+    # @rbs return: Regexp -- detects the start of a pipeline
+    START: untyped
+
+    # @rbs return: Regexp -- detects the possible end of a pipeline
+    PIPELINE_FINISH: untyped
+
+    # @rbs return: Regexp -- detects the end of arguments
+    ARGUMENTS_FINISH: untyped
+
+    # @rbs return: Regexp -- detects a named leading macro
+    NAMED_LEAD_MACRO: untyped
+
+    # @rbs return: Regexp -- detects the end of a macro
+    MACRO_FINISH: untyped
+
     # Constructor
     # @rbs urtext: String -- original source code
-    def initialize: (?String urtext) -> untyped
+    # @rbs scanner: StringScanner?
+    def initialize: (?String urtext, ?scanner: StringScanner?) -> untyped
 
     attr_reader urtext: untyped
+
+    attr_reader scanner: untyped
 
     # Parses the urtext (original source code)
     # @rbs return: Node -- AST (Abstract Syntax Tree)
@@ -18,8 +36,21 @@ module Fmt
     def extract: () -> Hash[Symbol, Object]
 
     # Transforms extracted components into an AST (Abstract Syntax Tree)
+    # @rbs pipeline: String -- extracted pipeline
     # @rbs macros: Array[String] -- extracted components
     # @rbs return: Node -- AST (Abstract Syntax Tree)
-    def transform: (macros: Array[String]) -> Node
+    def transform: (pipeline: String, macros: Array[String]) -> Node
+
+    private
+
+    # Extracts a named leading macro (includes trailing format content)
+    # @rbs pipeline: String -- pipeline to extract from
+    # @rbs return: String?
+    def extract_named_lead_macro: (String pipeline) -> String?
+
+    # Extracts all macros from the pipeline
+    # @rbs pipeline: String -- pipeline to extract from
+    # @rbs return: Array[String]
+    def extract_macros: (String pipeline) -> Array[String]
   end
 end

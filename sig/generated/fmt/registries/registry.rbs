@@ -10,43 +10,39 @@ module Fmt
     # Constructor
     def initialize: () -> untyped
 
-    # Retrieves a Proc from the registry
-    # @rbs key: String | Symbol -- key to retrieve
+    # Indicates if a method name is registered for any Class
+    # @rbs method_name: Symbol -- method name to check
+    # @rbs return: bool
+    def any?: (Symbol method_name) -> bool
+
+    # Indicates if a method name is unregistered
+    # @rbs method_name: Symbol -- method name to check
+    # @rbs return: bool
+    def none?: (Symbol method_name) -> bool
+
+    # Adds a keypair to the registry
+    # @rbs key: Array[Class | Module, Symbol] -- key to use
+    # @rbs overwrite: bool -- overwrite the existing keypair (default: false)
+    # @rbs block: Proc -- Proc to add (optional, if proc is provided)
+    # @rbs return: Proc
+    def add: (Array[Class | Module, Symbol] key, ?overwrite: bool) ?{ (?) -> untyped } -> Proc
+
+    # Deletes a keypair from the registry
+    # @rbs key: Array[Class | Module, Symbol] -- key to delete
     # @rbs return: Proc?
-    def []: (String | Symbol key) -> Proc?
+    def delete: (Array[Class | Module, Symbol] key) -> Proc?
 
-    # Retrieves an Array of supported method names for the given classes
-    # @rbs klasses: Array[Class]
-    # @rbs return: Array[Symbol]
-    def supported_method_names: (*untyped klasses) -> Array[Symbol]
-
-    # Indicates if a key exists in the registry
-    # @rbs key: String | Symbol -- key to check
-    def key?: (String | Symbol key) -> untyped
+    # Fetches a Proc from the registry
+    # @rbs key: Array[Class | Module, Symbol] -- key to retrieve
+    # @rbs callable: Proc -- Proc to use if the key is not found (optional, if block is provided)
+    # @rbs block: Proc -- block to use if the key is not found (optional, if proc is provided)
+    # @rbs return: Proc
+    def fetch: (Array[Class | Module, Symbol] key, ?callable: Proc) ?{ (?) -> untyped } -> Proc
 
     # Retrieves the registered key for a Proc
     # @rbs callable: Proc -- Proc to retrieve the key for
     # @rbs return: Symbol?
     def key_for: (Proc callable) -> Symbol?
-
-    # Adds a keypair to the registry
-    # @rbs key: String | Symbol -- key to use
-    # @rbs overwrite: bool -- overwrite the existing keypair (default: false)
-    # @rbs block: Proc -- Proc to add (optional, if proc is provided)
-    # @rbs return: Proc
-    def add: (String | Symbol key, ?overwrite: bool) ?{ (?) -> untyped } -> Proc
-
-    # Deletes a keypair from the registry
-    # @rbs key: String | Symbol -- key to delete
-    # @rbs return: Proc?
-    def delete: (String | Symbol key) -> Proc?
-
-    # Fetches a Proc from the registry
-    # @rbs key: String | Symbol -- key to retrieve
-    # @rbs callable: Proc -- Proc to use if the key is not found (optional, if block is provided)
-    # @rbs block: Proc -- block to use if the key is not found (optional, if proc is provided)
-    # @rbs return: Proc
-    def fetch: (String | Symbol key, ?callable: Proc) ?{ (?) -> untyped } -> Proc
 
     # Merges another registry into this one
     # @rbs other: Fmt::Registry -- other registry to merge
@@ -59,11 +55,15 @@ module Fmt
     #       and will overwrite existing entries for the duration of the block
     #       Non overriden entries remain unchanged
     #
-    # @rbs overrides: Hash[String | Symbol, Proc] -- overrides to apply
+    # @rbs overrides: Hash[Array[Class | Module, Symbol], Proc] -- overrides to apply
     # @rbs block: Proc -- block to execute with overrides
     # @rbs return: void
-    def with_overrides: (Hash[String | Symbol, Proc] overrides) ?{ (?) -> untyped } -> void
+    def with_overrides: (Hash[Array[Class | Module, Symbol], Proc] overrides) ?{ (?) -> untyped } -> void
 
     attr_reader store: untyped
+
+    # Hash of registered method names
+    # @rbs return: Hash[Symbol, TrueClass]
+    def method_names: () -> Hash[Symbol, TrueClass]
   end
 end

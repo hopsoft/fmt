@@ -8,6 +8,12 @@ module Fmt
   class Error < StandardError
   end
 
+  class FormatError < Error
+  end
+
+  class MacroError < Error
+  end
+
   def self.registry: () -> untyped
 
   def self.register: () -> untyped

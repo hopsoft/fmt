@@ -18,9 +18,9 @@ module Fmt
     def extract: () -> Hash[Symbol, Object]
 
     # Transforms extracted components into an AST (Abstract Syntax Tree)
-    # @rbs key: Symbol?
-    # @rbs tokens: Array[Token]
+    # @rbs method_name: Symbol?
+    # @rbs code: String -- code used to tokenize arguments
     # @rbs return: Node -- AST (Abstract Syntax Tree)
-    def transform: (key: Symbol?, tokens: Array[Token]) -> Node
+    def transform: (method_name: Symbol?, code: String) -> Node
   end
 end

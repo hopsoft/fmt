@@ -3,29 +3,42 @@
 module Fmt
   # Parses a template from a string and builds an AST (Abstract Syntax Tree)
   class TemplateParser < Parser
-    FORMAT_START: untyped
-
-    PIPELINE: untyped
-
     # Constructor
     # @rbs urtext: String -- original source code
-    def initialize: (?String urtext) -> untyped
+    # @rbs scanner: StringScanner?
+    def initialize: (?String urtext, ?scanner: StringScanner?) -> untyped
 
     attr_reader urtext: untyped
+
+    attr_reader scanner: untyped
 
     # Parses the urtext (original source code)
     # @rbs return: Node -- AST (Abstract Syntax Tree)
     def parse: () -> Node
 
-    attr_reader scanner: untyped
-
     # Extracts components for building the AST (Abstract Syntax Tree)
-    # @rbs return: Hash[Symbol, Object] -- extracted components
-    def extract: () -> Hash[Symbol, Object]
+    # @note Extraction is delegated to the PipelineParser and EmbedParser in transform
+    # @rbs return: Hash
+    def extract: () -> Hash
 
     # Transforms extracted components into an AST (Abstract Syntax Tree)
-    # @rbs pipeline: String -- extracted pipeline
     # @rbs return: Node -- AST (Abstract Syntax Tree)
-    def transform: (pipeline: String) -> Node
+    def transform: (**untyped) -> Node
+
+    private
+
+    # Parses all embeds contained in the urtext
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    def parse_embeds: () -> Node
+
+    # Parses all pipelines contained in the urtext
+    # @rbs embeds: Node -- AST (Abstract Syntax Tree)
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    def parse_pipelines: (Node embeds) -> Node
+
+    # Removes embedded templates prior to pipeline parsing
+    # @rbs embeds: Node -- AST (Abstract Syntax Tree)
+    # @rbs return: String
+    def pipeline_urtext: (Node embeds) -> String
   end
 end
