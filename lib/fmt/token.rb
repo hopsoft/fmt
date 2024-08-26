@@ -68,19 +68,6 @@ module Fmt
     # @!group Helpers
     # --------------------------------------------------------------------------
 
-    # Indicates if the token is a native String format specifier
-    # @see Sigils::FORMAT_SPECIFIERS
-    # @rbs return: bool
-    def specifier?
-      identifier? && value in Sigils::FORMAT_SPECIFIERS
-    end
-
-    # Indicates if the token is an identifier (e.g. method name, format specifier, variable name, etc.)
-    # @rbs return: bool
-    def identifier?
-      type == :ident
-    end
-
     # Indicates if the token is a left paren (i.e. start of arguments)
     # @rbs return: bool
     def arguments_start?
@@ -91,6 +78,37 @@ module Fmt
     # @rbs return: bool
     def arguments_finish?
       type == :rparen
+    end
+
+    # Indicates if the token possibly starts a named parameter
+    # @rbs return: bool
+    def name_start?
+      type == :lbrace || (type == :op && value == "<")
+    end
+
+    # Indicates if the token possibly finishes a named parameter
+    # @rbs return: bool
+    def name_finish?
+      type == :rbrace || (type == :op && value == ">")
+    end
+
+    # Indicates if the token is an identifier (e.g. method name, format specifier, variable name, etc.)
+    # @rbs return: bool
+    def identifier?
+      type == :ident
+    end
+
+    # Indicates if the token is an operator
+    # @rbs return: bool
+    def operator?
+      type == :op
+    end
+
+    # Indicates if the token is a native String format specifier
+    # @see Sigils::FORMAT_SPECIFIERS
+    # @rbs return: bool
+    def specifier?
+      identifier? && value in Sigils::FORMAT_SPECIFIERS
     end
   end
 end

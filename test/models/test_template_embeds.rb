@@ -10,6 +10,8 @@ module Fmt
         ast = Fmt::TemplateParser.new(source).parse
         template = Template.new(ast)
 
+        assert_instance_of Template, template
+
         assert_pattern {
           template = {
             ast: {

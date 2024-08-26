@@ -30,7 +30,7 @@ module Fmt
     def initialize
       super
 
-      add([Kernel, :format]) { |*args, **kwargs| Kernel.sprintf(self, *args, **kwargs) }
+      add([Kernel, :format]) { |*args, **kwargs| Kernel.format(self, *args, **kwargs) }
       add([Kernel, :sprintf]) { |*args, **kwargs| Kernel.sprintf(self, *args, **kwargs) }
 
       SUPPORTED_CLASSES.each do |klass|

@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "ast"
 
-  s.add_development_dependency "activesupport"
+  s.add_development_dependency "activesupport", "7.1.4" # pin due to -> warning: circular require considered harmful
   s.add_development_dependency "amazing_print"
   s.add_development_dependency "magic_frozen_string_literal"
   s.add_development_dependency "minitest"

@@ -9,6 +9,7 @@ module Fmt
         source = "%s|>cyan"
         ast = TemplateParser.new(source).parse
         template = Template.new(ast)
+        assert_instance_of Template, template
 
         assert_pattern {
           template => {
@@ -41,6 +42,7 @@ module Fmt
         source = "%{value}blue"
         ast = TemplateParser.new(source).parse
         template = Template.new(ast)
+        assert_instance_of Template, template
 
         assert_pattern {
           template => {
@@ -73,6 +75,7 @@ module Fmt
         source = "%<value>green"
         ast = TemplateParser.new(source).parse
         template = Template.new(ast)
+        assert_instance_of Template, template
 
         assert_pattern {
           template => {
@@ -105,6 +108,7 @@ module Fmt
         source = "%{value}red|>bold|>underline"
         ast = TemplateParser.new(source).parse
         template = Template.new(ast)
+        assert_instance_of Template, template
 
         assert_pattern {
           template => {
@@ -151,6 +155,7 @@ module Fmt
         source = "%<value>magenta|>italic|>faint"
         ast = TemplateParser.new(source).parse
         template = Template.new(ast)
+        assert_instance_of Template, template
 
         assert_pattern {
           template = {

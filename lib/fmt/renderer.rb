@@ -23,50 +23,51 @@ module Fmt
       raise Error, "positional and keyword arguments are mutually exclusive" if args.any? && kwargs.any?
 
       # start with an empty string
-      scanner = StringScanner.new(template.source)
-      output = scanner.scan_until(PIPELINE_START).to_s
+      output = template.source.dup
+
+      pipeline_results = Array.new(template.pipelines.size, "")
 
       # execute pipelines
-      template.pipelines.each do |pipeline|
+      template.pipelines.each_with_index do |pipeline, index|
         pipeline.macros.each do |macro|
-          output = case macro
-          in name: Sigils::FORMAT_METHOD then invoke_formatter(output, macro, *args, **kwargs)
-          else invoke_macro(output, macro)
+          result = case macro
+          in name: Sigils::FORMAT_METHOD
+            case [args, kwargs]
+            in [], {} then invoke_formatter(macro)
+            in [], {**} => kwargs then invoke_formatter(macro, **kwargs)
+            in [*], {} then invoke_formatter(macro, *args[index, 1])
+            in [*], {**} => kwargs then invoke_formatter(macro, *args[index, 1], **kwargs)
+            end
+          else invoke_macro(pipeline_results[index], macro)
           end
+          pipeline_results[index] = result
         end
+
+        output = output.sub(pipeline.source, pipeline_results[index])
       end
 
-      # final result
-      template.urtext.sub template.source, output.to_s
+      output
     end
 
     private
 
     # Invokes native Ruby string formatting
-    # @rbs context: Object              -- self in callable (Proc) @note Context will be cast to String
     # @rbs macro: Macro                 -- macro to use (source, arguments, etc.)
     # @rbs args: Array[Object]          -- positional arguments (user provided)
     # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
     # @rbs return: String
-    def invoke_formatter(context, macro, *args, **kwargs)
+    def invoke_formatter(macro, *args, **kwargs)
       callable = Fmt.registry[[Kernel, macro.name]]
-      context = "#{context}#{macro.arguments.args[0]}"
+      context = macro.arguments.args[0]
       context.instance_exec(*args, **kwargs, &callable)
     rescue => error
-      # rubocop:disable Layout/ExtraSpacing
-      case [args, kwargs]
-      in [*] => args, {}             if args.any?                then raise FormatError, "#{macro.name}(#{context.inspect}, #{args.map(&:inspect).join(", ")}) #{error.inspect}"
-      in [], {**} => kwargs          if kwargs.any?              then raise FormatError, "#{macro.name}(#{context.inspect}, #{kwargs.inspect}) #{error.inspect}"
-      in [*] => args, {**} => kwargs if args.any? && kwargs.any? then raise FormatError, "#{macro.name}(#{context.inspect}, #{args.map(&:inspect).join(", ")}, #{kwargs.inspect}) #{error.inspect}"
-      else                                                            raise FormatError, "#{macro.name}(#{context.inspect}) #{error.inspect}"
-      end
-      # rubocop:enable Layout/ExtraSpacing
+      raise_invocation_error(error, context, *args, **kwargs)
     end
 
     # Invokes a macro
-    # @rbs context: Object -- self in callable (Proc)
-    # @rbs macro: Macro    -- macro to use (source, arguments, etc.)
-    # @rbs return: Object  -- result
+    # @rbs context: Object              -- self in callable (Proc)
+    # @rbs macro: Macro                 -- macro to use (source, arguments, etc.)
+    # @rbs return: Object               -- result
     def invoke_macro(context, macro)
       callable = Fmt.registry[[context.class, macro.name]] || Fmt.registry[[Object, macro.name]]
       raise Error, "[#{context.class.name} | Object, #{macro.name}] is not a registered formatter!" unless callable
@@ -76,14 +77,22 @@ module Fmt
 
       context.instance_exec(*args, **kwargs, &callable)
     rescue => error
-      # rubocop:disable Layout/ExtraSpacing
-      case [macro.arguments.args, macro.arguments.kwargs]
-      in [*] => args, {}             if args.any?                then raise MacroError, "#{context.inspect}.#{macro.name}(#{args.map(&:inspect).join(", ")}) #{error.inspect}"
-      in [], {**} => kwargs          if kwargs.any?              then raise MacroError, "#{context.inspect}.#{macro.name}(#{kwargs.inspect}) #{error.inspect}"
-      in [*] => args, {**} => kwargs if args.any? && kwargs.any? then raise MacroError, "#{context.inspect}.#{macro.name}(#{args.map(&:inspect).join(", ")}, #{kwargs.inspect}) #{error.inspect}"
-      else                                                            raise MacroError, "#{context.inspect}.#{macro.name} #{error.inspect}"
+      raise_invocation_error(error, context, *args, **kwargs)
+    end
+
+    # Raises an invocation error if/when Proc invocations fail
+    # @rbs cause: Exception             -- exception that caused the error
+    # @rbs context: Object              -- self in callable (Proc)
+    # @rbs args: Array[Object]          -- positional arguments (user provided)
+    # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
+    # @rbs return: void
+    def raise_invocation_error(cause, context, *args, **kwargs)
+      example = case [args.size, kwargs.size]
+      in [0, 0] then "sprintf(#{context.inspect})"
+      in [*, 0] then "sprintf(#{context.inspect}, #{args.map(&:inspect).join(", ")})"
+      in [0, *] then "sprintf(#{context.inspect}, #{kwargs.inspect})"
       end
-      # rubocop:enable Layout/ExtraSpacing
+      raise FormatError, "Did you pass the correct arguments? #{example} -- Cause: #{cause.message}"
     end
   end
 end

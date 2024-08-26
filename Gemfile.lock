@@ -7,17 +7,16 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (7.2.1)
+    activesupport (7.1.4)
       base64
       bigdecimal
-      concurrent-ruby (~> 1.0, >= 1.3.1)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
       connection_pool (>= 2.2.5)
       drb
       i18n (>= 1.6, < 2)
-      logger (>= 1.4.2)
       minitest (>= 5.1)
-      securerandom (>= 0.3)
-      tzinfo (~> 2.0, >= 2.0.5)
+      mutex_m
+      tzinfo (~> 2.0)
     amazing_print (1.6.0)
     ansi (1.5.0)
     ast (2.4.2)
@@ -96,6 +95,7 @@ GEM
       builder
       minitest (>= 5.0)
       ruby-progressbar
+    mutex_m (0.2.0)
     optparse (0.5.0)
     parallel (1.26.3)
     parser (3.3.4.2)
@@ -144,7 +144,6 @@ GEM
       refinements (~> 12.7)
       xdg (~> 8.6)
       zeitwerk (~> 2.6)
-    securerandom (0.3.1)
     sod (0.14.0)
       cogger (~> 0.21)
       containable (~> 0.2)
@@ -200,7 +199,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport
+  activesupport (= 7.1.4)
   amazing_print
   fmt!
   magic_frozen_string_literal

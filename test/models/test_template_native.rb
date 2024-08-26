@@ -9,6 +9,7 @@ module Fmt
         source = "Inspect: %s"
         ast = TemplateParser.new(source).parse
         template = Template.new(ast)
+        assert_instance_of Template, template
 
         assert_pattern {
           template => {
@@ -34,6 +35,7 @@ module Fmt
         source = "Inspect: %{obj}"
         ast = Fmt::TemplateParser.new(source).parse
         template = Template.new(ast)
+        assert_instance_of Template, template
 
         assert_pattern {
           template => {
@@ -59,6 +61,7 @@ module Fmt
         source = "Inspect: %<obj>s"
         ast = Fmt::TemplateParser.new(source).parse
         template = Template.new(ast)
+        assert_instance_of Template, template
 
         assert_pattern {
           template => {
@@ -84,6 +87,7 @@ module Fmt
         source = "%.10f"
         ast = TemplateParser.new(source).parse
         template = Template.new(ast)
+        assert_instance_of Template, template
 
         assert_pattern {
           template => {
@@ -109,6 +113,7 @@ module Fmt
         source = "%<value>.10f"
         ast = TemplateParser.new(source).parse
         template = Template.new(ast)
+        assert_instance_of Template, template
 
         assert_pattern {
           template => {
@@ -134,6 +139,7 @@ module Fmt
         source = "Pipleline: %s|><value>.10f|>p|>truncate(10, '.')"
         ast = TemplateParser.new(source).parse
         template = Template.new(ast)
+        assert_instance_of Template, template
 
         assert_pattern {
           template => {
@@ -180,6 +186,7 @@ module Fmt
         template = "One: %s Two: %.10f Three: %{value} %p"
         ast = TemplateParser.new(template).parse
         template = Template.new(ast)
+        assert_instance_of Template, template
 
         assert_pattern {
           template => {

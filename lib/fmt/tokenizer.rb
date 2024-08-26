@@ -32,22 +32,49 @@ module Fmt
       end
     end
 
-    # Returns leading identifier tokens (before arguments or format specifiers)
+    # Returns identifier tokens (typically method names)
+    # @rbs start: Integer -- start index
     # @rbs return: Array[Token]
-    def identifier_tokens
-      tokens.each_with_object([]) do |token, memo|
+    def identifier_tokens(start: 0)
+      tokens[start..].each_with_object([]) do |token, memo|
         break memo if token.arguments_start?
         memo << token if token.identifier?
       end
     end
 
-    # Returns the argument tokens
+    # Returns variable name tokens
+    # @rbs start: Integer -- start index
+    # @rbs return: Array[Token]?
+    def name_tokens(start: 0)
+      start = tokens[start..].find(&:name_start?)
+      identifier = tokens[tokens.index(start)..].find(&:identifier?) if start
+      finish = tokens[tokens.index(identifier)..].find(&:name_finish?) if identifier
+      list = [start, identifier, finish].compact
+
+      return [] unless list.size == 3
+      return [] unless urtext.include?(list.map(&:value).join)
+
+      [start, identifier, finish]
+    end
+
+    # Returns operator tokens
+    # @rbs start: Integer -- start index
     # @rbs return: Array[Token]
-    def argument_tokens
+    def operator_tokens(start: 0)
+      tokens[start..].each_with_object([]) do |token, memo|
+        break memo if token.arguments_start?
+        memo << token if token.operator?
+      end
+    end
+
+    # Returns the argument tokens
+    # @rbs start: Integer -- start index
+    # @rbs return: Array[Token]
+    def argument_tokens(start: 0)
       starters = 0
       finishers = 0
 
-      tokens.each_with_object([]) do |token, memo|
+      tokens[start..].each_with_object([]) do |token, memo|
         break memo if starters.positive? && finishers == starters
 
         starters += 1 if token.arguments_start?

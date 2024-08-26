@@ -26,7 +26,20 @@ module Fmt
     def extract
       tokenizer = Tokenizer.new(urtext)
       tokenizer.tokenize
-      token = tokenizer.identifier_tokens.last
+
+      name_tokens = tokenizer.name_tokens
+      name_index = tokenizer.tokens.rindex(name_tokens.last).to_i
+
+      # method name (preferred)
+      token ||= name_index.positive? ?
+        tokenizer.identifier_tokens(start: name_index + 1).last :
+        tokenizer.identifier_tokens.last
+
+      # operator (fallback)
+      token ||= name_index.positive? ?
+        tokenizer.operator_tokens(start: name_index + 1).last :
+        tokenizer.operator_tokens.last
+
       value = token&.value&.to_sym
 
       method_name = case value
