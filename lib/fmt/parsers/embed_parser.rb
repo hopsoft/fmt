@@ -5,8 +5,23 @@
 module Fmt
   # Parses embeds from a string and builds an AST (Abstract Syntax Tree)
   class EmbedParser < Parser
-    START = Regexp.new("(?=%s)" % Regexp.escape(Sigils::EMBED_PREFIX)).freeze # :: Regexp
-    FINISH = Regexp.new(Regexp.escape(Sigils::EMBED_SUFFIX)).freeze           # :: Regexp
+    # @rbs return: Regexp -- detects the start of an embed
+    START = Regexp.new("(?=%s)" % Regexp.escape(Sigils::EMBED_PREFIX)).freeze
+
+    # @rbs return: Regexp -- detects the end of an embed
+    FINISH = Regexp.new("(?=%{format}[%{name_prefix}]\\w+[%{name_suffix}])?(%{suffix}|[%{name_suffix}])" % {
+      format: Sigils::FORMAT_PREFIX,
+      name_prefix: Sigils::NAME_PREFIXES.join,
+      name_suffix: Sigils::NAME_SUFFIXES.join,
+      suffix: Regexp.escape(Sigils::EMBED_SUFFIX)
+    }).freeze
+
+    # @rbs return: Regexp -- detects a named formatter
+    NAME = Regexp.new("%{format}[%{prefix}]\\w+[%{suffix}]" % {
+      format: Sigils::FORMAT_PREFIX,
+      prefix: Sigils::NAME_PREFIXES.join,
+      suffix: Sigils::NAME_SUFFIXES.join
+    }).freeze
 
     # Constructor
     # @rbs urtext: String -- original source code
@@ -16,7 +31,7 @@ module Fmt
       @scanner = scanner || StringScanner.new(@urtext)
     end
 
-    attr_reader :urtext # :: String -- original source code
+    attr_reader :urtext  # :: String -- original source code
     attr_reader :scanner # :: StringScanner
 
     # Parses the urtext (original source code)
@@ -30,32 +45,47 @@ module Fmt
     # Extracts components for building the AST (Abstract Syntax Tree)
     # @rbs return: Hash[Symbol, Object] -- extracted components
     def extract
-      scanner.skip_until(START)
-      embed = scanner.scan_until(FINISH)
-
-      while scanner.matched? && unbalanced?(embed)
-        match = scanner.scan_until(FINISH)
-        embed = "#{embed}#{match}" if scanner.matched?
-      end
-
-      {embed: embed.to_s.strip}
+      {embed: extract_embed}
     end
 
     # Transforms extracted components into an AST (Abstract Syntax Tree)
     # @rbs embed: String -- extracted embed
     # @rbs return: Node -- AST (Abstract Syntax Tree)
     def transform(embed:)
-      template_urtext = embed.delete_prefix(Sigils::EMBED_PREFIX).delete_suffix(Sigils::EMBED_SUFFIX)
-      TemplateParser.new(template_urtext, scanner: scanner).parse
+      TemplateParser.new(embed, scanner: scanner).parse
     end
 
     private
+
+    # Extracts the next embed string
+    # @rbs return: String?
+    def extract_embed
+      return "" unless match?
+
+      scanner.skip_until(START)
+      value = scanner.scan_until(FINISH)
+
+      while scanner.matched? && unbalanced?(value)
+        match = scanner.scan_until(FINISH)
+        value = "#{value}#{match}" if scanner.matched?
+        break if scanner.eos?
+      end
+
+      value
+    end
+
+    # Indicates if the urtext contains an embed
+    # @rbs return: bool
+    def match?
+      urtext.include?(Sigils::EMBED_PREFIX) && urtext.include?(Sigils::EMBED_SUFFIX)
+    end
 
     # Indicates if the embed string is balanced
     # @rbs embed: String
     # @rbs return: bool
     def balanced?(embed)
-      embed.scan(START).size == embed.scan(FINISH).size
+      nameless = embed.gsub(NAME, "")
+      nameless.count(Sigils::EMBED_PREFIX) == nameless.count(Sigils::EMBED_SUFFIX)
     end
 
     # Indicates if the embed string is unbalanced

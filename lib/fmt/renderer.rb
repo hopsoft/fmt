@@ -22,34 +22,66 @@ module Fmt
     def render(*args, **kwargs)
       raise Error, "positional and keyword arguments are mutually exclusive" if args.any? && kwargs.any?
 
-      # start with an empty string
-      output = template.source.dup
-
-      pipeline_results = Array.new(template.pipelines.size, "")
-
-      # execute pipelines
-      template.pipelines.each_with_index do |pipeline, index|
-        pipeline.macros.each do |macro|
-          result = case macro
-          in name: Sigils::FORMAT_METHOD
-            case [args, kwargs]
-            in [], {} then invoke_formatter(macro)
-            in [], {**} => kwargs then invoke_formatter(macro, **kwargs)
-            in [*], {} then invoke_formatter(macro, *args[index, 1])
-            in [*], {**} => kwargs then invoke_formatter(macro, *args[index, 1], **kwargs)
-            end
-          else invoke_macro(pipeline_results[index], macro)
-          end
-          pipeline_results[index] = result
-        end
-
-        output = output.sub(pipeline.source, pipeline_results[index])
-      end
-
-      output
+      template.source
+        .then { render_embeds(_1, *args, **kwargs) }
+        .then { render_pipelines(_1, *args, **kwargs) }
     end
 
     private
+
+    # Renders all template embeds
+    # @rbs context: String              -- starting context
+    # @rbs args: Array[Object]          -- positional arguments (user provided)
+    # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
+    # @rbs return: String
+    def render_embeds(context, *args, **kwargs)
+      result = context
+
+      template.embeds.each do |embed|
+        value = Renderer.new(embed).render(*args, **kwargs)
+        result = result.sub(embed.urtext, value)
+      end
+
+      result
+    end
+
+    # Renders all template pipelines
+    # @rbs context: String              -- starting context
+    # @rbs args: Array[Object]          -- positional arguments (user provided)
+    # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
+    # @rbs return: String
+    def render_pipelines(context, *args, **kwargs)
+      result = context
+
+      template.pipelines.each_with_index do |pipeline, index|
+        pipeline_result = render_pipeline(pipeline, *args[index, 1], **kwargs)
+        result = result.sub(pipeline.source, pipeline_result)
+      end
+
+      result
+    end
+
+    # Renders a single pipeline
+    # @rbs pipeline: Pipeline           -- pipeline to render
+    # @rbs args: Array[Object]          -- positional arguments (user provided)
+    # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
+    # @rbs return: String
+    def render_pipeline(pipeline, *args, **kwargs)
+      result = ""
+      pipeline.macros.each do |macro|
+        result = case macro
+        in name: Sigils::FORMAT_METHOD
+          case [args, kwargs]
+          in [], {} then invoke_formatter(macro)
+          in [], {**} => kwargs then invoke_formatter(macro, **kwargs)
+          in [*], {} then invoke_formatter(macro, *args)
+          in [*], {**} => kwargs then invoke_formatter(macro, *args, **kwargs)
+          end
+        else invoke_macro(result, macro)
+        end
+      end
+      result
+    end
 
     # Invokes native Ruby string formatting
     # @rbs macro: Macro                 -- macro to use (source, arguments, etc.)

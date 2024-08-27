@@ -13,7 +13,7 @@ module Fmt
     # @rbs scanner: StringScanner?
     def initialize(urtext = "", scanner: nil)
       @urtext = urtext.to_s
-      @scanner = scanner
+      @scanner = scanner || StringScanner.new(@urtext)
     end
 
     attr_reader :urtext  # :: String -- original source code
@@ -22,7 +22,7 @@ module Fmt
     # Parses the urtext (original source code)
     # @rbs return: Node -- AST (Abstract Syntax Tree)
     def parse
-      cache(urtext) { super }
+      cache(source) { super }
     end
 
     protected
@@ -37,7 +37,7 @@ module Fmt
     # Transforms extracted components into an AST (Abstract Syntax Tree)
     # @rbs return: Node -- AST (Abstract Syntax Tree)
     def transform(**)
-      return Node.new(:template, [], scanner: scanner) if urtext.empty?
+      return Node.new(:template, [], scanner: scanner) if source.empty?
 
       embeds = parse_embeds
       pipelines = parse_pipelines(embeds)
@@ -46,17 +46,23 @@ module Fmt
       children << embeds unless embeds.empty?
       children << pipelines unless pipelines.empty?
 
-      Node.new :template, children, urtext: urtext, source: urtext
+      Node.new :template, children, urtext: urtext, source: source
     end
 
     private
+
+    # Indicates if the urtext is an embed (leading and trailing embed delimiters)
+    # @rbs return: bool
+    def embed?
+      urtext.start_with?(Sigils::EMBED_PREFIX) && urtext.end_with?(Sigils::EMBED_SUFFIX)
+    end
 
     # Parses all embeds contained in the urtext
     # @rbs return: Node -- AST (Abstract Syntax Tree)
     def parse_embeds
       embeds = []
-      scanner = StringScanner.new(urtext)
-      template = EmbedParser.new(urtext, scanner: scanner).parse
+      scanner = StringScanner.new(source)
+      template = EmbedParser.new(source, scanner: scanner).parse
 
       until template.empty?
         embeds << template
@@ -65,12 +71,12 @@ module Fmt
         break if scanner.eos?
       end
 
-      Node.new :embeds, embeds, urtext: urtext, source: urtext
+      Node.new :embeds, embeds, urtext: urtext, source: source
     ensure
       embeds.each { |embed| embed.properties.delete :scanner }
     end
 
-    # Parses all pipelines contained in the urtext
+    # Parses all pipelines contained in the source
     # @rbs embeds: Node -- AST (Abstract Syntax Tree)
     # @rbs return: Node -- AST (Abstract Syntax Tree)
     def parse_pipelines(embeds)
@@ -94,12 +100,19 @@ module Fmt
     # @rbs embeds: Node -- AST (Abstract Syntax Tree)
     # @rbs return: String
     def pipeline_urtext(embeds)
-      text = urtext
+      text = source
       embeds.children.each do |embed|
         remove = "%s%s%s" % [Sigils::EMBED_PREFIX, embed.source, Sigils::EMBED_SUFFIX]
         text = text.sub(remove, "")
       end
       text
+    end
+
+    # Returns the parsed source code
+    # @rbs return: String
+    def source
+      return urtext unless embed?
+      urtext.delete_prefix(Sigils::EMBED_PREFIX).delete_suffix(Sigils::EMBED_SUFFIX)
     end
   end
 end
