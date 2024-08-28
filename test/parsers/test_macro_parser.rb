@@ -119,7 +119,7 @@ module Fmt
       assert_equal expected.rstrip, ast.to_s
     end
 
-    def test_methdo_without_args
+    def test_method_without_args
       source = "strip"
       ast = MacroParser.new(source).parse
       assert_instance_of Node, ast

@@ -42,19 +42,12 @@ module Fmt
       raise Error, "transform must be implemented by subclass"
     end
 
-    # Builds a cache key specific to the parser
-    # @rbs args: Array[Object] -- args to use in the cache key
-    # @rbs return: String
-    def cache_key(*args)
-      args.prepend(self.class.name).join ":"
-    end
-
     # Cache helper that fetches a value from the cache
-    # @rbs args: Array[Object] -- args to use in the cache key
+    # @rbs key: String -- cache key
     # @rbs block: Proc -- block to execute if the value is not found in the cache
     # @rbs return: Object
-    def cache(*args, &block)
-      Cache.fetch(cache_key(*args)) { yield }
+    def cache(key, &block)
+      Cache.fetch_unsafe("#{self.class.name}/#{key}") { yield }
     end
   end
 end

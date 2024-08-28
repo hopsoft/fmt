@@ -75,6 +75,16 @@ module Fmt
       synchronize { put key, default }
     end
 
+    # Fetches a value from the cache without synchronization (not thread safe)
+    # @rbs key: Object -- key to fetch
+    # @rbs default: Object -- default value to write
+    # @rbs block: Proc -- block to call to get the default value
+    # @rbs return: Object -- value
+    def fetch_unsafe(key, default = nil, &block)
+      return store[key] if store.key?(key)
+      store[key] = (default || block&.call)
+    end
+
     # Indicates if the cache is full
     # @rbs return: bool
     def full?
