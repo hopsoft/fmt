@@ -3,6 +3,7 @@
 # rbs_inline: enabled
 
 module Fmt
+  # Renders templates to a formatted string
   class Renderer
     PIPELINE_START = Regexp.new("(?=%s)" % [Sigils::FORMAT_PREFIX]).freeze # :: Regexp -- detects start of first pipeline
 

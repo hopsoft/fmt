@@ -10,41 +10,46 @@ module Fmt
   LOCK = Monitor.new # :: Monitor
   private_constant :LOCK
 
+  # Standard error class for Fmt
   class Error < StandardError; end
 
+  # Error for formatting failures
   class FormatError < Error; end
 
-  class MacroError < Error; end
-
   class << self
+    # Global registry for storing and retrieving String formatters i.e. Procs
     def registry
       @registry ||= LOCK.synchronize do
         NativeRegistry.new.merge! RainbowRegistry.new
       end
     end
 
+    # Adds a keypair to the registry
+    # @rbs key: Array[Class | Module, Symbol] -- key to use
+    # @rbs overwrite: bool -- overwrite the existing keypair (default: false)
+    # @rbs block: Proc -- Proc to add (optional, if proc is provided)
+    # @rbs return: Proc
     def register(...)
       registry.add(...)
     end
 
+    # Deletes a keypair from the registry
+    # @rbs key: Array[Class | Module, Symbol] -- key to delete
+    # @rbs return: Proc?
     def unregister(...)
       registry.delete(...)
     end
-
-    # def formatter
-    # Formatter.instance
-    # end
-
-    # def format(...)
-    # formatter.format(...)
-    # end
-
-    # def filters
-    # formatter.filters
-    # end
   end
 end
 
-# def Fmt(...)
-# Fmt.format(...)
-# end
+# Top level helper for formatting and rendering a source string
+# @rbs source: String -- string to format
+# @rbs args: Array[Object]          -- positional arguments (user provided)
+# @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
+# @rbs return: String               -- rendered template
+def Fmt(source, *args, **kwargs)
+  ast = Fmt::TemplateParser.new(source).parse
+  template = Fmt::Template.new(ast)
+  renderer = Fmt::Renderer.new(template)
+  renderer.render(*args, **kwargs)
+end

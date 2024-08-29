@@ -1,5 +1,35 @@
 #!/usr/bin/env ruby
+
 # frozen_string_literal: true
 
-system "bundle exec magic_frozen_string_literal ."
+frozen_string = "# frozen_string_literal: true"
+rbs_inline = "# rbs_inline: enabled"
+
+Dir.glob(File.join(File.expand_path("../lib", __dir__), "**", "*.{rake,rb}")).each do |path|
+  lines = File.readlines(path)
+
+  frozen = lines.any? { _1.start_with? frozen_string }
+  rbs = lines.any? { _1.start_with? rbs_inline }
+
+  case [frozen, rbs]
+  in [true, true] then next
+  in [false, true]
+    lines
+      .insert(0, "#{frozen_string}\n")
+      .insert(1, "\n")
+  in [true, false]
+    lines
+      .insert(1, "\n")
+      .insert(2, "#{rbs_inline}\n")
+  in [false, false]
+    lines
+      .insert(0, "#{frozen_string}\n")
+      .insert(1, "\n")
+      .insert(2, "#{rbs_inline}\n")
+      .insert(3, "\n")
+  end
+
+  File.write(path, lines.join)
+end
+
 system "bundle exec standardrb --fix ."
