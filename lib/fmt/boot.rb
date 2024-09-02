@@ -24,6 +24,9 @@ require_relative "token"
 require_relative "tokenizer"
 require_relative "version"
 
+# Refinements
+require_relative "refinements/kernel_refinement"
+
 # Registries -- store of Procs that can be used with Fmt
 require_relative "registries/registry" # <- base class
 require_relative "registries/native_registry"
