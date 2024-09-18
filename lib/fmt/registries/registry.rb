@@ -7,7 +7,7 @@ module Fmt
   class Registry
     extend Forwardable
 
-    INSTANCE_VAR = :@fmt_registry_key # :: Symbol -- instance variable set on registered Procs
+    INSTANCE_VAR = :@fmt_registry_key # : Symbol -- instance variable set on registered Procs
     private_constant :INSTANCE_VAR
 
     # Constructor
@@ -15,9 +15,9 @@ module Fmt
       @store = LRUCache.new(capacity: -1)
     end
 
-    def_delegator :store, :to_h # :: Hash[Symbol, Proc]
-    def_delegator :store, :[]   # :: Proc -- retrieves a Proc from the registry
-    def_delegator :store, :key? # :: bool -- indicates if a key exists in the registry
+    def_delegator :store, :to_h # : Hash[Symbol, Proc]
+    def_delegator :store, :[]   # : Proc -- retrieves a Proc from the registry
+    def_delegator :store, :key? # : bool -- indicates if a key exists in the registry
 
     # Indicates if a method name is registered for any Class
     # @rbs method_name: Symbol -- method name to check
@@ -116,7 +116,7 @@ module Fmt
 
     protected
 
-    attr_reader :store # :: LRUCache
+    attr_reader :store # : LRUCache
 
     # Hash of registered method names
     # @rbs return: Hash[Symbol, TrueClass]

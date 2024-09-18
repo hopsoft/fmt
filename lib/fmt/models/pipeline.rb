@@ -18,7 +18,7 @@ module Fmt
       super
     end
 
-    attr_reader :macros # :: Array[Node]
+    attr_reader :macros # : Array[Node]
 
     # Hash representation of the model (required for pattern matching)
     # @rbs return: Hash[Symbol, Object]

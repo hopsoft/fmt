@@ -5,15 +5,24 @@
 module Fmt
   # Parses embeds from a string and builds an AST (Abstract Syntax Tree)
   class EmbedParser < Parser
+    WRAPPER_START = Regexp.new("(?<=%{format}%{wrapper})\s*(?=%{prefix})" % {
+      format: Regexp.escape(Sigils::FORMAT_PREFIX),
+      wrapper: Regexp.escape(Sigils::EMBED_PREFIX[0]),
+      prefix: Regexp.escape(Sigils::EMBED_PREFIX)
+    }).freeze
+
+    WRAPPEE_START = Regexp.new("%{format}%{prefix}" % {
+      format: Sigils::FORMAT_PREFIX,
+      prefix: Regexp.escape(Sigils::NAME_PREFIXES[-1])
+    }).freeze
+
     # @rbs return: Regexp -- detects the start of an embed
-    START = Regexp.new("(?=%s)" % Regexp.escape(Sigils::EMBED_PREFIX)).freeze
+    START = Regexp.new(Regexp.escape(Sigils::EMBED_PREFIX)).freeze
 
     # @rbs return: Regexp -- detects the end of an embed
-    FINISH = Regexp.new("(?=%{format}[%{name_prefix}]\\w+[%{name_suffix}])?(%{suffix}|[%{name_suffix}])" % {
-      format: Sigils::FORMAT_PREFIX,
-      name_prefix: Sigils::NAME_PREFIXES.join,
-      name_suffix: Sigils::NAME_SUFFIXES.join,
-      suffix: Regexp.escape(Sigils::EMBED_SUFFIX)
+    FINISH = Regexp.new("(?=(?:[%{suffix}])?([%{suffix}]{2})(%{format}|\\w|\\z))" % {
+      suffix: Sigils::EMBED_SUFFIX[0],
+      format: Sigils::FORMAT_PREFIX
     }).freeze
 
     # @rbs return: Regexp -- detects a named formatter
@@ -31,8 +40,8 @@ module Fmt
       @scanner = scanner || StringScanner.new(@urtext)
     end
 
-    attr_reader :urtext  # :: String -- original source code
-    attr_reader :scanner # :: StringScanner
+    attr_reader :urtext  # : String -- original source code
+    attr_reader :scanner # : StringScanner
 
     # Parses the urtext (original source code)
     # @rbs return: Node -- AST (Abstract Syntax Tree)
@@ -52,7 +61,20 @@ module Fmt
     # @rbs embed: String -- extracted embed
     # @rbs return: Node -- AST (Abstract Syntax Tree)
     def transform(embed:)
-      TemplateParser.new(embed, scanner: scanner).parse
+      template = TemplateParser.new(embed, scanner: scanner).parse
+
+      # attach embed metadata to template
+      unless template.empty?
+        properties = template.properties.merge(
+          embed: true,
+          key: "embed_#{SecureRandom.hex(8)}",
+          source: "#{Sigils::EMBED_PREFIX}#{template.source}#{Sigils::EMBED_SUFFIX}",
+          wrapped: wrapped?
+        )
+        template = Node.new(:template, template.children, properties)
+      end
+
+      template
     end
 
     private
@@ -62,16 +84,24 @@ module Fmt
     def extract_embed
       return "" unless match?
 
+      scanner.skip_until(WRAPPER_START)
+      @wrapped = scanner.matched?
+
       scanner.skip_until(START)
       value = scanner.scan_until(FINISH)
 
       while scanner.matched? && unbalanced?(value)
         match = scanner.scan_until(FINISH)
         value = "#{value}#{match}" if scanner.matched?
+        value = "#{value}#{Sigils::NAME_SUFFIXES[-1]}" if value&.match?(WRAPPEE_START) && unbalanced?(value)
         break if scanner.eos?
       end
 
       value
+    end
+
+    def wrapped?
+      !!@wrapped
     end
 
     # Indicates if the urtext contains an embed

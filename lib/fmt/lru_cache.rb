@@ -20,7 +20,7 @@ module Fmt
   class LRUCache
     include MonitorMixin
 
-    DEFAULT_CAPACITY = 5_000 # :: Integer -- default capacity
+    DEFAULT_CAPACITY = 5_000 # : Integer -- default capacity
 
     # Constructor
     # @rbs capacity: Integer -- max capacity (negative values are uncapped, default: 5_000)
@@ -163,12 +163,12 @@ module Fmt
       synchronize(&block)
     end
 
-    alias_method :[], :get  # :: Object -- alias for get
-    alias_method :[]=, :put # :: Object -- alias for put
+    alias_method :[], :get  # : Object -- alias for get
+    alias_method :[]=, :put # : Object -- alias for put
 
     private
 
-    attr_reader :store # :: Hash[Object, Object]
+    attr_reader :store # : Hash[Object, Object]
 
     # Moves the key to the end keeping it fresh
     # @rbs key: Object -- key to reposition

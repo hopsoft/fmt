@@ -5,9 +5,6 @@
 module Fmt
   # Parses a template from a string and builds an AST (Abstract Syntax Tree)
   class TemplateParser < Parser
-    # FORMAT_START = Regexp.new(Sigils::FORMAT_PREFIX).freeze # :: Regexp
-    # PIPELINE = Regexp.new("(?=%s|%s|$)" % [Sigils::FORMAT_PREFIX, Regexp.escape(Sigils::EMBED_PREFIX)]).freeze # :: Regexp
-
     # Constructor
     # @rbs urtext: String -- original source code
     # @rbs scanner: StringScanner?
@@ -16,13 +13,13 @@ module Fmt
       @scanner = scanner || StringScanner.new(@urtext)
     end
 
-    attr_reader :urtext  # :: String -- original source code
-    attr_reader :scanner # :: StringScanner?
+    attr_reader :urtext  # : String -- original source code
+    attr_reader :scanner # : StringScanner?
 
     # Parses the urtext (original source code)
     # @rbs return: Node -- AST (Abstract Syntax Tree)
     def parse
-      cache(source) { super }
+      cache(urtext) { super }
     end
 
     protected
@@ -37,10 +34,21 @@ module Fmt
     # Transforms extracted components into an AST (Abstract Syntax Tree)
     # @rbs return: Node -- AST (Abstract Syntax Tree)
     def transform(**)
-      return Node.new(:template, [], scanner: scanner) if source.empty?
+      return Node.new(:template, [], scanner: scanner) if urtext.empty?
 
+      source = urtext
+
+      # parse embeds first
+      # @note modifies source before parsing pipelines
       embeds = parse_embeds
-      pipelines = parse_pipelines(embeds)
+      embeds.each_with_index do |embed, index|
+        source = source.sub(embed.source, embed.properties[:key])
+      end
+      embeds = Node.new(:embeds, embeds, urtext: urtext, source: source)
+
+      # parse pipelines
+      pipelines = parse_pipelines(source)
+      pipelines = Node.new(:pipelines, pipelines, urtext: urtext, source: source)
 
       children = []
       children << embeds unless embeds.empty?
@@ -58,11 +66,11 @@ module Fmt
     end
 
     # Parses all embeds contained in the urtext
-    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    # @rbs return: Array[Node] -- Array of embed Nodes
     def parse_embeds
       embeds = []
-      scanner = StringScanner.new(source)
-      template = EmbedParser.new(source, scanner: scanner).parse
+      scanner = StringScanner.new(urtext)
+      template = EmbedParser.new(urtext, scanner: scanner).parse
 
       until template.empty?
         embeds << template
@@ -71,18 +79,18 @@ module Fmt
         break if scanner.eos?
       end
 
-      Node.new :embeds, embeds, urtext: urtext, source: source
+      embeds
     ensure
       embeds.each { |embed| embed.properties.delete :scanner }
     end
 
     # Parses all pipelines contained in the source
-    # @rbs embeds: Node -- AST (Abstract Syntax Tree)
-    # @rbs return: Node -- AST (Abstract Syntax Tree)
-    def parse_pipelines(embeds)
+    # @rbs urtext: String -- source code
+    # @rbs return: Array[Node] -- Array of pipeline Nodes
+    def parse_pipelines(urtext)
       pipelines = []
 
-      scanner = StringScanner.new(pipeline_urtext(embeds))
+      scanner = StringScanner.new(urtext)
       pipeline = PipelineParser.new(scanner.rest, scanner: scanner).parse
 
       until pipeline.empty?
@@ -91,28 +99,9 @@ module Fmt
         pipeline = PipelineParser.new(scanner.rest, scanner: scanner).parse
       end
 
-      Node.new :pipelines, pipelines, urtext: urtext, source: urtext
+      pipelines
     ensure
       pipelines.each { |pipeline| pipeline.properties.delete :scanner }
-    end
-
-    # Removes embedded templates prior to pipeline parsing
-    # @rbs embeds: Node -- AST (Abstract Syntax Tree)
-    # @rbs return: String
-    def pipeline_urtext(embeds)
-      text = source
-      embeds.children.each do |embed|
-        remove = "%s%s%s" % [Sigils::EMBED_PREFIX, embed.source, Sigils::EMBED_SUFFIX]
-        text = text.sub(remove, "")
-      end
-      text
-    end
-
-    # Returns the parsed source code
-    # @rbs return: String
-    def source
-      return urtext unless embed?
-      urtext.delete_prefix(Sigils::EMBED_PREFIX).delete_suffix(Sigils::EMBED_SUFFIX)
     end
   end
 end

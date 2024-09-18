@@ -42,7 +42,7 @@ module Fmt
       super
     end
 
-    attr_reader :properties # :: Hash[Symbol, Object]
+    attr_reader :properties # : Hash[Symbol, Object]
 
     # Returns the child at the specified index
     # @rbs index: Integer -- index of child node

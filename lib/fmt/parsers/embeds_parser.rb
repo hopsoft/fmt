@@ -5,8 +5,8 @@
 module Fmt
   # Parses embeds from a string and builds an AST (Abstract Syntax Tree)
   class EmbedsParser < Parser
-    PREFIX = Regexp.new("(?=%s)" % Regexp.escape(Sigils::EMBED_PREFIX)).freeze # :: Regexp
-    SUFFIX = Regexp.new(Regexp.escape(Sigils::EMBED_SUFFIX)).freeze            # :: Regexp
+    PREFIX = Regexp.new("(?=%s)" % Regexp.escape(Sigils::EMBED_PREFIX)).freeze # : Regexp
+    SUFFIX = Regexp.new(Regexp.escape(Sigils::EMBED_SUFFIX)).freeze            # : Regexp
 
     # Constructor
     # @rbs urtext: String -- original source code
@@ -15,7 +15,7 @@ module Fmt
       @scanner = StringScanner.new(@urtext)
     end
 
-    attr_reader :urtext # :: String -- original source code
+    attr_reader :urtext # : String -- original source code
 
     # Parses the urtext (original source code)
     # @rbs return: Node -- AST (Abstract Syntax Tree)
@@ -25,7 +25,7 @@ module Fmt
 
     protected
 
-    attr_reader :scanner # :: StringScanner
+    attr_reader :scanner # : StringScanner
 
     # Extracts components for building the AST (Abstract Syntax Tree)
     # @rbs return: Hash[Symbol, Object] -- extracted components

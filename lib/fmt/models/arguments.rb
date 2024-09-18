@@ -18,8 +18,8 @@ module Fmt
       super
     end
 
-    attr_reader :args   # :: Array[Object] -- positional arguments
-    attr_reader :kwargs # :: Hash[Symbol, Object] -- keyword arguments
+    attr_reader :args   # : Array[Object] -- positional arguments
+    attr_reader :kwargs # : Hash[Symbol, Object] -- keyword arguments
 
     # Hash representation of the model (required for pattern matching)
     # @rbs return: Hash[Symbol, Object]

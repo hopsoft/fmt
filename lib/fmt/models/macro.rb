@@ -10,8 +10,8 @@ module Fmt
   # 2. arguments: Arguments
   #
   class Macro < Model
-    attr_reader :name      # :: Symbol -- method name
-    attr_reader :arguments # :: Arguments
+    attr_reader :name      # : Symbol -- method name
+    attr_reader :arguments # : Arguments
 
     # Constructor
     # @rbs ast: Node

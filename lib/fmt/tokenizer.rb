@@ -21,8 +21,8 @@ module Fmt
       @tokens = []
     end
 
-    attr_reader :urtext # :: String -- original source code
-    attr_reader :tokens # :: Array[Object] -- result of tokenization
+    attr_reader :urtext # : String -- original source code
+    attr_reader :tokens # : Array[Object] -- result of tokenization
 
     # Tokenizes the urtext (original source code)
     # @rbs return: Array[Token] -- wrapped ripper tokens
@@ -42,19 +42,23 @@ module Fmt
       end
     end
 
-    # Returns variable name tokens
+    def method_tokens(start: 0)
+      identifier_tokens + operator_tokens
+    end
+
+    # Returns key (named parameter) tokens
     # @rbs start: Integer -- start index
     # @rbs return: Array[Token]?
-    def name_tokens(start: 0)
-      start = tokens[start..].find(&:name_start?)
+    def key_tokens(start: 0)
+      start = tokens[start..].find(&:key_start?)
       identifier = tokens[tokens.index(start)..].find(&:identifier?) if start
-      finish = tokens[tokens.index(identifier)..].find(&:name_finish?) if identifier
+      finish = tokens[tokens.index(identifier)..].find(&:key_finish?) if identifier
       list = [start, identifier, finish].compact
 
       return [] unless list.size == 3
       return [] unless urtext.include?(list.map(&:value).join)
 
-      [start, identifier, finish]
+      list
     end
 
     # Returns operator tokens

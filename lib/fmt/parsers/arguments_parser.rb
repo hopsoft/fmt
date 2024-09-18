@@ -11,7 +11,7 @@ module Fmt
       @urtext = urtext.to_s
     end
 
-    attr_reader :urtext # :: String -- original source code
+    attr_reader :urtext # : String -- original source code
 
     # Parses the urtext (original source code)
     # @rbs return: Node -- AST (Abstract Syntax Tree)

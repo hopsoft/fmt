@@ -28,12 +28,12 @@ module Fmt
       freeze
     end
 
-    attr_reader :ripper_token # :: Array[[Integer, Integer], Symbol, String, Object]
-    attr_reader :lineno       # :: Integer
-    attr_reader :column       # :: Integer
-    attr_reader :type         # :: Symbol
-    attr_reader :token        # :: String
-    attr_reader :state        # :: Object
+    attr_reader :ripper_token # : Array[[Integer, Integer], Symbol, String, Object]
+    attr_reader :lineno       # : Integer
+    attr_reader :column       # : Integer
+    attr_reader :type         # : Symbol
+    attr_reader :token        # : String
+    attr_reader :state        # : Object
 
     # @note The entire data structure is considered a "token"
     #       Alias the embedded "token" as "value" to reduce confusion
@@ -80,15 +80,15 @@ module Fmt
       type == :rparen
     end
 
-    # Indicates if the token possibly starts a named parameter
+    # Indicates if the token starts a key (string formatting named parameter)
     # @rbs return: bool
-    def name_start?
+    def key_start?
       type == :lbrace || (type == :op && value == "<")
     end
 
-    # Indicates if the token possibly finishes a named parameter
+    # Indicates if the token finishes a key (string formatting named parameter)
     # @rbs return: bool
-    def name_finish?
+    def key_finish?
       type == :rbrace || (type == :op && value == ">")
     end
 

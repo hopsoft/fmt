@@ -19,11 +19,11 @@ module Fmt
       process ast
     end
 
-    attr_reader :ast    # :: Node
-    attr_reader :urtext # :: String -- original source code
-    attr_reader :source # :: String -- parsed source code
+    attr_reader :ast    # : Node
+    attr_reader :urtext # : String -- original source code
+    attr_reader :source # : String -- parsed source code
 
-    alias_method :to_s, :source # :: String -- alias for source
+    alias_method :to_s, :source # : String -- alias for source
 
     # Model inspection
     # @rbs return: String

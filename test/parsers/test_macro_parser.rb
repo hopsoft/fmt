@@ -9,8 +9,8 @@ module Fmt
       ast = MacroParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.urtext
-      assert_equal source, ast.source
-      assert_equal "(%Q[%s])", ast.find(:arguments).source
+      assert_equal "sprintf('%s')", ast.source
+      assert_equal "('%s')", ast.find(:arguments).source
 
       expected = <<~AST
         (macro
@@ -18,9 +18,9 @@ module Fmt
           (arguments
             (tokens
               (lparen "(")
-              (tstring-beg "%Q[")
+              (tstring-beg "'")
               (tstring-content "%s")
-              (tstring-end "]")
+              (tstring-end "'")
               (rparen ")"))))
       AST
 
@@ -32,8 +32,8 @@ module Fmt
       ast = MacroParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.urtext
-      assert_equal source, ast.source
-      assert_equal "(%Q[%.10f])", ast.find(:arguments).source
+      assert_equal "sprintf('%.10f')", ast.source
+      assert_equal "('%.10f')", ast.find(:arguments).source
 
       expected = <<~AST
         (macro
@@ -41,9 +41,9 @@ module Fmt
           (arguments
             (tokens
               (lparen "(")
-              (tstring-beg "%Q[")
+              (tstring-beg "'")
               (tstring-content "%.10f")
-              (tstring-end "]")
+              (tstring-end "'")
               (rparen ")"))))
       AST
 
@@ -55,8 +55,8 @@ module Fmt
       ast = MacroParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.urtext
-      assert_equal source, ast.source
-      assert_equal "(%Q[%{value}])", ast.find(:arguments).source
+      assert_equal "sprintf('%{value}')", ast.source
+      assert_equal "('%{value}')", ast.find(:arguments).source
 
       expected = <<~AST
         (macro
@@ -64,9 +64,9 @@ module Fmt
           (arguments
             (tokens
               (lparen "(")
-              (tstring-beg "%Q[")
+              (tstring-beg "'")
               (tstring-content "%{value}")
-              (tstring-end "]")
+              (tstring-end "'")
               (rparen ")"))))
       AST
 
@@ -78,8 +78,8 @@ module Fmt
       ast = MacroParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.urtext
-      assert_equal source, ast.source
-      assert_equal "(%Q[%<value>s])", ast.find(:arguments).source
+      assert_equal "sprintf('%<value>s')", ast.source
+      assert_equal "('%<value>s')", ast.find(:arguments).source
 
       expected = <<~AST
         (macro
@@ -87,9 +87,9 @@ module Fmt
           (arguments
             (tokens
               (lparen "(")
-              (tstring-beg "%Q[")
+              (tstring-beg "'")
               (tstring-content "%<value>s")
-              (tstring-end "]")
+              (tstring-end "'")
               (rparen ")"))))
       AST
 
@@ -101,8 +101,8 @@ module Fmt
       ast = MacroParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.urtext
-      assert_equal source, ast.source
-      assert_equal "(%Q[%<value>.10f])", ast.find(:arguments).source
+      assert_equal "sprintf('%<value>.10f')", ast.source
+      assert_equal "('%<value>.10f')", ast.find(:arguments).source
 
       expected = <<~AST
         (macro
@@ -110,9 +110,9 @@ module Fmt
           (arguments
             (tokens
               (lparen "(")
-              (tstring-beg "%Q[")
+              (tstring-beg "'")
               (tstring-content "%<value>.10f")
-              (tstring-end "]")
+              (tstring-end "'")
               (rparen ")"))))
       AST
 

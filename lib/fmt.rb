@@ -7,7 +7,7 @@ require_relative "fmt/boot"
 # Extends native Ruby String format specifications
 # @see https://ruby-doc.org/3.3.4/format_specifications_rdoc.html
 module Fmt
-  LOCK = Monitor.new # :: Monitor
+  LOCK = Monitor.new # : Monitor
   private_constant :LOCK
 
   # Standard error class for Fmt

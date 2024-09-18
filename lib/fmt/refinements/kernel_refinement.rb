@@ -10,7 +10,11 @@ module Fmt
       # @rbs pipeline [Array[String | Symbol]] -- Fmt pipeline
       # @rbs return [String] -- formatted text
       def fmt(object, *pipeline)
-        text = (object in String) ? object : object.inspect
+        text = case object
+        in String then object
+        in Symbol then object.to_s
+        else object.inspect
+        end
         Fmt "%s|>to_s|>#{pipeline.join("|>")}", text
       end
 

@@ -22,9 +22,9 @@ module Fmt
                   (arguments
                     (tokens
                       (lparen "(")
-                      (tstring-beg "%Q[")
+                      (tstring-beg "'")
                       (tstring-content "%s")
-                      (tstring-end "]")
+                      (tstring-end "'")
                       (rparen ")")))))))
         AST
 
@@ -48,9 +48,9 @@ module Fmt
                   (arguments
                     (tokens
                       (lparen "(")
-                      (tstring-beg "%Q[")
+                      (tstring-beg "'")
                       (tstring-content "%{obj}s")
-                      (tstring-end "]")
+                      (tstring-end "'")
                       (rparen ")")))))))
         AST
 
@@ -74,9 +74,9 @@ module Fmt
                   (arguments
                     (tokens
                       (lparen "(")
-                      (tstring-beg "%Q[")
+                      (tstring-beg "'")
                       (tstring-content "%<obj>s")
-                      (tstring-end "]")
+                      (tstring-end "'")
                       (rparen ")")))))))
         AST
 
@@ -84,12 +84,12 @@ module Fmt
       end
 
       def test_complex
-        template = "Number: %.10f"
-        ast = TemplateParser.new(template).parse
+        source = "Number: %.10f"
+        ast = TemplateParser.new(source).parse
 
         assert_instance_of Node, ast
-        assert_equal template, ast.urtext
-        assert_equal template, ast.source
+        assert_equal source, ast.urtext
+        assert_equal source, ast.source
 
         expected = <<~AST
           (template
@@ -100,9 +100,9 @@ module Fmt
                   (arguments
                     (tokens
                       (lparen "(")
-                      (tstring-beg "%Q[")
+                      (tstring-beg "'")
                       (tstring-content "%.10f")
-                      (tstring-end "]")
+                      (tstring-end "'")
                       (rparen ")")))))))
         AST
 
@@ -126,9 +126,9 @@ module Fmt
                   (arguments
                     (tokens
                       (lparen "(")
-                      (tstring-beg "%Q[")
+                      (tstring-beg "'")
                       (tstring-content "%<value>.10f")
-                      (tstring-end "]")
+                      (tstring-end "'")
                       (rparen ")")))))))
         AST
 
@@ -152,27 +152,27 @@ module Fmt
                   (arguments
                     (tokens
                       (lparen "(")
-                      (tstring-beg "%Q[")
+                      (tstring-beg "'")
                       (tstring-content "%s")
-                      (tstring-end "]")
+                      (tstring-end "'")
                       (rparen ")"))))
                 (macro
                   (name :sprintf)
                   (arguments
                     (tokens
                       (lparen "(")
-                      (tstring-beg "%Q[")
+                      (tstring-beg "'")
                       (tstring-content "%<value>.10f")
-                      (tstring-end "]")
+                      (tstring-end "'")
                       (rparen ")"))))
                 (macro
                   (name :sprintf)
                   (arguments
                     (tokens
                       (lparen "(")
-                      (tstring-beg "%Q[")
+                      (tstring-beg "'")
                       (tstring-content "%p")
-                      (tstring-end "]")
+                      (tstring-end "'")
                       (rparen ")"))))
                 (macro
                   (name :truncate)
@@ -206,9 +206,9 @@ module Fmt
                   (arguments
                     (tokens
                       (lparen "(")
-                      (tstring-beg "%Q[")
-                      (tstring-content "%s")
-                      (tstring-end "]")
+                      (tstring-beg "'")
+                      (tstring-content "%s Two:")
+                      (tstring-end "'")
                       (rparen ")")))))
               (pipeline
                 (macro
@@ -216,9 +216,9 @@ module Fmt
                   (arguments
                     (tokens
                       (lparen "(")
-                      (tstring-beg "%Q[")
-                      (tstring-content "%.10f")
-                      (tstring-end "]")
+                      (tstring-beg "'")
+                      (tstring-content "%.10f Three:")
+                      (tstring-end "'")
                       (rparen ")")))))
               (pipeline
                 (macro
@@ -226,9 +226,9 @@ module Fmt
                   (arguments
                     (tokens
                       (lparen "(")
-                      (tstring-beg "%Q[")
+                      (tstring-beg "'")
                       (tstring-content "%p")
-                      (tstring-end "]")
+                      (tstring-end "'")
                       (rparen ")")))))))
         AST
 

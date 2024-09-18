@@ -41,9 +41,9 @@ module Fmt
                   (arguments
                     (tokens
                       (lparen "(")
-                      (tstring-beg "%Q[")
+                      (tstring-beg "'")
                       (tstring-content "%{value}")
-                      (tstring-end "]")
+                      (tstring-end "'")
                       (rparen ")"))))
                 (macro
                   (name :blue)))))
@@ -69,9 +69,9 @@ module Fmt
                   (arguments
                     (tokens
                       (lparen "(")
-                      (tstring-beg "%Q[")
+                      (tstring-beg "'")
                       (tstring-content "%<value>")
-                      (tstring-end "]")
+                      (tstring-end "'")
                       (rparen ")"))))
                 (macro
                   (name :blue)))))
@@ -97,9 +97,9 @@ module Fmt
                   (arguments
                     (tokens
                       (lparen "(")
-                      (tstring-beg "%Q[")
+                      (tstring-beg "'")
                       (tstring-content "%{value}")
-                      (tstring-end "]")
+                      (tstring-end "'")
                       (rparen ")"))))
                 (macro
                   (name :red))
@@ -129,9 +129,9 @@ module Fmt
                   (arguments
                     (tokens
                       (lparen "(")
-                      (tstring-beg "%Q[")
+                      (tstring-beg "'")
                       (tstring-content "%<value>")
-                      (tstring-end "]")
+                      (tstring-end "'")
                       (rparen ")"))))
                 (macro
                   (name :red))
@@ -159,9 +159,9 @@ module Fmt
                   (arguments
                     (tokens
                       (lparen "(")
-                      (tstring-beg "%Q[")
+                      (tstring-beg "'")
                       (tstring-content "%s")
-                      (tstring-end "]")
+                      (tstring-end "'")
                       (rparen ")"))))
                 (macro
                   (name :red)))
@@ -171,9 +171,9 @@ module Fmt
                   (arguments
                     (tokens
                       (lparen "(")
-                      (tstring-beg "%Q[")
+                      (tstring-beg "'")
                       (tstring-content "%{two}")
-                      (tstring-end "]")
+                      (tstring-end "'")
                       (rparen ")"))))
                 (macro
                   (name :blue))
@@ -185,9 +185,9 @@ module Fmt
                   (arguments
                     (tokens
                       (lparen "(")
-                      (tstring-beg "%Q[")
+                      (tstring-beg "'")
                       (tstring-content "%<three>")
-                      (tstring-end "]")
+                      (tstring-end "'")
                       (rparen ")"))))
                 (macro
                   (name :green))

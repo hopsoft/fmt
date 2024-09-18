@@ -8,7 +8,8 @@ module Fmt
       source = "%ljust(80, '.')"
       ast = PipelineParser.new(source).parse
       assert_instance_of Node, ast
-      assert_equal source, ast.source
+      assert_equal source, ast.urtext
+      assert_equal source[1..], ast.source
 
       expected = <<~AST
         (pipeline
@@ -33,7 +34,8 @@ module Fmt
       source = "%ljust(80, '.')|>cyan"
       ast = PipelineParser.new(source).parse
       assert_instance_of Node, ast
-      assert_equal source, ast.source
+      assert_equal source, ast.urtext
+      assert_equal source[1..], ast.source
 
       expected = <<~AST
         (pipeline
@@ -60,7 +62,8 @@ module Fmt
       source = "%<value>.10f|>ljust(80, '.')|>cyan"
       ast = PipelineParser.new(source).parse
       assert_instance_of Node, ast
-      assert_equal source, ast.source
+      assert_equal source, ast.urtext
+      assert_equal source[1..], ast.source
 
       expected = <<~AST
         (pipeline
@@ -69,9 +72,9 @@ module Fmt
             (arguments
               (tokens
                 (lparen "(")
-                (tstring-beg "%Q[")
+                (tstring-beg "'")
                 (tstring-content "%<value>.10f")
-                (tstring-end "]")
+                (tstring-end "'")
                 (rparen ")"))))
           (macro
             (name :ljust)
@@ -96,7 +99,8 @@ module Fmt
       source = "%pluralize(2, locale: :en)|>titleize|>truncate(30, '.')|>red|>bold|>underline"
       ast = PipelineParser.new(source).parse
       assert_instance_of Node, ast
-      assert_equal source, ast.source
+      assert_equal source, ast.urtext
+      assert_equal source[1..], ast.source
 
       expected = <<~AST
         (pipeline

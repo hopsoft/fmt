@@ -27,46 +27,50 @@ module Fmt
       tokenizer = Tokenizer.new(urtext)
       tokenizer.tokenize
 
-      name_tokens = tokenizer.name_tokens
-      name_index = tokenizer.tokens.rindex(name_tokens.last).to_i
+      key = extract_key(tokenizer)
+      source = extract_source(key, tokenizer)
+      method_name = extract_method_name(source)
 
-      # method name (preferred)
-      token ||= name_index.positive? ?
-        tokenizer.identifier_tokens(start: name_index + 1).last :
-        tokenizer.identifier_tokens.last
-
-      # operator (fallback)
-      token ||= name_index.positive? ?
-        tokenizer.operator_tokens(start: name_index + 1).last :
-        tokenizer.operator_tokens.last
-
-      value = token&.value&.to_sym
-
-      method_name = case value
-      in Symbol if Fmt.registry.any?(value) then value
-      else Sigils::FORMAT_METHOD
-      end
-
-      # source code used to tokenize arguments
-      code = case method_name
-      in Sigils::FORMAT_METHOD then "%s(%%Q[%s%s])" % [method_name, Sigils::FORMAT_PREFIX, urtext]
-      else urtext
-      end
-
-      {method_name: method_name, code: code}
+      {method_name: method_name, source: source}
     end
 
     # Transforms extracted components into an AST (Abstract Syntax Tree)
     # @rbs method_name: Symbol?
-    # @rbs code: String -- code used to tokenize arguments
+    # @rbs source: String -- parsed source code
     # @rbs return: Node -- AST (Abstract Syntax Tree)
-    def transform(method_name:, code:)
+    def transform(method_name:, source:)
       children = [
         Node.new(:name, [method_name]),
-        ArgumentsParser.new(code).parse
+        ArgumentsParser.new(source).parse
       ]
 
-      Node.new :macro, children.reject(&:empty?), urtext: urtext, source: urtext
+      Node.new :macro, children.reject(&:empty?), urtext: urtext, source: source
+    end
+
+    private
+
+    def extract_key(tokenizer)
+      return nil unless tokenizer.key_tokens.any?
+      tokenizer.key_tokens.map(&:value).join
+    end
+
+    def extract_source(key, tokenizer)
+      return "#{Sigils::FORMAT_METHOD}('#{Sigils::FORMAT_PREFIX}#{key}#{urtext.partition(key).last}')" if key in String
+
+      case tokenizer.method_tokens.first&.value
+      in String => method if Fmt.registry.any?(method.to_sym)
+        urtext
+      in String => method if Sigils::FORMAT_SPECIFIERS.any?(method[-1])
+        "#{Sigils::FORMAT_METHOD}('#{Sigils::FORMAT_PREFIX}#{urtext}')"
+      else
+        "#{Sigils::FORMAT_METHOD}('#{urtext}')"
+      end
+    end
+
+    def extract_method_name(source)
+      tokenizer = Tokenizer.new(source)
+      tokenizer.tokenize
+      tokenizer.method_tokens.first.value.to_sym
     end
   end
 end

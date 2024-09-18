@@ -11,9 +11,12 @@ module Fmt
   # Loading is handled by AST processors (Models)
   # @see lib/fmt/models/
   class Parser
-    Cache = Fmt::LRUCache.new # :: Fmt::LRUCache -- local in-memory cache
+    Cache = Fmt::LRUCache.new # : Fmt::LRUCache -- local in-memory cache
 
-    attr_reader :ast # : Node -- extracted AST
+    # Escapes a string for use in a regular expression
+    # @rbs value: String -- string to escape
+    # @rbs return: String -- escaped string
+    def self.esc(value) = Regexp.escape(value.to_s)
 
     # Parses input passed to the constructor and returns an AST (Abstract Syntax Tree)
     #

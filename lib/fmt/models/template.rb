@@ -20,8 +20,27 @@ module Fmt
       super
     end
 
-    attr_reader :embeds    # :: Array[Template]
-    attr_reader :pipelines # :: Array[Pipeline]
+    attr_reader :embeds    # : Array[Template]
+    attr_reader :pipelines # : Array[Pipeline]
+
+    # The template key (used for embeds)
+    # @rbs return: String?
+    def key
+      ast.properties[:key]
+    end
+
+    # Indicates if the template is an embed
+    # @rbs return: bool
+    def embed?
+      !!ast.properties[:embed]
+    end
+
+    # Indicates if the template is a wrapped embed
+    # @rbs return: bool
+    def wrapped?
+      return false unless embed?
+      !!ast.properties[:wrapped]
+    end
 
     # @rbs return: Hash[Symbol, Object]
     def to_h

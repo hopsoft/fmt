@@ -5,7 +5,7 @@
 module Fmt
   # Renders templates to a formatted string
   class Renderer
-    PIPELINE_START = Regexp.new("(?=%s)" % [Sigils::FORMAT_PREFIX]).freeze # :: Regexp -- detects start of first pipeline
+    PIPELINE_START = Regexp.new("(?=%s)" % [Sigils::FORMAT_PREFIX]).freeze # : Regexp -- detects start of first pipeline
 
     # Constructor
     # @rbs template: Template
@@ -13,7 +13,7 @@ module Fmt
       @template = template
     end
 
-    attr_reader :template # :: Template
+    attr_reader :template # : Template
 
     # Renders the template to a string
     # @note Positional and Keyword arguments are mutually exclusive
@@ -23,9 +23,11 @@ module Fmt
     def render(*args, **kwargs)
       raise Error, "positional and keyword arguments are mutually exclusive" if args.any? && kwargs.any?
 
-      template.source
-        .then { render_embeds(_1, *args, **kwargs) }
-        .then { render_pipelines(_1, *args, **kwargs) }
+      context = template.embed? ? template.urtext : template.source
+
+      render_embeds(context, *args, **kwargs) do |ctx, *a, **kw|
+        render_pipelines(ctx, *a, **kw)
+      end
     end
 
     private
@@ -34,16 +36,20 @@ module Fmt
     # @rbs context: String              -- starting context
     # @rbs args: Array[Object]          -- positional arguments (user provided)
     # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
-    # @rbs return: String
+    # @rbs &block: Proc                 -- block to execute after rendering embeds (signature: Proc(String, *args, **kwargs))
     def render_embeds(context, *args, **kwargs)
-      result = context
+      puts "rendering #{template.embeds.size} embeds"
+      kwargs = kwargs.dup
 
-      template.embeds.each do |embed|
-        value = Renderer.new(embed).render(*args, **kwargs)
-        result = result.sub(embed.urtext, value)
+      template.embeds.each do |t|
+        if t.wrapped?
+          kwargs[t.key.to_sym] = Renderer.new(t).render(*args, **kwargs)
+        else
+          context = context.sub(t.key, Renderer.new(t).render(*args, **kwargs))
+        end
       end
 
-      result
+      yield(context, *args, **kwargs)
     end
 
     # Renders all template pipelines
@@ -82,6 +88,8 @@ module Fmt
         end
       end
       result
+    rescue => er
+      # binding.pry
     end
 
     # Invokes native Ruby string formatting
