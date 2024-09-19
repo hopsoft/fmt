@@ -5,7 +5,7 @@ require_relative "../test_helper"
 module Fmt
   class TestMacroParser < UnitTest
     def test_formatter_simple
-      source = "s"
+      source = "%s"
       ast = MacroParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.urtext
@@ -28,7 +28,7 @@ module Fmt
     end
 
     def test_formatter_complex
-      source = ".10f"
+      source = "%.10f"
       ast = MacroParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.urtext
@@ -51,7 +51,7 @@ module Fmt
     end
 
     def test_formatter_named
-      source = "{value}"
+      source = "%{value}"
       ast = MacroParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.urtext
@@ -74,7 +74,7 @@ module Fmt
     end
 
     def test_formatter_named_alt
-      source = "<value>s"
+      source = "%<value>s"
       ast = MacroParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.urtext
@@ -97,7 +97,7 @@ module Fmt
     end
 
     def test_formatter_complex_named
-      source = "<value>.10f"
+      source = "%<value>.10f"
       ast = MacroParser.new(source).parse
       assert_instance_of Node, ast
       assert_equal source, ast.urtext

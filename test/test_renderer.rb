@@ -127,24 +127,20 @@ module Fmt
     #   assert_equal "\e[31mone\e[0m \e[32mtwo\e[0m \e[34mthree\e[0m", renderer.render(r: "one", g: "two", b: "three")
     # end
 
-    # def test_peers_complex
-    #   renderer = build_renderer("%s|>cyan|>faint Number: %.6f|>center(32, '-')|>bold|>underline %s|>cyan|>faint")
-    #   assert_equal "\e[36m\e[2m<\e[0m Number: \e[1m\e[4m-----------123.000000-----------\e[0m \e[36m\e[2m>\e[0m", renderer.render("<", 123, ">")
-    # end
+    def test_peers_complex
+      renderer = build_renderer("%s|>cyan|>faint Number: %.6f|>center(32, '-')|>bold|>underline %s|>cyan|>faint")
+      assert_equal "\e[36m\e[2m<\e[0m Number: \e[1m\e[4m-----------123.000000-----------\e[0m \e[36m\e[2m>\e[0m", renderer.render("<", 123, ">")
+    end
 
     # def test_peers_complex_named
     #   renderer = build_renderer("%{prefix}|>cyan|>faint Number: %<number>.6f|>center(32, '-')|>bold|>underline %{suffix}|>cyan|>faint")
     #   assert_equal "\e[36m\e[2m<\e[0m Number: \e[1m\e[4m-----------123.000000-----------\e[0m \e[36m\e[2m>\e[0m", renderer.render(prefix: "<", number: 123, suffix: ">")
     # end
 
-    def setup
-      puts "testing: #{name}"
-    end
-
-    def test_embeds
-      renderer = build_renderer("%{outer}:{{%{inner}}}")
-      assert_equal "outer:inner", renderer.render(outer: "outer", inner: "inner")
-    end
+    # def test_embeds
+    #  renderer = build_renderer("%{outer}:{{%{inner}}}")
+    #  assert_equal "outer:inner", renderer.render(outer: "outer", inner: "inner")
+    # end
 
     # def test_embeds_deep
     #   renderer = build_renderer("%{a}{{:%{b}{{:%{c}{{:%{d}}}}}}}")

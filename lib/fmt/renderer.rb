@@ -32,13 +32,17 @@ module Fmt
 
     private
 
+    # Escapes a string for use in a regular expression
+    # @rbs value: String -- string to escape
+    # @rbs return: String -- escaped string
+    def esc(value) = Regexp.escape(value.to_s)
+
     # Renders all template embeds
     # @rbs context: String              -- starting context
     # @rbs args: Array[Object]          -- positional arguments (user provided)
     # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
     # @rbs &block: Proc                 -- block to execute after rendering embeds (signature: Proc(String, *args, **kwargs))
     def render_embeds(context, *args, **kwargs)
-      puts "rendering #{template.embeds.size} embeds"
       kwargs = kwargs.dup
 
       template.embeds.each do |t|
@@ -61,8 +65,9 @@ module Fmt
       result = context
 
       template.pipelines.each_with_index do |pipeline, index|
-        pipeline_result = render_pipeline(pipeline, *args[index, 1], **kwargs)
-        result = result.sub(pipeline.source, pipeline_result)
+        pipeline_result = render_pipeline(pipeline, *args[index..], **kwargs)
+        binding.pry
+        result = result.sub(pipeline.placeholder, pipeline_result)
       end
 
       result
@@ -75,6 +80,7 @@ module Fmt
     # @rbs return: String
     def render_pipeline(pipeline, *args, **kwargs)
       result = ""
+
       pipeline.macros.each do |macro|
         result = case macro
         in name: Sigils::FORMAT_METHOD
@@ -87,9 +93,8 @@ module Fmt
         else invoke_macro(result, macro)
         end
       end
+
       result
-    rescue => er
-      # binding.pry
     end
 
     # Invokes native Ruby string formatting

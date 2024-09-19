@@ -98,10 +98,22 @@ module Fmt
       type == :ident
     end
 
+    # Indicates if the token is a method name (i.e. method name or operator)
+    # @rbs return: bool
+    def method_name?
+      identifier? || operator?
+    end
+
     # Indicates if the token is an operator
     # @rbs return: bool
     def operator?
       type == :op
+    end
+
+    # Indicates if the token is a whitespace
+    # @rbs return: bool
+    def whitespace?
+      type == :on_sp
     end
 
     # Indicates if the token is a native String format specifier

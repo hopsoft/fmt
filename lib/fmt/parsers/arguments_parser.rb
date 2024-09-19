@@ -6,17 +6,17 @@ module Fmt
   # Parses arguments from a string and builds an AST (Abstract Syntax Tree)
   class ArgumentsParser < Parser
     # Constructor
-    # @rbs urtext: String -- original source code
-    def initialize(urtext = "")
-      @urtext = urtext.to_s
+    # @rbs tokens: Array[Token] -- wrapped ripper tokens
+    def initialize(tokens = [])
+      @tokens = tokens
     end
 
-    attr_reader :urtext # : String -- original source code
+    attr_reader :tokens # : Array[Token] -- wrapped ripper tokens
 
     # Parses the urtext (original source code)
     # @rbs return: Node -- AST (Abstract Syntax Tree)
     def parse
-      cache(urtext) { super }
+      cache(tokens.to_s) { super }
     end
 
     protected
@@ -24,9 +24,7 @@ module Fmt
     # Extracts components for building the AST (Abstract Syntax Tree)
     # @rbs return: Hash[Symbol, Object] -- extracted components
     def extract
-      tokenizer = Tokenizer.new(urtext)
-      tokenizer.tokenize
-      {tokens: tokenizer.argument_tokens}
+      {tokens: tokens}
     end
 
     # Transforms extracted components into an AST (Abstract Syntax Tree)
@@ -35,10 +33,11 @@ module Fmt
     def transform(tokens:)
       return Node.new(:arguments) if tokens.none?
 
+      source = tokens.map(&:value).join
       tokens = tokens.map { |t| Node.new(t.type, [t.value], urtext: t.value, source: t.value) }
-      tokens = Node.new(:tokens, tokens, urtext: urtext, source: tokens.map(&:source).join)
+      tokens = Node.new(:tokens, tokens, urtext: source, source: source)
 
-      Node.new :arguments, [tokens], urtext: urtext, source: tokens.source
+      Node.new :arguments, [tokens], urtext: source, source: source
     end
   end
 end

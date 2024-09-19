@@ -100,7 +100,7 @@ GEM
     parser (3.3.5.0)
       ast (~> 2.4.1)
       racc
-    prism (0.30.0)
+    prism (1.0.0)
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -115,8 +115,8 @@ GEM
     rake (13.2.1)
     rbs (3.5.3)
       logger
-    rbs-inline (0.7.0)
-      prism (>= 0.29, < 0.31)
+    rbs-inline (0.8.0)
+      prism (>= 0.29, < 1.1)
       rbs (~> 3.5.0)
     refinements (12.8.0)
     regexp_parser (2.9.2)

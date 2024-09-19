@@ -30,6 +30,7 @@ module Fmt
       Ripper.lex(urtext).each do |token|
         tokens << Token.new(token)
       end
+      tokens
     end
 
     # Returns identifier tokens (typically method names)
@@ -42,8 +43,11 @@ module Fmt
       end
     end
 
-    def method_tokens(start: 0)
-      identifier_tokens + operator_tokens
+    # Returns method tokens (identifiers and operators)
+    # @rbs start: Integer -- start index
+    # @rbs return: Array[Token]
+    def method_name_tokens(start: 0)
+      identifier_tokens(start: start) + operator_tokens(start: start)
     end
 
     # Returns key (named parameter) tokens

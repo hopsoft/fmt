@@ -4,25 +4,22 @@ require_relative "../test_helper"
 
 module Fmt
   class TestPipelineParser < UnitTest
-    def test_one
-      source = "%ljust(80, '.')"
-      ast = PipelineParser.new(source).parse
+    def test_pipeline_with_one_macro
+      value = "%s"
+      ast = PipelineParser.new(value).parse
       assert_instance_of Node, ast
-      assert_equal source, ast.urtext
-      assert_equal source[1..], ast.source
+      assert_equal value, ast.urtext
+      assert_equal "sprintf('%s')", ast.source
 
       expected = <<~AST
         (pipeline
           (macro
-            (name :ljust)
+            (name :sprintf)
             (arguments
               (tokens
                 (lparen "(")
-                (int "80")
-                (comma ",")
-                (sp " ")
                 (tstring-beg "'")
-                (tstring-content ".")
+                (tstring-content "%s")
                 (tstring-end "'")
                 (rparen ")")))))
       AST
@@ -30,15 +27,24 @@ module Fmt
       assert_equal expected.rstrip, ast.to_s
     end
 
-    def test_two
-      source = "%ljust(80, '.')|>cyan"
-      ast = PipelineParser.new(source).parse
+    def test_pipeline_with_three_macros
+      value = "%s|>ljust(80, '.')|>cyan"
+      ast = PipelineParser.new(value).parse
       assert_instance_of Node, ast
-      assert_equal source, ast.urtext
-      assert_equal source[1..], ast.source
+      assert_equal value, ast.urtext
+      assert_equal "sprintf('%s')|>ljust(80, '.')|>cyan", ast.source
 
       expected = <<~AST
         (pipeline
+          (macro
+            (name :sprintf)
+            (arguments
+              (tokens
+                (lparen "(")
+                (tstring-beg "'")
+                (tstring-content "%s")
+                (tstring-end "'")
+                (rparen ")"))))
           (macro
             (name :ljust)
             (arguments
@@ -58,12 +64,12 @@ module Fmt
       assert_equal expected.rstrip, ast.to_s
     end
 
-    def test_named
-      source = "%<value>.10f|>ljust(80, '.')|>cyan"
-      ast = PipelineParser.new(source).parse
+    def test_named_pipeline
+      value = "%<value>.10f|>ljust(80, '.')|>cyan"
+      ast = PipelineParser.new(value).parse
       assert_instance_of Node, ast
-      assert_equal source, ast.urtext
-      assert_equal source[1..], ast.source
+      assert_equal value, ast.urtext
+      assert_equal "sprintf('%<value>.10f')|>ljust(80, '.')|>cyan", ast.source
 
       expected = <<~AST
         (pipeline
@@ -96,11 +102,11 @@ module Fmt
     end
 
     def test_multiple
-      source = "%pluralize(2, locale: :en)|>titleize|>truncate(30, '.')|>red|>bold|>underline"
-      ast = PipelineParser.new(source).parse
+      value = "pluralize(2, locale: :en)|>titleize|>truncate(30, '.')|>red|>bold|>underline"
+      ast = PipelineParser.new(value).parse
       assert_instance_of Node, ast
-      assert_equal source, ast.urtext
-      assert_equal source[1..], ast.source
+      assert_equal value, ast.urtext
+      assert_equal value, ast.source
 
       expected = <<~AST
         (pipeline

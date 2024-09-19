@@ -20,6 +20,10 @@ module Fmt
 
     attr_reader :macros # : Array[Node]
 
+    def placeholder
+      "#{Sigils::FORMAT_PREFIX}#{source}"
+    end
+
     # Hash representation of the model (required for pattern matching)
     # @rbs return: Hash[Symbol, Object]
     def to_h
