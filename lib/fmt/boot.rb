@@ -44,6 +44,7 @@ require_relative "parsers/template_parser"
 # Models -- data structures build from ASTs
 require_relative "models/model" # <- base class
 require_relative "models/arguments"
+require_relative "models/embed"
 require_relative "models/macro"
 require_relative "models/pipeline"
 require_relative "models/template"

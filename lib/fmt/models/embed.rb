@@ -10,38 +10,38 @@ module Fmt
   #
   # @note Pipelines are processed in sequence (left to right)
   #
-  class Pipeline < Model
-    # Constructor
-    # @rbs ast: Node
-    def initialize(ast)
-      @macros = []
-      super
-    end
-
-    attr_reader :macros # : Array[Node]
+  class Embed < Model
+    attr_reader :placeholder # : String -- placeholder for embed
+    attr_reader :template    # : Template
 
     # Hash representation of the model (required for pattern matching)
     # @rbs return: Hash[Symbol, Object]
     def to_h
-      super.merge macros: macros.map(&:to_h)
+      super.merge placeholder: placeholder, template: template&.to_h
     end
 
     # ..........................................................................
     # @!group AST Processors
     # ..........................................................................
 
-    # Processes a pipeline AST node
+    # Processes an embed AST node
     # @rbs node: Node
     # @rbs return: void
-    def on_pipeline(node)
+    def on_embed(node)
       process_all node.children
     end
 
-    # Processes a macro AST node
+    # Processes a placeholder AST node
     # @rbs node: Node
     # @rbs return: void
-    def on_macro(node)
-      @macros << Macro.new(node)
+    def on_placeholder(node)
+      @placeholder = node.children.first
+    end
+
+    # Processes a template AST node
+    # @rbs node: Node
+    def on_template(node)
+      @template = Template.new(node)
     end
   end
 end

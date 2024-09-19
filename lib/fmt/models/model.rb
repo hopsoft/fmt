@@ -31,6 +31,13 @@ module Fmt
       "#<#{self.class.name} #{inspect_properties}>"
     end
 
+    # Indicates if a given AST node is the same AST used to construct the model
+    # @rbs node: Node
+    # @rbs return: bool
+    def self?(node)
+      node == ast
+    end
+
     # Hash representation of the model (required for pattern matching)
     # @note Subclasses should override this method and call: super.merge(**)
     # @rbs return: Hash[Symbol, Object]

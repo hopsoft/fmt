@@ -23,24 +23,12 @@ module Fmt
     attr_reader :embeds    # : Array[Template]
     attr_reader :pipelines # : Array[Pipeline]
 
-    # The template key (used for embeds)
-    # @rbs return: String?
-    def key
-      ast.properties[:key]
-    end
-
-    # Indicates if the template is an embed
-    # @rbs return: bool
-    def embed?
-      !!ast.properties[:embed]
-    end
-
-    # Indicates if the template is a wrapped embed
-    # @rbs return: bool
-    def wrapped?
-      return false unless embed?
-      !!ast.properties[:wrapped]
-    end
+    ## Indicates if the template is a wrapped embed
+    ## @rbs return: bool
+    # def wrapped?
+    # return false unless embed?
+    # !!ast.properties[:wrapped]
+    # end
 
     # @rbs return: Hash[Symbol, Object]
     def to_h
@@ -51,16 +39,16 @@ module Fmt
     # @!group AST Processors
     # ..........................................................................
 
-    def self?(node)
-      node == ast
+    def on_template(node)
+      process_all node.children
     end
 
-    def on_template(node)
-      # handling self
-      return process_all(node.children) if self?(node)
+    def on_embeds(node)
+      process_all node.children
+    end
 
-      # handling embedded template
-      embeds << Template.new(node)
+    def on_embed(node)
+      embeds << Embed.new(node)
     end
 
     def on_pipelines(node)
@@ -69,12 +57,6 @@ module Fmt
 
     def on_pipeline(node)
       pipelines << Pipeline.new(node)
-    end
-
-    # @note The embeds node has template children
-    #       processing children (re)triggers the on_template handler for each embedded template
-    def on_embeds(node)
-      process_all node.children
     end
   end
 end
