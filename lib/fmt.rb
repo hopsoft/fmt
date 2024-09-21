@@ -39,6 +39,19 @@ module Fmt
     def unregister(...)
       registry.delete(...)
     end
+
+    # Executes a block with registry overrides
+    #
+    # @note Overrides will temporarily be added to the registry
+    #       and will overwrite existing entries for the duration of the block
+    #       Non overriden entries remain unchanged
+    #
+    # @rbs overrides: Hash[Array[Class | Module, Symbol], Proc] -- overrides to apply
+    # @rbs block: Proc -- block to execute with overrides
+    # @rbs return: void
+    def with_overrides(...)
+      registry.with_overrides(...)
+    end
   end
 end
 
