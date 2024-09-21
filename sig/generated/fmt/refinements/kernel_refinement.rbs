@@ -1,0 +1,23 @@
+# Generated from lib/fmt/refinements/kernel_refinement.rb with RBS::Inline
+
+module Fmt
+  module KernelRefinement
+    # Formats an object with Fmt
+    # @rbs object [Object] -- object to format (coerced to String)
+    # @rbs pipeline [Array[String | Symbol]] -- Fmt pipeline
+    # @rbs return [String] -- formatted text
+    def fmt: ([ Object ] object, *untyped pipeline) -> [ String ]
+
+    # Formats an object with Fmt and prints to STDOUT
+    # @rbs object [Object] -- object to format (coerced to String)
+    # @rbs pipeline [Array[String | Symbol]] -- Fmt pipeline
+    # @rbs return void
+    def fmt_print: ([ Object ] object, *untyped pipeline) -> void
+
+    # Formats an object with Fmt and puts to STDOUT
+    # @rbs object [Object] -- object to format (coerced to String)
+    # @rbs pipeline [Array[String | Symbol]] -- Fmt pipeline
+    # @rbs return void
+    def fmt_puts: ([ Object ] object, *untyped pipeline) -> void
+  end
+end

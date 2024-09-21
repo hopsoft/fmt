@@ -1,0 +1,11 @@
+# Generated from lib/fmt/registries/rainbow_registry.rb with RBS::Inline
+
+module Fmt
+  # Extends native Ruby String format specifications with Rainbow methods
+  # @see https://ruby-doc.org/3.3.4/format_specifications_rdoc.html
+  # @note Rainbow macros convert the Object to a String
+  class RainbowRegistry < Registry
+    # Constructor
+    def initialize: () -> untyped
+  end
+end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rbs_inline: enabled
+
 require "bundler/setup"
 
 require "active_support/all"

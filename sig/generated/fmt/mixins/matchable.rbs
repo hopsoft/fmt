@@ -1,0 +1,18 @@
+# Generated from lib/fmt/mixins/matchable.rb with RBS::Inline
+
+module Fmt
+  module Matchable
+    # Hash representation of the Object (required for pattern matching)
+    # @rbs return: Hash[Symbol, Object]
+    def to_h: () -> Hash[Symbol, Object]
+
+    # Returns a Hash representation of the object limited to the given keys
+    # @rbs keys: Array[Symbol] -- keys to include
+    # @rbs return: Hash[Symbol, Object]
+    def deconstruct_keys: (?Array[Symbol] keys) -> Hash[Symbol, Object]
+
+    # Returns an Array representation of the object
+    # @rbs return: Array[Object]
+    def deconstruct: () -> Array[Object]
+  end
+end

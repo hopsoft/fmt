@@ -5,7 +5,11 @@
 frozen_string = "# frozen_string_literal: true"
 rbs_inline = "# rbs_inline: enabled"
 
-Dir.glob(File.join(File.expand_path("../lib", __dir__), "**", "*.{rake,rb}")).each do |path|
+paths = Dir.glob(File.join(File.expand_path("../lib", __dir__), "**", "*.{rb}"))
+paths += Dir.glob(File.join(File.expand_path("../test", __dir__), "**", "*.{rb}"))
+puts paths.inspect
+
+paths.each do |path|
   lines = File.readlines(path)
 
   frozen = lines.any? { _1.start_with? frozen_string }

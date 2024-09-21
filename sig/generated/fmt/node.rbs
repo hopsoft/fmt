@@ -1,0 +1,64 @@
+# Generated from lib/fmt/node.rb with RBS::Inline
+
+module Fmt
+  # Extends behavior of AST::Node
+  class Node < AST::Node
+    extend Forwardable
+
+    # Finds all Node child nodes
+    # @rbs node: Node -- node to search
+    # @rbs return: Array[Node]
+    def self.node_children: (Node node) -> Array[Node]
+
+    # Recursively finds all Nodes in the tree
+    # @rbs node: Node -- node to search
+    # @rbs return: Array[Node]
+    def self.node_descendants: (Node node) -> Array[Node]
+
+    # Constructor
+    # @rbs type: Symbol
+    # @rbs children: Array[Node]
+    # @rbs properties: Hash[Symbol, Object]
+    def initialize: (Symbol type, ?Array[Node] children, ?Hash[Symbol, Object] properties) -> untyped
+
+    attr_reader properties: untyped
+
+    # Recursively searches the tree for a descendant node
+    # @rbs types: Array[Object] -- node types to find
+    # @rbs return: Node?
+    def dig: (*untyped types) -> Node?
+
+    # Finds the first child node of the specified type
+    # @rbs type: Object -- node type to find
+    # @rbs return: Node?
+    def find: (Object type) -> Node?
+
+    # Flattens Node descendants into a one dimensional array
+    # @rbs return: Array[Node]
+    def flatten: () -> Array[Node]
+
+    # Finds all child nodes of the specified type
+    # @rbs type: Object -- node type to select
+    # @rbs return: Node?
+    def select: (Object type) -> Node?
+
+    # String representation of the node (AST)
+    # @rbs squish: bool -- remove extra whitespace
+    # @rbs return: String
+    def to_s: (?squish: bool) -> String
+
+    private
+
+    # Finds all Node child nodes
+    # @rbs return: Array[Node]
+    def node_children: () -> Array[Node]
+
+    # Recursively finds all Node nodes in the tree
+    # @rbs return: Array[Node]
+    def node_descendants: () -> Array[Node]
+
+    # Defines accessor methods for properties on the receiver
+    # @rbs properties: Hash[Symbol, Object] -- exposed as instance methods
+    def define_properties: (Hash[Symbol, Object] properties) -> untyped
+  end
+end
