@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.metadata["homepage_uri"] = s.homepage
   s.metadata["source_code_uri"] = s.homepage
 
-  s.files = Dir["{lib}/**/*", "MIT-LICENSE", "README.md"]
+  s.files = Dir["{lib,sig}/**/*", "MIT-LICENSE", "README.md"]
   s.require_paths = ["lib"]
 
   s.add_dependency "ast"

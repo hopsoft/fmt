@@ -241,6 +241,17 @@ Fmt("%s|>red", "This is original red!")
 #=> "\e[31mThis is original red!\e[0m"
 ```
 
+## Performance: Fast Formatting
+
+Fmt isn't just pretty – it's quick too!
+
+- Tokenization: Uses StringScanner and Ripper to parse and tokenize templates
+- Caching: Stores an Abstract Syntax Tree (AST) representation of each template, pipeline, and macro
+- Speed: Current benchmarks show an average pipeline execution time of **under <0.3 milliseconds**
+
+> [!NOTE]
+> While Fmt is optimized for performance, remember that complex pipelines might take a tad longer.
+
 ## A Final Note
 
 Remember, Fmt is here to make your life easier. While it might not solve all of life's mysteries, it certainly makes string formatting a breeze!

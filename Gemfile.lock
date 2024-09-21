@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    fmt (0.2.0)
+    fmt (0.3.0)
       ast
 
 GEM
