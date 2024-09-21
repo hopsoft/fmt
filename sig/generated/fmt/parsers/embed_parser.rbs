@@ -1,0 +1,36 @@
+# Generated from lib/fmt/parsers/embed_parser.rb with RBS::Inline
+
+module Fmt
+  # Parses embeds from a string and builds an AST (Abstract Syntax Tree)
+  class EmbedParser < Parser
+    # Constructor
+    # @rbs urtext: String -- original source code
+    # @rbs key: Symbol -- key for embed
+    # @rbs placeholder: String -- placeholder for embed
+    def initialize: (?String urtext, key: Symbol, placeholder: String) -> untyped
+
+    attr_reader urtext: untyped
+
+    attr_reader key: untyped
+
+    attr_reader placeholder: untyped
+
+    # Parses the urtext (original source code)
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    def parse: () -> Node
+
+    # Extracts components for building the AST (Abstract Syntax Tree)
+    # @rbs return: Hash[Symbol, Object] -- extracted components
+    def extract: () -> Hash[Symbol, Object]
+
+    # Transforms extracted components into an AST (Abstract Syntax Tree)
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    def transform: (**untyped) -> Node
+
+    private
+
+    # Returns the template urtext
+    # @rbs return: String
+    def template_urtext: () -> String
+  end
+end

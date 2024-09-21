@@ -1,0 +1,122 @@
+# Generated from lib/fmt/lru_cache.rb with RBS::Inline
+
+module Fmt
+  # A threadsafe fixed-size LRU in-memory cache
+  # Grows to capacity then evicts the least used entries
+  #
+  # @example
+  #   cache = Fmt::Cache.new
+  #
+  #   cache.put :key, "value"
+  #   cache.get :key
+  #   cache.delete :key
+  #   cache.fetch :key, "default"
+  #   cache.fetch(:key) { "default" }
+  #
+  # @example Capacity
+  #   Fmt::Cache.capacity = 10_000
+  class LRUCache
+    include MonitorMixin
+
+    DEFAULT_CAPACITY: ::Integer
+
+    # Constructor
+    # @rbs capacity: Integer -- max capacity (negative values are uncapped, default: 5_000)
+    # @rbs return: Fmt::Cache
+    def initialize: (?capacity: Integer) -> Fmt::Cache
+
+    # The cache max capacity (number of entries)
+    # @rbs return: Integer
+    def capacity: () -> Integer
+
+    # Set the max capacity (number of entries)
+    # @rbs capacity: Integer -- new max capacity
+    # @rbs return: Integer -- new max capacity
+    def capacity=: (Integer capacity) -> Integer
+
+    # Indicates if the cache is capped
+    # @rbs return: bool
+    def capped?: () -> bool
+
+    # Clears the cache
+    # @rbs return: void
+    def clear: () -> void
+
+    # Deletes the entry for the specified key
+    # @rbs key: Object -- key to delete
+    # @rbs return: Object? -- the deleted value
+    def delete: (Object key) -> Object?
+
+    # Fetches the value for the specified key
+    # Writes the default value if the key is not found
+    # @rbs key: Object -- key to fetch
+    # @rbs default: Object -- default value to write
+    # @rbs block: Proc -- block to call to get the default value
+    # @rbs return: Object -- value
+    def fetch: (Object key, ?Object default) ?{ (?) -> untyped } -> Object
+
+    # Fetches a value from the cache without synchronization (not thread safe)
+    # @rbs key: Object -- key to fetch
+    # @rbs default: Object -- default value to write
+    # @rbs block: Proc -- block to call to get the default value
+    # @rbs return: Object -- value
+    def fetch_unsafe: (Object key, ?Object default) ?{ (?) -> untyped } -> Object
+
+    # Indicates if the cache is full
+    # @rbs return: bool
+    def full?: () -> bool
+
+    # Retrieves the value for the specified key
+    # @rbs key: Object -- key to retrieve
+    def get: (Object key) -> untyped
+
+    # Cache keys
+    # @rbs return: Array[Object]
+    def keys: () -> Array[Object]
+
+    # Indicates if the cache contains the specified key
+    # @rbs key: Object -- key to check
+    # @rbs return: bool
+    def key?: (Object key) -> bool
+
+    # Stores the value for the specified key
+    # @rbs key: Object -- key to store
+    # @rbs value: Object -- value to store
+    # @rbs return: Object -- value
+    def put: (Object key, Object value) -> Object
+
+    # Resets the cache capacity to the default
+    # @rbs return: Integer -- capacity
+    def reset_capacity: () -> Integer
+
+    # The current size of the cache (number of entries)
+    # @rbs return: Integer
+    def size: () -> Integer
+
+    # Returns a Hash with only the given keys
+    # @rbs keys: Array[Object] -- keys to include
+    # @rbs return: Hash[Object, Object]
+    def slice: (*untyped keys) -> Hash[Object, Object]
+
+    # Hash representation of the cache
+    # @rbs return: Hash[Object, Proc]
+    def to_h: () -> Hash[Object, Proc]
+
+    # Cache values
+    # @rbs return: Array[Object]
+    def values: () -> Array[Object]
+
+    # Executes a block with a synchronized mutex
+    # @rbs block: Proc -- block to execute
+    def lock: () ?{ (?) -> untyped } -> untyped
+
+    private
+
+    attr_reader store: untyped
+
+    # Moves the key to the end keeping it fresh
+    # @rbs key: Object -- key to reposition
+    # @rbs return: Object -- value
+    def reposition: (Object key) -> Object
+  end
+end

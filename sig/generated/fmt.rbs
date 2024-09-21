@@ -1,0 +1,30 @@
+# Generated from lib/fmt.rb with RBS::Inline
+
+# Extends native Ruby String format specifications
+# @see https://ruby-doc.org/3.3.4/format_specifications_rdoc.html
+module Fmt
+  LOCK: untyped
+
+  # Standard error class for Fmt
+  class Error < StandardError
+  end
+
+  # Error for formatting failures
+  class FormatError < Error
+  end
+
+  # Global registry for storing and retrieving String formatters i.e. Procs
+  def self.registry: () -> untyped
+
+  # Adds a keypair to the registry
+  # @rbs key: Array[Class | Module, Symbol] -- key to use
+  # @rbs overwrite: bool -- overwrite the existing keypair (default: false)
+  # @rbs block: Proc -- Proc to add (optional, if proc is provided)
+  # @rbs return: Proc
+  def self.register: () -> Proc
+
+  # Deletes a keypair from the registry
+  # @rbs key: Array[Class | Module, Symbol] -- key to delete
+  # @rbs return: Proc?
+  def self.unregister: () -> Proc?
+end

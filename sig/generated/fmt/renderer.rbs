@@ -1,0 +1,70 @@
+# Generated from lib/fmt/renderer.rb with RBS::Inline
+
+module Fmt
+  # Renders templates to a formatted string
+  class Renderer
+    PIPELINE_START: untyped
+
+    # Constructor
+    # @rbs template: Template
+    def initialize: (Template template) -> untyped
+
+    attr_reader template: untyped
+
+    # Renders the template to a string
+    # @note Positional and Keyword arguments are mutually exclusive
+    # @rbs args: Array[Object]          -- positional arguments (user provided)
+    # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
+    # @rbs return: String               -- rendered template
+    def render: (*untyped args, **untyped kwargs) -> String
+
+    private
+
+    # Escapes a string for use in a regular expression
+    # @rbs value: String -- string to escape
+    # @rbs return: String -- escaped string
+    def esc: (String value) -> String
+
+    # Renders all template embeds
+    # @rbs context: String              -- starting context
+    # @rbs args: Array[Object]          -- positional arguments (user provided)
+    # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
+    # @rbs &block: Proc                 -- block to execute after rendering embeds (signature: Proc(String, *args, **kwargs))
+    def render_embeds: (String context, *untyped args, **untyped kwargs) -> untyped
+
+    # Renders all template pipelines
+    # @rbs context: String              -- starting context
+    # @rbs args: Array[Object]          -- positional arguments (user provided)
+    # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
+    # @rbs return: String
+    def render_pipelines: (String context, *untyped args, **untyped kwargs) -> String
+
+    # Renders a single pipeline
+    # @rbs pipeline: Pipeline           -- pipeline to render
+    # @rbs args: Array[Object]          -- positional arguments (user provided)
+    # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
+    # @rbs return: String
+    def render_pipeline: (Pipeline pipeline, *untyped args, **untyped kwargs) -> String
+
+    # Invokes native Ruby string formatting
+    # @rbs macro: Macro                 -- macro to use (source, arguments, etc.)
+    # @rbs args: Array[Object]          -- positional arguments (user provided)
+    # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
+    # @rbs return: String
+    def invoke_formatter: (Macro macro, *untyped args, **untyped kwargs) -> String
+
+    # Invokes a macro
+    # @rbs context: Object              -- self in callable (Proc)
+    # @rbs macro: Macro                 -- macro to use (source, arguments, etc.)
+    # @rbs return: Object               -- result
+    def invoke_macro: (Object context, Macro macro) -> Object
+
+    # Raises an invocation error if/when Proc invocations fail
+    # @rbs macro: Macro                 -- macro that failed
+    # @rbs args: Array[Object]          -- positional arguments (user provided)
+    # @rbs cause: Exception             -- exception that caused the error
+    # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
+    # @rbs return: void
+    def raise_format_error: (Macro macro, *untyped args, cause: Exception, **untyped kwargs) -> void
+  end
+end

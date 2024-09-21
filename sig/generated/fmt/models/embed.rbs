@@ -1,0 +1,34 @@
+# Generated from lib/fmt/models/embed.rb with RBS::Inline
+
+module Fmt
+  class Embed < Model
+    attr_reader key: untyped
+
+    attr_reader placeholder: untyped
+
+    attr_reader template: untyped
+
+    # Hash representation of the model (required for pattern matching)
+    # @rbs return: Hash[Symbol, Object]
+    def to_h: () -> Hash[Symbol, Object]
+
+    # Processes an embed AST node
+    # @rbs node: Node
+    # @rbs return: void
+    def on_embed: (Node node) -> void
+
+    # Processes a key AST node
+    # @rbs node: Node
+    # @rbs return: void
+    def on_key: (Node node) -> void
+
+    # Processes a placeholder AST node
+    # @rbs node: Node
+    # @rbs return: void
+    def on_placeholder: (Node node) -> void
+
+    # Processes a template AST node
+    # @rbs node: Node
+    def on_template: (Node node) -> untyped
+  end
+end

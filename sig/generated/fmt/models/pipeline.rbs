@@ -1,0 +1,31 @@
+# Generated from lib/fmt/models/pipeline.rb with RBS::Inline
+
+module Fmt
+  # Represents a series of Macros
+  #
+  # A Pipeline is comprised of:
+  # 1. macros: Array[Macro]
+  #
+  # @note Pipelines are processed in sequence (left to right)
+  class Pipeline < Model
+    # Constructor
+    # @rbs ast: Node
+    def initialize: (Node ast) -> untyped
+
+    attr_reader macros: untyped
+
+    # Hash representation of the model (required for pattern matching)
+    # @rbs return: Hash[Symbol, Object]
+    def to_h: () -> Hash[Symbol, Object]
+
+    # Processes a pipeline AST node
+    # @rbs node: Node
+    # @rbs return: void
+    def on_pipeline: (Node node) -> void
+
+    # Processes a macro AST node
+    # @rbs node: Node
+    # @rbs return: void
+    def on_macro: (Node node) -> void
+  end
+end

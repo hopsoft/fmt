@@ -1,0 +1,115 @@
+# Generated from lib/fmt/models/arguments.rb with RBS::Inline
+
+module Fmt
+  # Represents arguments for a method call
+  #
+  # Arguments are comprised of:
+  # 1. args: Array[Object]
+  # 2. kwargs: Hash[Symbol, Object]
+  class Arguments < Model
+    # Constructor
+    # @rbs ast: Node
+    def initialize: (Node ast) -> untyped
+
+    attr_reader args: untyped
+
+    attr_reader kwargs: untyped
+
+    # Hash representation of the model (required for pattern matching)
+    # @rbs return: Hash[Symbol, Object]
+    def to_h: () -> Hash[Symbol, Object]
+
+    # Processes an arguments AST node
+    # @rbs node: Node
+    # @rbs return: void
+    def on_arguments: (Node node) -> void
+
+    # Processes a tokens AST node
+    # @rbs node: Node
+    # @rbs return: void
+    def on_tokens: (Node node) -> void
+
+    # Processes a keyword AST node
+    # @rbs node: Node
+    # @rbs return: nil | true | false | Object
+    def on_kw: (Node node) -> (nil | true | false | Object)
+
+    # Processes a string AST node
+    # @rbs node: Node
+    # @rbs return: String
+    def on_tstring_content: (Node node) -> String
+
+    # Processes a symbol AST Node
+    # @rbs node: Node
+    # @rbs return: Symbol
+    def on_symbol: (Node node) -> Symbol
+
+    # Processes a symbol start AST Node
+    # @rbs node: Node
+    # @rbs return: void
+    def on_symbeg: (Node node) -> void
+
+    # Processes an identifier AST Node
+    # @rbs node: Node
+    # @rbs return: Symbol?
+    def on_ident: (Node node) -> Symbol?
+
+    # Processes an integer AST node
+    # @rbs node: Node
+    # @rbs return: Integer
+    def on_int: (Node node) -> Integer
+
+    # Processes a float AST node
+    # @rbs node: Node
+    # @rbs return: Float
+    def on_float: (Node node) -> Float
+
+    # Processes a rational AST node
+    # @rbs node: Node
+    # @rbs return: Rational
+    def on_rational: (Node node) -> Rational
+
+    # Processes an imaginary (complex) AST node
+    # @rbs node: Node
+    # @rbs return: Complex
+    def on_imaginary: (Node node) -> Complex
+
+    # Processes a left bracket AST node
+    # @rbs node: Node
+    # @rbs return: Array
+    def on_lbracket: (Node node) -> Array
+
+    # Processes a left brace AST node
+    # @rbs node: Node
+    # @rbs return: Hash
+    def on_lbrace: (Node node) -> Hash
+
+    # Process a label (hash key) AST node
+    # @rbs node: Node
+    # @rbs return: void
+    def on_label: (Node node) -> void
+
+    private
+
+    # Assigns a value to the receiver
+    # @rbs value: Object -- value to assign
+    # @rbs label: Symbol? -- label to use (if applicable)
+    # @rbs return: Object
+    def assign: (Object value, ?label: Symbol?) -> Object
+
+    # Receiver that the processed value will be assigned to
+    # @rbs label: Symbol? -- label to use (if applicable)
+    # @rbs return: Array | Hash
+    def receiver: (?label: Symbol?) -> (Array | Hash)
+
+    # Finds the receiver that the processed value will be assigned to
+    # @rbs obj: Object
+    # @rbs return: Array? | Hash?
+    def find_receiver: (Object obj) -> (Array? | Hash?)
+
+    # Indicates if the value is a composite type (Array or Hash)
+    # @rbs value: Object -- value to check
+    # @rbs return: bool
+    def composite?: (Object value) -> bool
+  end
+end

@@ -1,0 +1,60 @@
+# Generated from lib/fmt/parsers/macro_parser.rb with RBS::Inline
+
+module Fmt
+  # Parses a macro from a string and builds an AST (Abstract Syntax Tree)
+  class MacroParser < Parser
+    # Constructor
+    # @rbs urtext: String -- original source code
+    def initialize: (?String urtext) -> untyped
+
+    attr_reader urtext: untyped
+
+    # Parses the urtext (original source code)
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    def parse: () -> Node
+
+    # Extracts components for building the AST (Abstract Syntax Tree)
+    # @rbs return: Hash[Symbol, Object] -- extracted components
+    def extract: () -> Hash[Symbol, Object]
+
+    # Transforms extracted components into an AST (Abstract Syntax Tree)
+    # @rbs method: Symbol?
+    # @rbs arguments_tokens: Array[Token] -- arguments tokens
+    # @rbs return: Node -- AST (Abstract Syntax Tree)
+    def transform: (method: Symbol?, arguments_tokens: Array[Token]) -> Node
+
+    private
+
+    # Tokenizes source code
+    # @rbs code: String -- source code to tokenize
+    # @rbs return: Array[Token] -- wrapped ripper tokens
+    def tokenize: (String code) -> Array[Token]
+
+    # Indicates if there is a set of arguments in the tokens
+    # @rbs tokens: Array[Token] -- tokens to check
+    # @rbs return: bool
+    def arguments?: (Array[Token] tokens) -> bool
+
+    # Indicates if arguments have started
+    # @rbs tokens: Array[Token] -- tokens to check
+    # @rbs return: bool
+    def arguments_started?: (Array[Token] tokens) -> bool
+
+    # Indicates if arguments have finished
+    # @note Call this after a whitespace has been detected
+    # @rbs tokens: Array[Token] -- tokens to check
+    # @rbs return: bool
+    def arguments_finished?: (Array[Token] tokens) -> bool
+
+    # Indicates if a macro token array is complete or finished
+    # @note Call this after a whitespace has been detected
+    # @rbs tokens: Array[Token] -- tokens to check
+    # @rbs return: bool
+    def finished?: (Array[Token] tokens) -> bool
+
+    # Indicates if a value is a Ruby native format string
+    # @rbs value: String -- value to check
+    # @rbs return: bool
+    def native_format_string?: (String value) -> bool
+  end
+end

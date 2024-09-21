@@ -1,3 +1,6 @@
-# For available configuration options, see:
-#   https://github.com/standardrb/standard
+# For available configuration options, see: https://github.com/standardrb/standard
 ruby_version: 3.0
+fix: true
+parallel: true
+format: progress
+default_ignores: true

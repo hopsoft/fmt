@@ -1,0 +1,45 @@
+# Generated from lib/fmt/models/model.rb with RBS::Inline
+
+module Fmt
+  # Superclass for all models
+  # @note Models are constructed from AST nodes
+  class Model
+    include AST::Processor::Mixin
+
+    include Matchable
+
+    # Constructor
+    # @rbs ast: Node
+    def initialize: (Node ast) -> untyped
+
+    attr_reader ast: untyped
+
+    attr_reader urtext: untyped
+
+    attr_reader source: untyped
+
+    # Model inspection
+    # @rbs return: String
+    def inspect: () -> String
+
+    # Indicates if a given AST node is the same AST used to construct the model
+    # @rbs node: Node
+    # @rbs return: bool
+    def self?: (Node node) -> bool
+
+    # Hash representation of the model (required for pattern matching)
+    # @note Subclasses should override this method and call: super.merge(**)
+    # @rbs return: Hash[Symbol, Object]
+    def to_h: () -> Hash[Symbol, Object]
+
+    private
+
+    # Hash of instance variables for inspection
+    # @rbs return: Hash[String, Object]
+    def inspectable_properties: () -> Hash[String, Object]
+
+    # String of inspectable properties for inspection
+    # @rbs return: String
+    def inspect_properties: () -> String
+  end
+end
