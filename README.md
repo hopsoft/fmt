@@ -1,23 +1,3 @@
-<!-- Tocer[start]: Auto-generated, don't remove. -->
-
-## Table of Contents
-
-- [Fmt: Your Friendly Guide to String Formatting](#fmt-your-friendly-guide-to-string-formatting)
-  - [What's Fmt, and why should you care?](#whats-fmt-and-why-should-you-care)
-  - [Getting Started: It's a Breeze!](#getting-started-its-a-breeze)
-  - [Usage: Your Formatting Adventure Begins](#usage-your-formatting-adventure-begins)
-    - [Macros: The Secret Sauce](#macros-the-secret-sauce)
-    - [Pipelines: Unleashing the Power of Chained Macros](#pipelines-unleashing-the-power-of-chained-macros)
-    - [Supported Methods: The Ultimate Answer to Formatting](#supported-methods-the-ultimate-answer-to-formatting)
-      - [Rainbow GEM: The Color of Magic](#rainbow-gem-the-color-of-magic)
-    - [Composition: The Art of the Template](#composition-the-art-of-the-template)
-      - [Embedded Templates: Nesting with Infinite Possibilities](#embedded-templates-nesting-with-infinite-possibilities)
-    - [Customizing Fmt: Create Your Own Extensions](#customizing-fmt-create-your-own-extensions)
-  - [A Final Note](#a-final-note)
-  - [Sponsors: Our Awesome Supporters](#sponsors-our-awesome-supporters)
-
-<!-- Tocer[finish]: Auto-generated, don't remove. -->
-
 <p align="center">
   <a href="http://blog.codinghorror.com/the-best-code-is-no-code-at-all/">
     <img alt="Lines of Code" src="https://img.shields.io/badge/loc-1039-47d299.svg" />
@@ -36,6 +16,25 @@
 # Fmt: Your Friendly Guide to String Formatting
 
 Welcome to Fmt, your go-to companion for Ruby string templating – simple, versatile, and surprisingly powerful!
+
+<!-- Tocer[start]: Auto-generated, don't remove. -->
+
+## Table of Contents
+
+- [What's Fmt, and why should you care?](#whats-fmt-and-why-should-you-care)
+- [Getting Started: It's a Breeze!](#getting-started-its-a-breeze)
+- [Usage: Your Formatting Adventure Begins](#usage-your-formatting-adventure-begins)
+  - [Macros: The Secret Sauce](#macros-the-secret-sauce)
+  - [Pipelines: Unleashing the Power of Chained Macros](#pipelines-unleashing-the-power-of-chained-macros)
+  - [Supported Methods: The Ultimate Answer to Formatting](#supported-methods-the-ultimate-answer-to-formatting)
+    - [Rainbow GEM: The Color of Magic](#rainbow-gem-the-color-of-magic)
+  - [Composition: The Art of the Template](#composition-the-art-of-the-template)
+    - [Embedded Templates: Nesting with Infinite Possibilities](#embedded-templates-nesting-with-infinite-possibilities)
+  - [Customizing Fmt: Create Your Own Extensions](#customizing-fmt-create-your-own-extensions)
+- [A Final Note](#a-final-note)
+- [Sponsors: Our Awesome Supporters](#sponsors-our-awesome-supporters)
+
+<!-- Tocer[finish]: Auto-generated, don't remove. -->
 
 ## What's Fmt, and why should you care?
 
