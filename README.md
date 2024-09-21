@@ -13,7 +13,7 @@
   </a>
 </p>
 
-# Fmt: Your Friendly Guide to String Formatting
+# Fmt: Your Friendly String Formatter
 
 Welcome to Fmt, your go-to companion for Ruby string templating – simple, versatile, and surprisingly powerful!
 
