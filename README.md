@@ -189,6 +189,7 @@ Embeds can also span multiple lines.
 
 ```ruby
 template = <<~T
+  Multiline:
   %{one}|>red {{
     %{two}|>blue {{
       %{three}|>green
@@ -196,7 +197,7 @@ template = <<~T
   }}|>bold
 T
 Fmt(template, one: "Red", two: "Blue", three: "Green")
-#=> "\e[31mRed\e[0m \e[1m\n  \e[34mBlue\e[0m \n    \e[32mGreen\e[0m"
+#=> "Multiline:\n\e[31mRed\e[0m \e[1m\n  \e[34mBlue\e[0m \n    \e[32mGreen\e[0m"
 ```
 
 ### Extending Fmt

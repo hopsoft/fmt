@@ -53,6 +53,7 @@ module Fmt
 
     def test_054526
       template = <<~T
+        Multiline:
         %{one}|>red {{
           %{two}|>blue {{
             %{three}|>green
@@ -60,7 +61,7 @@ module Fmt
         }}|>bold
       T
 
-      assert_equal "\e[31mRed\e[0m \e[1m\n  \e[34mBlue\e[0m \n    \e[32mGreen\e[0m", Fmt(template, one: "Red", two: "Blue", three: "Green")
+      assert_equal "Multiline:\n\e[31mRed\e[0m \e[1m\n  \e[34mBlue\e[0m \n    \e[32mGreen\e[0m", Fmt(template, one: "Red", two: "Blue", three: "Green")
     end
 
     def test_2cacce
