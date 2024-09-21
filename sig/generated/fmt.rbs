@@ -27,4 +27,15 @@ module Fmt
   # @rbs key: Array[Class | Module, Symbol] -- key to delete
   # @rbs return: Proc?
   def self.unregister: () -> Proc?
+
+  # Executes a block with registry overrides
+  #
+  # @note Overrides will temporarily be added to the registry
+  #       and will overwrite existing entries for the duration of the block
+  #       Non overriden entries remain unchanged
+  #
+  # @rbs overrides: Hash[Array[Class | Module, Symbol], Proc] -- overrides to apply
+  # @rbs block: Proc -- block to execute with overrides
+  # @rbs return: void
+  def self.with_overrides: () -> void
 end
