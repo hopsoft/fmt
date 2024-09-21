@@ -1,6 +1,6 @@
 <p align="center">
   <a href="http://blog.codinghorror.com/the-best-code-is-no-code-at-all/">
-    <img alt="Lines of Code" src="https://img.shields.io/badge/loc-347-47d299.svg" />
+    <img alt="Lines of Code" src="https://img.shields.io/badge/loc-1039-47d299.svg" />
   </a>
   <a href="https://github.com/testdouble/standard">
     <img alt="Ruby Style" src="https://img.shields.io/badge/style-standard-168AFE?logo=ruby&logoColor=FE1616" />
@@ -15,25 +15,25 @@
 
 # Fmt
 
-#### A simple template engine based on native Ruby String formatting mechanics
+#### Template engine based on native Ruby String formatting mechanics
 
 <!-- Tocer[start]: Auto-generated, don't remove. -->
 
 ## Table of Contents
 
-  - [Why?](#why)
-  - [Setup](#setup)
-  - [Usage](#usage)
-    - [Formatting](#formatting)
-    - [Filters](#filters)
-    - [Embeds](#embeds)
-  - [Sponsors](#sponsors)
+- [Why?](#why)
+- [Setup](#setup)
+- [Usage](#usage)
+  - [Formatting](#formatting)
+  - [Filters](#filters)
+  - [Embeds](#embeds)
+- [Sponsors](#sponsors)
 
 <!-- Tocer[finish]: Auto-generated, don't remove. -->
 
 ## Why?
 
-I'm currenly using this to help build beautiful CLI applications with Ruby. Plus it's fun.
+I'm using `Fmt` to help craft beautiful CLI applications with Ruby. _Plus it's fun._
 
 ## Setup
 
@@ -44,68 +44,96 @@ bundle add fmt
 
 ## Usage
 
-Simply create a string with embedded formatting syntax as you'd normally do with `sprintf`.
+Simply create a string with Ruby's format specifiers as you'd normally do with `sprintf`.
+
+- `"%s"`
+- `"%{variable}"`
+- `"%<variable>s"`
+
+Formatting `macros` can be appended to the format specifier like so.
 
 ```ruby
-"%{...}"
+Fmt("%s|>capitalize", "hello world!") # => "Hello world!"
+Fmt("%{msg}|>capitalize", msg: "hello world!") # => "Hello world!"
 ```
 
-Filters can be chained after the placeholder like so.
+Macros can accept arguments.
 
 ```ruby
-"%{...}FILTER|FILTER|FILTER"
+Fmt("%s|>prepend('Hello ')", "world!") # => "Hello world!"
+Fmt("%{msg}|>prepend('Hello ')", msg: "world!") # => "Hello world!"
+```
+
+Macros can be chained `pipeline` to construct a formatting `pipeline`.
+
+```ruby
+Fmt("%s|>prepend('Hello ')|>ljust(32, '.')|>upcase", "world!") # => "HELLO WORLD!...................."
+Fmt("%{msg}|>prepend('Hello ')|>ljust(32, '.')|>upcase", msg: "world!") # => "HELLO WORLD!...................."
 ```
 
 > [!NOTE]
-> Filters are processed in the order they are specified.
+> Pipelines are processed left to right. The return value from a preceeding `macro` is the starting point for the next.
 
-Filters can be [native Ruby formatting](https://docs.ruby-lang.org/en/master/format_specifications_rdoc.html) as well as String methods like `capitalize`, `downcase`, `strip`, etc.
-Also, you can use Rainbow filters like `bold`, `cyan`, `underline`, et al. if you have the [Rainbow GEM](https://github.com/ku1ik/rainbow) installed.
-
-**You can even [register your own filters](#filters).**
-
-### Formatting
-
-Basic example:
+`Fmt` arguments and `macro` return values can be any type.
 
 ```ruby
-require "rainbow"
-require "fmt"
-
-Fmt.add_rainbow_filters
-
-template = "Hello %{name}cyan|bold"
-Fmt template, name: "World"
-
-#=> "Hello \e[36m\e[1mWorld\e[0m"
+Fmt("%p|>partition(/:/)|>last|>delete_suffix('>')", Object.new) # => "0x000000011f33bc68"
 ```
 
-![CleanShot 2024-07-26 at 01 40 33@2x](https://github.com/user-attachments/assets/04ff90e6-254a-42d4-9169-586ac24b82f0)
+### Supported Methods
 
-Mix and match native formatting with Rainbow formatting:
+Most public instance methods on the following classes are supported.
+
+- `Array`
+- `Date`
+- `DateTime`
+- `FalseClass`
+- `Float`
+- `Hash`
+- `Integer`
+- `NilClass`
+- `Range`
+- `Regexp`
+- `Set`
+- `StandardError`
+- `String`
+- `Struct`
+- `Symbol`
+- `Time`
+- `TrueClass`
+
+> [!TIP]
+> If you're using libraries like ActiveSupport, support for extension methods is also available.
+
+#### Rainbow GEM
+
+Color and style support is available if your project includes the [Rainbow GEM](https://github.com/ku1ik/rainbow).
 
 ```ruby
-require "rainbow"
-require "fmt"
-
-Fmt.add_rainbow_filters
-
-template = "Date: %{date}.10s|magenta"
-Fmt template, date: Time.now
-
-#=> "Date: \e[35m2024-07-26\e[0m"
+template = "%{msg}|>cyan|>bold|>underline" # <- templates are just format strings
+Fmt(template, msg: "Hello World!")
+#=> "\e[36m\e[1m\e[4mHello World!\e[0m"
 ```
 
-![CleanShot 2024-07-26 at 01 42 53@2x](https://github.com/user-attachments/assets/507913b0-826b-4526-9c79-27f766c904b3)
+### Composition
+
+Templates can include multiple format strings.
+
+```ruby
+template = "Date: %<date>.10s|>magenta -- %{msg}|>titleize|>bold"
+Fmt(template, date: Time.now, msg: "this is cool")
+#=> "Date: \e[35m2024-09-20\e[0m \e[1mThis Is Cool\e[0m"
+```
+
+---
+
+## TODO: Edit content below...
+
+---
 
 Multiline example:
 
 ```ruby
-require "rainbow"
-require "fmt"
-
-Fmt.add_rainbow_filters
-
 template = <<~T
   Date: %{date}.10s|underline
 
