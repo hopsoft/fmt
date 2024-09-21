@@ -34,10 +34,12 @@ module Fmt
     # @note Extraction is delegated to the PipelineParser and EmbedParser in transform
     # @rbs return: Hash
     def extract
-      embeds = extract_embeds
-
       source = urtext
-      embeds.each { source = "#{source[0..._1[:index]]}#{_1[:placeholder]}#{source[(_1[:rindex] + 1)..]}" }
+
+      embeds = extract_embeds
+      embeds.each do |embed|
+        source = "#{source[0...embed[:index]]}#{embed[:placeholder]}#{source[embed[:rindex]..]}"
+      end
 
       pipelines = extract_pipelines(source)
 
@@ -50,7 +52,7 @@ module Fmt
     # @rbs source: String -- parsed source code
     # @rbs return: Node -- AST (Abstract Syntax Tree)
     def transform(embeds:, pipelines:, source:)
-      embeds = embeds.map { EmbedParser.new(_1[:urtext], placeholder: _1[:placeholder]).parse }
+      embeds = embeds.map { EmbedParser.new(_1[:urtext], **_1.slice(:key, :placeholder)).parse }
       embeds = Node.new(:embeds, embeds, urtext: urtext, source: urtext)
 
       pipelines = pipelines.map { PipelineParser.new(_1).parse }
@@ -63,6 +65,8 @@ module Fmt
 
     private
 
+    # Extracts embed metadata from the urtext
+    # @rbs return: Array[Hash] -- extracted embeds
     def extract_embeds
       embeds = []
 
@@ -78,11 +82,12 @@ module Fmt
 
         if embed.scan(EMBED_HEAD).size == embed.scan(EMBED_TAIL).size
           rindex = scanner.charpos
-          key = "embed_#{index}_#{rindex}"
+          key = :"embed_#{index}_#{rindex}"
 
           embeds << {
             index: index,
             rindex: rindex,
+            key: key,
             placeholder: "#{Sigils::FORMAT_PREFIX}#{Sigils::KEY_PREFIXES[-1]}#{key}#{Sigils::KEY_SUFFIXES[-1]}",
             urtext: embed
           }
@@ -95,6 +100,9 @@ module Fmt
       embeds
     end
 
+    # Extracts pipelines from the source
+    # @rbs source: String -- source code to extract pipelines from
+    # @rbs return: Array[String] -- extracted pipelines
     def extract_pipelines(source)
       pipelines = []
       pipeline = ""

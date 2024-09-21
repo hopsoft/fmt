@@ -30,8 +30,16 @@ module Fmt
     def initialize
       super
 
-      add([Kernel, :format]) { |*args, **kwargs| Kernel.format(self, *args, **kwargs) }
-      add([Kernel, :sprintf]) { |*args, **kwargs| Kernel.sprintf(self, *args, **kwargs) }
+      format = ->(*args, **kwargs) do
+        verbose = $VERBOSE
+        $VERBOSE = nil
+        Kernel.sprintf(self, *args, **kwargs)
+      ensure
+        $VERBOSE = verbose
+      end
+
+      add([Kernel, :format], &format)
+      add([Kernel, :sprintf], &format)
 
       SUPPORTED_CLASSES.each do |klass|
         supported_method_names(klass).each do |name|

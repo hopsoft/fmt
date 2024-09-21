@@ -23,11 +23,13 @@ module Fmt
     def render(*args, **kwargs)
       raise Error, "positional and keyword arguments are mutually exclusive" if args.any? && kwargs.any?
 
-      context = template.embed? ? template.urtext : template.source
+      context = template.source
 
-      render_embeds(context, *args, **kwargs) do |ctx, *a, **kw|
-        render_pipelines(ctx, *a, **kw)
+      render_embeds(context, *args, **kwargs) do |embed, result|
+        kwargs[embed.key] = result
       end
+
+      render_pipelines(context, *args, **kwargs)
     end
 
     private
@@ -43,17 +45,9 @@ module Fmt
     # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
     # @rbs &block: Proc                 -- block to execute after rendering embeds (signature: Proc(String, *args, **kwargs))
     def render_embeds(context, *args, **kwargs)
-      kwargs = kwargs.dup
-
-      template.embeds.each do |t|
-        if t.wrapped?
-          kwargs[t.key.to_sym] = Renderer.new(t).render(*args, **kwargs)
-        else
-          context = context.sub(t.key, Renderer.new(t).render(*args, **kwargs))
-        end
+      template.embeds.each do |embed|
+        yield embed, Renderer.new(embed.template).render(*args, **kwargs)
       end
-
-      yield(context, *args, **kwargs)
     end
 
     # Renders all template pipelines
@@ -62,15 +56,12 @@ module Fmt
     # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
     # @rbs return: String
     def render_pipelines(context, *args, **kwargs)
-      result = context
-
       template.pipelines.each_with_index do |pipeline, index|
-        pipeline_result = render_pipeline(pipeline, *args[index..], **kwargs)
-        binding.pry
-        result = result.sub(pipeline.placeholder, pipeline_result)
+        result = render_pipeline(pipeline, *args[index..], **kwargs)
+        context = context.sub(pipeline.urtext, result)
       end
 
-      result
+      context
     end
 
     # Renders a single pipeline
@@ -107,7 +98,7 @@ module Fmt
       context = macro.arguments.args[0]
       context.instance_exec(*args, **kwargs, &callable)
     rescue => error
-      raise_invocation_error(error, context, *args, **kwargs)
+      raise_format_error(macro, *args, cause: error, **kwargs)
     end
 
     # Invokes a macro
@@ -123,22 +114,19 @@ module Fmt
 
       context.instance_exec(*args, **kwargs, &callable)
     rescue => error
-      raise_invocation_error(error, context, *args, **kwargs)
+      args ||= []
+      kwargs ||= {}
+      raise_format_error(macro, *args, cause: error, **kwargs)
     end
 
     # Raises an invocation error if/when Proc invocations fail
-    # @rbs cause: Exception             -- exception that caused the error
-    # @rbs context: Object              -- self in callable (Proc)
+    # @rbs macro: Macro                 -- macro that failed
     # @rbs args: Array[Object]          -- positional arguments (user provided)
+    # @rbs cause: Exception             -- exception that caused the error
     # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
     # @rbs return: void
-    def raise_invocation_error(cause, context, *args, **kwargs)
-      example = case [args.size, kwargs.size]
-      in [0, 0] then "sprintf(#{context.inspect})"
-      in [*, 0] then "sprintf(#{context.inspect}, #{args.map(&:inspect).join(", ")})"
-      in [0, *] then "sprintf(#{context.inspect}, #{kwargs.inspect})"
-      end
-      raise FormatError, "Did you pass the correct arguments? #{example} -- Cause: #{cause.message}"
+    def raise_format_error(macro, *args, cause:, **kwargs)
+      raise FormatError, "Error in macro! `#{macro.urtext}` args=#{args.inspect} kwargs=#{kwargs.inspect} cause=#{cause.inspect}"
     end
   end
 end

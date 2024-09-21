@@ -13,6 +13,8 @@ module Fmt
 
       if defined? Rainbow
         add([Object, :rainbow]) { Rainbow self }
+        add([Object, :bg]) { |*args, **kwargs| Rainbow(self).bg(*args, **kwargs) }
+        add([Object, :color]) { |*args, **kwargs| Rainbow(self).color(*args, **kwargs) }
 
         methods = Rainbow::Presenter.public_instance_methods(false).select do
           Rainbow::Presenter.public_instance_method(_1).arity == 0

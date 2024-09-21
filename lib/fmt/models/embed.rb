@@ -3,14 +3,8 @@
 # rbs_inline: enabled
 
 module Fmt
-  # Represents a series of Macros
-  #
-  # A Pipeline is comprised of:
-  # 1. macros: Array[Macro]
-  #
-  # @note Pipelines are processed in sequence (left to right)
-  #
   class Embed < Model
+    attr_reader :key         # : Symbol -- key for embed
     attr_reader :placeholder # : String -- placeholder for embed
     attr_reader :template    # : Template
 
@@ -29,6 +23,13 @@ module Fmt
     # @rbs return: void
     def on_embed(node)
       process_all node.children
+    end
+
+    # Processes a key AST node
+    # @rbs node: Node
+    # @rbs return: void
+    def on_key(node)
+      @key = node.children.first
     end
 
     # Processes a placeholder AST node

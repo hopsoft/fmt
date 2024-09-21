@@ -23,13 +23,6 @@ module Fmt
     attr_reader :embeds    # : Array[Template]
     attr_reader :pipelines # : Array[Pipeline]
 
-    ## Indicates if the template is a wrapped embed
-    ## @rbs return: bool
-    # def wrapped?
-    # return false unless embed?
-    # !!ast.properties[:wrapped]
-    # end
-
     # @rbs return: Hash[Symbol, Object]
     def to_h
       super.merge embeds: embeds.map(&:to_h), pipelines: pipelines.map(&:to_h)

@@ -7,13 +7,16 @@ module Fmt
   class EmbedParser < Parser
     # Constructor
     # @rbs urtext: String -- original source code
+    # @rbs key: Symbol -- key for embed
     # @rbs placeholder: String -- placeholder for embed
-    def initialize(urtext = "", placeholder:)
+    def initialize(urtext = "", key:, placeholder:)
       @urtext = urtext.to_s
+      @key = key
       @placeholder = placeholder
     end
 
     attr_reader :urtext # : String -- original source code
+    attr_reader :key    # : Symbol -- key for embed
     attr_reader :placeholder # : String -- placeholder for embed
 
     # Parses the urtext (original source code)
@@ -33,9 +36,10 @@ module Fmt
     # Transforms extracted components into an AST (Abstract Syntax Tree)
     # @rbs return: Node -- AST (Abstract Syntax Tree)
     def transform(**)
+      key = Node.new(:key, [self.key])
       placeholder = Node.new(:placeholder, [self.placeholder])
       template = TemplateParser.new(template_urtext).parse
-      children = [placeholder, template].reject(&:empty?)
+      children = [key, placeholder, template].reject(&:empty?)
       Node.new(:embed, children, urtext: urtext, source: urtext)
     end
 
