@@ -13,66 +13,55 @@
   </a>
 </p>
 
-# Fmt: Your Friendly String Formatter
+# Fmt: CLI Templating System and String Formatter
 
-Welcome to Fmt, your go-to companion for Ruby string templating – simple, versatile, and surprisingly powerful!
+Fmt is a powerful and flexible templating system and string formatter for Ruby, designed to streamline the creation of command-line interfaces and enhance general-purpose string formatting.
 
 <!-- Tocer[start]: Auto-generated, don't remove. -->
 
 ## Table of Contents
 
-  - [What's Fmt, and why should you care?](#whats-fmt-and-why-should-you-care)
-  - [Getting Started: It's a Breeze!](#getting-started-its-a-breeze)
-  - [Usage: Your Formatting Adventure Begins](#usage-your-formatting-adventure-begins)
-    - [Macros: The Secret Sauce](#macros-the-secret-sauce)
-    - [Pipelines: Unleashing the Power of Chained Macros](#pipelines-unleashing-the-power-of-chained-macros)
-    - [Supported Methods: The Ultimate Answer to Formatting](#supported-methods-the-ultimate-answer-to-formatting)
-      - [Rainbow GEM: The Color of Magic](#rainbow-gem-the-color-of-magic)
-    - [Composition: The Art of the Template](#composition-the-art-of-the-template)
-      - [Embedded Templates: Nesting with Infinite Possibilities](#embedded-templates-nesting-with-infinite-possibilities)
-    - [Customizing Fmt: Create Your Own Extensions](#customizing-fmt-create-your-own-extensions)
-  - [Performance: Fast Formatting](#performance-fast-formatting)
-  - [Sponsors: Our Awesome Supporters](#sponsors-our-awesome-supporters)
+  - [Getting Started](#getting-started)
+  - [Usage](#usage)
+    - [Macros](#macros)
+    - [Pipelines](#pipelines)
+    - [Supported Methods](#supported-methods)
+      - [Rainbow GEM](#rainbow-gem)
+    - [Composition](#composition)
+      - [Embedded Templates](#embedded-templates)
+    - [Customizing Fmt](#customizing-fmt)
+  - [Performance](#performance)
+  - [Sponsors](#sponsors)
 
 <!-- Tocer[finish]: Auto-generated, don't remove. -->
 
-## What's Fmt, and why should you care?
+## Getting Started
 
-Fmt is a template engine that harnesses the raw power of Ruby's native string formatting mechanics. It's like having a universal translator for your strings, turning your formatting wishes into beautiful, functional output.
-
-- 🚀 Supercharge your general-purpose templating
-- 🎨 Craft CLI applications so beautiful, they'll make even the most stoic developer smile
-- 🧠 Intuitive enough for beginners, powerful enough for experts
-
-## Getting Started: It's a Breeze!
-
-First, let's get you set up. It's easier than making a cup of coffee!
+Install the required dependencies:
 
 ```sh
-bundle add rainbow # <- optional, but recommended for those who enjoy a splash of color
+bundle add rainbow # <- optional, for color support
 bundle add fmt
 ```
 
-Then, in your Ruby file:
+Then, require the necessary libraries in your Ruby file:
 
 ```ruby
-require "rainbow" # <- optional, but why not add some color to your life?
+require "rainbow" # <- optional, for color support
 require "fmt"
 ```
 
-## Usage: Your Formatting Adventure Begins
+## Usage
 
-Using Fmt is simpler than ordering takeout. Just create a string with Ruby's [format specifiers](https://ruby-doc.org/3.3.5/format_specifications_rdoc.html), much like you would for `sprintf`.
+Fmt uses Ruby's native [format specifiers](https://ruby-doc.org/3.3.5/format_specifications_rdoc.html) to create templates:
 
-- `"%s"` - The classic
-- `"%{variable}"` - For when you're feeling descriptive
-- `"%<variable>s"` - When you want to be extra explicit
+- `"%s"` - Standard format specifier
+- `"%{variable}"` - Named format specifier
+- `"%<variable>s"` - Named format specifier _(alternative syntax)_
 
-Remember, with Fmt, any string can be a template. It's like having a Swiss Army knife for text formatting!
+### Macros
 
-### Macros: The Secret Sauce
-
-Formatting macros are what make Fmt special. Append them to your format specifiers like so:
+Formatting macros are appended to format specifiers to modify the output:
 
 <!-- test_e798c3 -->
 
@@ -81,7 +70,7 @@ Fmt("%s|>capitalize", "hello world!") # => "Hello world!"
 Fmt("%{msg}|>capitalize", msg: "hello world!") # => "Hello world!"
 ```
 
-Macros can accept arguments.
+Macros can accept arguments:
 
 <!-- test_1707d2  -->
 
@@ -90,9 +79,9 @@ Fmt("%s|>prepend('Hello ')", "world!") # => "Hello world!"
 Fmt("%{msg}|>prepend('Hello ')", msg: "world!") # => "Hello world!"
 ```
 
-### Pipelines: Unleashing the Power of Chained Macros
+### Pipelines
 
-Macros can be chained to create a formatting pipeline.
+Macros can be chained to create a formatting pipeline:
 
 <!-- test_425625 -->
 
@@ -101,10 +90,9 @@ Fmt("%s|>prepend('Hello ')|>ljust(32, '.')|>upcase", "world!") # => "HELLO WORLD
 Fmt("%{msg}|>prepend('Hello ')|>ljust(32, '.')|>upcase", msg: "world!") # => "HELLO WORLD!...................."
 ```
 
-> [!NOTE]
-> Pipelines are processed left to right. The return value from the preceeding macro is the starting value for the next macro.
+Pipelines are processed left to right, with the return value from the preceding macro serving as the starting value for the next macro.
 
-Arguments and return values can be any type.
+Arguments and return values can be of any type:
 
 <!-- test_f55ae2 -->
 
@@ -112,34 +100,17 @@ Arguments and return values can be any type.
 Fmt("%p|>partition(/:/)|>last|>delete_suffix('>')", Object.new) # => "0x000000011f33bc68"
 ```
 
-### Supported Methods: The Ultimate Answer to Formatting
+### Supported Methods
 
-Most public instance methods on the following classes are supported.
+Most public instance methods on the following classes are supported:
 
-- `Array`
-- `Date`
-- `DateTime`
-- `FalseClass`
-- `Float`
-- `Hash`
-- `Integer`
-- `NilClass`
-- `Range`
-- `Regexp`
-- `Set`
-- `StandardError`
-- `String`
-- `Struct`
-- `Symbol`
-- `Time`
-- `TrueClass`
+`Array`, `Date`, `DateTime`, `FalseClass`, `Float`, `Hash`, `Integer`, `NilClass`, `Range`, `Regexp`, `Set`, `StandardError`, `String`, `Struct`, `Symbol`, `Time`, `TrueClass`
 
-> [!TIP]
-> If you're using libraries like ActiveSupport that extend these classes, extension methods will also available if the library is required before Fmt.
+Extension methods from libraries like ActiveSupport will also be available if the library is required before Fmt.
 
-#### Rainbow GEM: The Color of Magic
+#### Rainbow GEM
 
-Color and style support is available if your project includes the [Rainbow GEM](https://github.com/ku1ik/rainbow).
+Color and style support is available if your project includes the [Rainbow GEM](https://github.com/ku1ik/rainbow):
 
 <!-- test_19c8ca -->
 
@@ -149,11 +120,9 @@ Fmt(template, msg: "Hello World!")
 #=> "\e[36m\e[1m\e[4mHello World!\e[0m"
 ```
 
-### Composition: The Art of the Template
+### Composition
 
-You can mix and match macros that target any type within a pipeline.
-
-Templates can also include multiple format strings with their own distinct pipelines.
+Templates can include multiple format strings with distinct pipelines:
 
 <!-- test_0dbfcd -->
 
@@ -163,9 +132,9 @@ Fmt(template, date: Time.now, msg: "this is cool")
 #=> "Date: \e[35m2024-09-20\e[0m \e[1mThis Is Cool\e[0m"
 ```
 
-#### Embedded Templates: Nesting with Infinite Possibilities
+#### Embedded Templates
 
-Embedded templates can be nested within other templates... as deep as needed!
+Embedded templates can be nested within other templates:
 
 <!-- test_efee7a -->
 
@@ -175,7 +144,7 @@ Fmt(template, msg: "Look Ma...", embed: "I'm embedded!")
 #=> "\e[2mLook Ma...\e[0m \e[1mI'm embedded!\e[0m"
 ```
 
-Embeds can also have their own distinct pipelines.
+Embeds can have their own pipelines:
 
 <!-- test_abb7ea -->
 
@@ -185,7 +154,7 @@ Fmt(template, msg: "Look Ma...", embed: "I'm embedded!")
 #=> "\e[2mLook Ma...\e[0m \e[1m\e[4mI'm embedded!\e[0m"
 ```
 
-Embeds can be deeply nested.
+Embeds can be deeply nested:
 
 <!-- test_79e924 -->
 
@@ -195,7 +164,7 @@ Fmt(template, msg: "Look Ma...", embed: "I'm embedded!", deep_embed: "And I'm de
 #=> "\e[2mLook Ma...\e[0m \e[1mI'm embedded!\e[0m \e[31m\e[1mAnd I'm deeply embedded!\e[0m"
 ```
 
-Embeds can also span multiple lines.
+Embeds can also span multiple lines:
 
 <!-- test_054526 -->
 
@@ -212,9 +181,9 @@ Fmt(template, one: "Red", two: "Blue", three: "Green")
 #=> "Multiline:\n\e[31mRed\e[0m \e[1m\n  \e[34mBlue\e[0m \n    \e[32mGreen\e[0m"
 ```
 
-### Customizing Fmt: Create Your Own Extensions
+### Customizing Fmt
 
-Want to add your own filters? It's easier than you might think:
+Add custom filters by registering them with Fmt:
 
 <!-- test_2cacce -->
 
@@ -224,10 +193,7 @@ Fmt("%s|>shuffle", "This don't make no sense.")
 #=> "de.nnoTtsnh'oeek  ssim a "
 ```
 
-You can also run a Ruby block with temporary filters if you don't want to officially register them.
-
-> [!TIP]
-> This also allows you to override existing filters for the duration of the block.
+Run a Ruby block with temporary filters without officially registering them:
 
 <!-- test_7df4eb -->
 
@@ -241,20 +207,17 @@ Fmt("%s|>red", "This is original red!")
 #=> "\e[31mThis is original red!\e[0m"
 ```
 
-## Performance: Fast Formatting
+## Performance
 
-Fmt isn't just pretty – it's quick too!
+Fmt is optimized for performance:
 
 - Tokenization: Uses StringScanner and Ripper to parse and tokenize templates
 - Caching: Stores an Abstract Syntax Tree (AST) representation of each template, pipeline, and macro
-- Speed: Current benchmarks show an average pipeline execution time of **under <0.3 milliseconds**
+- Speed: Current benchmarks show an average pipeline execution time of under 0.3 milliseconds
 
-> [!NOTE]
-> While Fmt is optimized for performance, remember that complex pipelines might take a tad longer.
+Complex pipelines may take slightly longer to execute.
 
-**Happy formatting!**
-
-## Sponsors: Our Awesome Supporters
+## Sponsors
 
 <p align="center">
   <em>Proudly sponsored by</em>
