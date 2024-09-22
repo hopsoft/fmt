@@ -10,12 +10,7 @@ module Fmt
       # @rbs pipeline [Array[String | Symbol]] -- Fmt pipeline
       # @rbs return [String] -- formatted text
       def fmt(object, *pipeline)
-        text = case object
-        in String then object
-        in Symbol then object.to_s
-        else object.inspect
-        end
-        Fmt "%s|>to_s|>#{pipeline.join("|>")}", text
+        Fmt pipeline.prepend("%s").join(Sigils::PIPE_OPERATOR), object
       end
 
       # Formats an object with Fmt and prints to STDOUT
@@ -23,7 +18,7 @@ module Fmt
       # @rbs pipeline [Array[String | Symbol]] -- Fmt pipeline
       # @rbs return void
       def fmt_print(object, *pipeline)
-        puts fmt(object, *pipeline)
+        print fmt(object, *pipeline)
       end
 
       # Formats an object with Fmt and puts to STDOUT

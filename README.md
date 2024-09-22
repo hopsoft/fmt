@@ -1,6 +1,6 @@
 <p align="center">
   <a href="http://blog.codinghorror.com/the-best-code-is-no-code-at-all/">
-    <img alt="Lines of Code" src="https://img.shields.io/badge/loc-1039-47d299.svg" />
+    <img alt="Lines of Code" src="https://img.shields.io/badge/loc-1042-47d299.svg" />
   </a>
   <a href="https://github.com/testdouble/standard">
     <img alt="Ruby Style" src="https://img.shields.io/badge/style-standard-168AFE?logo=ruby&logoColor=FE1616" />
@@ -206,6 +206,58 @@ end
 Fmt("%s|>red", "This is original red!")
 #=> "\e[31mThis is original red!\e[0m"
 ```
+
+## Kernel Refinement
+
+Fmt provides a kernel refinement that adds convenient methods for formatting and outputting text directly. To use these methods, you need to enable the refinement in your code:
+
+```ruby
+using Fmt::KernelRefinement
+```
+
+Once enabled, you'll have access to the following methods:
+
+### `fmt(object, *pipeline)`
+
+This method formats an object using a different pipeline syntax:
+
+```ruby
+fmt("Hello, World!", :bold) # => "\e[1mHello, World!\e[0m"
+fmt(:hello, :underline) # => "\e[4mhello\e[0m"
+fmt(Object.new, :red) # => "\e[31m#<Object:0x00007f9b8b0b0a08>\e[0m"
+```
+
+### `fmt_print(object, *pipeline)`
+
+This method formats an object and prints it to STDOUT without a newline:
+
+```ruby
+fmt_print("Hello, World!", :italic) # Prints: "\e[3mHello, World!\e[0m"
+fmt_print(:hello, :green) # Prints: "\e[32mhello\e[0m"
+```
+
+### `fmt_puts(object, *pipeline)`
+
+This method formats an object and prints it to STDOUT with a newline:
+
+```ruby
+fmt_puts("Hello, World!", :bold, :underline) # Prints: "\e[1m\e[4mHello, World!\e[0m\n"
+fmt_puts(:hello, :magenta) # Prints: "\e[35mhello\e[0m\n"
+```
+
+These methods provide a convenient way to use Fmt's formatting capabilities directly in your code without explicitly calling the `Fmt` method.
+
+You can pass any number of macros when using these methods:
+
+```ruby
+fmt("Important!", :red, :bold, :underline)
+# => "\e[31m\e[1m\e[4mImportant!\e[0m"
+
+fmt_puts("Warning:", :yellow, :italic)
+# Prints: "\e[33m\e[3mWarning:\e[0m\n"
+```
+
+These kernel methods make it easy to integrate Fmt's powerful formatting capabilities into your command-line interfaces or any part of your Ruby application where you need to format and output text.
 
 ## Performance
 
