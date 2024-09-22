@@ -13,9 +13,9 @@
   </a>
 </p>
 
-# Fmt: CLI Templating System and String Formatter
+# CLI Templating System and String Formatter
 
-Fmt is a powerful and flexible templating system and string formatter for Ruby, designed to streamline the creation of command-line interfaces and enhance general-purpose string formatting.
+**Fmt** is a powerful and flexible templating system and string formatter for Ruby, designed to streamline the creation of command-line interfaces and enhance general-purpose string formatting.
 
 <!-- Tocer[start]: Auto-generated, don't remove. -->
 
