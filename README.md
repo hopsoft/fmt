@@ -21,18 +21,18 @@ Welcome to Fmt, your go-to companion for Ruby string templating – simple, vers
 
 ## Table of Contents
 
-- [What's Fmt, and why should you care?](#whats-fmt-and-why-should-you-care)
-- [Getting Started: It's a Breeze!](#getting-started-its-a-breeze)
-- [Usage: Your Formatting Adventure Begins](#usage-your-formatting-adventure-begins)
-  - [Macros: The Secret Sauce](#macros-the-secret-sauce)
-  - [Pipelines: Unleashing the Power of Chained Macros](#pipelines-unleashing-the-power-of-chained-macros)
-  - [Supported Methods: The Ultimate Answer to Formatting](#supported-methods-the-ultimate-answer-to-formatting)
-    - [Rainbow GEM: The Color of Magic](#rainbow-gem-the-color-of-magic)
-  - [Composition: The Art of the Template](#composition-the-art-of-the-template)
-    - [Embedded Templates: Nesting with Infinite Possibilities](#embedded-templates-nesting-with-infinite-possibilities)
-  - [Customizing Fmt: Create Your Own Extensions](#customizing-fmt-create-your-own-extensions)
-- [A Final Note](#a-final-note)
-- [Sponsors: Our Awesome Supporters](#sponsors-our-awesome-supporters)
+  - [What's Fmt, and why should you care?](#whats-fmt-and-why-should-you-care)
+  - [Getting Started: It's a Breeze!](#getting-started-its-a-breeze)
+  - [Usage: Your Formatting Adventure Begins](#usage-your-formatting-adventure-begins)
+    - [Macros: The Secret Sauce](#macros-the-secret-sauce)
+    - [Pipelines: Unleashing the Power of Chained Macros](#pipelines-unleashing-the-power-of-chained-macros)
+    - [Supported Methods: The Ultimate Answer to Formatting](#supported-methods-the-ultimate-answer-to-formatting)
+      - [Rainbow GEM: The Color of Magic](#rainbow-gem-the-color-of-magic)
+    - [Composition: The Art of the Template](#composition-the-art-of-the-template)
+      - [Embedded Templates: Nesting with Infinite Possibilities](#embedded-templates-nesting-with-infinite-possibilities)
+    - [Customizing Fmt: Create Your Own Extensions](#customizing-fmt-create-your-own-extensions)
+  - [Performance: Fast Formatting](#performance-fast-formatting)
+  - [Sponsors: Our Awesome Supporters](#sponsors-our-awesome-supporters)
 
 <!-- Tocer[finish]: Auto-generated, don't remove. -->
 
@@ -252,11 +252,7 @@ Fmt isn't just pretty – it's quick too!
 > [!NOTE]
 > While Fmt is optimized for performance, remember that complex pipelines might take a tad longer.
 
-## A Final Note
-
-Remember, Fmt is here to make your life easier. While it might not solve all of life's mysteries, it certainly makes string formatting a breeze!
-
-Happy formatting!
+**Happy formatting!**
 
 ## Sponsors: Our Awesome Supporters
 
