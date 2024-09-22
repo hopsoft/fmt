@@ -30,6 +30,10 @@
     - [Composition](#composition)
       - [Embedded Templates](#embedded-templates)
     - [Customizing Fmt](#customizing-fmt)
+  - [Kernel Refinement](#kernel-refinement)
+    - [`fmt(object, *pipeline)`](#fmtobject-pipeline)
+    - [`fmt_print(object, *pipeline)`](#fmt_printobject-pipeline)
+    - [`fmt_puts(object, *pipeline)`](#fmt_putsobject-pipeline)
   - [Performance](#performance)
   - [Sponsors](#sponsors)
 
