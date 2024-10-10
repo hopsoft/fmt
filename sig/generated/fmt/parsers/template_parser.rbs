@@ -3,22 +3,19 @@
 module Fmt
   # Parses a template from a string and builds an AST (Abstract Syntax Tree)
   class TemplateParser < Parser
+    EMBED_PEEK: ::Regexp
+
     PIPELINE_HEAD: ::Regexp
+
+    PIPELINE_PEEK: ::Regexp
 
     PIPELINE_TAIL: ::Regexp
 
-    EMBED_HEAD: ::Regexp
-
-    EMBED_TAIL: ::Regexp
-
     # Constructor
     # @rbs urtext: String -- original source code
-    # @rbs scanner: StringScanner?
-    def initialize: (?String urtext, ?scanner: StringScanner?) -> untyped
+    def initialize: (?String urtext) -> untyped
 
     attr_reader urtext: untyped
-
-    attr_reader scanner: untyped
 
     # Parses the urtext (original source code)
     # @rbs return: Node -- AST (Abstract Syntax Tree)
@@ -38,9 +35,18 @@ module Fmt
 
     private
 
-    # Extracts embed metadata from the urtext
+    # stack.zero? ? string[index...rindex] : nil
+    # end
+    def extract_next_embed: (untyped scanner) -> untyped
+
+    # Extracts embed metadata from the source
     # @rbs return: Array[Hash] -- extracted embeds
-    def extract_embeds: () -> Array[Hash]
+    def extract_embeds: (untyped source) -> Array[Hash]
+
+    # Extracts the next pipeline with the scanner
+    # @rbs scanner: StringScanner -- scanner to extract from
+    # @rbs return: String? -- extracted pipeline
+    def extract_next_pipeline: (StringScanner scanner) -> String?
 
     # Extracts pipelines from the source
     # @rbs source: String -- source code to extract pipelines from

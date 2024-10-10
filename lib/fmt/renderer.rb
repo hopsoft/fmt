@@ -36,15 +36,10 @@ module Fmt
 
     private
 
-    # Escapes a string for use in a regular expression
-    # @rbs value: String -- string to escape
-    # @rbs return: String -- escaped string
-    def esc(value) = Regexp.escape(value.to_s)
-
     # Renders all template embeds
     # @rbs args: Array[Object]          -- positional arguments (user provided)
     # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
-    # @rbs &block: Proc                 -- block to execute after rendering embeds (signature: Proc(String, *args, **kwargs))
+    # @rbs &block: Proc                 -- block executed for each embed (signature: Proc(Embed, String))
     def render_embeds(*args, **kwargs)
       template.embeds.each do |embed|
         yield embed, Renderer.new(embed.template).render(*args, **kwargs)
@@ -54,6 +49,7 @@ module Fmt
     # Renders all template pipelines
     # @rbs args: Array[Object]          -- positional arguments (user provided)
     # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
+    # @rbs block: Proc                  -- block executed for each pipeline (signature: Proc(Pipeline, String))
     def render_pipelines(*args, **kwargs)
       template.pipelines.each_with_index do |pipeline, index|
         yield pipeline, render_pipeline(pipeline, *args[index..], **kwargs)
@@ -78,17 +74,20 @@ module Fmt
     # Invokes a macro
     # @rbs context: Object              -- self in callable (Proc)
     # @rbs macro: Macro                 -- macro to use (source, arguments, etc.)
+    # @rbs args: Array[Object]          -- positional arguments (user provided)
+    # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
     # @rbs return: Object               -- result
     def invoke_macro(context, macro, *args, **kwargs)
       callable = Fmt.registry[[context.class, macro.name]] || Fmt.registry[[Object, macro.name]]
 
       case callable
-      # in nil then context.instance_exec { sprintf(macro.urtext, *args, **kwargs) }
       in nil
         if kwargs.key? macro.name
           kwargs[macro.name]
         else
-          context.instance_exec { sprintf(macro.urtext, *args, **kwargs) }
+          quietly do
+            context.instance_exec { sprintf(macro.urtext, *args, **kwargs) }
+          end
         end
       else
         context.instance_exec(*macro.arguments.args, **macro.arguments.kwargs, &callable)
@@ -97,6 +96,17 @@ module Fmt
       args ||= []
       kwargs ||= {}
       raise_format_error(macro, *args, cause: error, **kwargs)
+    end
+
+    # Suppresses verbose output for the duration of the block
+    # @rbs block: Proc -- block to execute
+    # @rbs return: void
+    def quietly
+      verbose = $VERBOSE
+      $VERBOSE = nil
+      yield
+    ensure
+      $VERBOSE = verbose
     end
 
     # Raises an invocation error if/when Proc invocations fail
