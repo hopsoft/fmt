@@ -23,45 +23,37 @@ module Fmt
     def render(*args, **kwargs)
       raise Error, "positional and keyword arguments are mutually exclusive" if args.any? && kwargs.any?
 
-      context = template.source
-
-      render_embeds(context, *args, **kwargs) do |embed, result|
+      render_embeds(*args, **kwargs) do |embed, result|
         kwargs[embed.key] = result
       end
 
-      render_pipelines(context, *args, **kwargs)
+      rendered = template.source
+      render_pipelines(*args, **kwargs) do |pipeline, result|
+        rendered = rendered.sub(pipeline.urtext, result.to_s)
+      end
+      rendered
     end
 
     private
 
-    # Escapes a string for use in a regular expression
-    # @rbs value: String -- string to escape
-    # @rbs return: String -- escaped string
-    def esc(value) = Regexp.escape(value.to_s)
-
     # Renders all template embeds
-    # @rbs context: String              -- starting context
     # @rbs args: Array[Object]          -- positional arguments (user provided)
     # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
-    # @rbs &block: Proc                 -- block to execute after rendering embeds (signature: Proc(String, *args, **kwargs))
-    def render_embeds(context, *args, **kwargs)
+    # @rbs &block: Proc                 -- block executed for each embed (signature: Proc(Embed, String))
+    def render_embeds(*args, **kwargs)
       template.embeds.each do |embed|
         yield embed, Renderer.new(embed.template).render(*args, **kwargs)
       end
     end
 
     # Renders all template pipelines
-    # @rbs context: String              -- starting context
     # @rbs args: Array[Object]          -- positional arguments (user provided)
     # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
-    # @rbs return: String
-    def render_pipelines(context, *args, **kwargs)
+    # @rbs block: Proc                  -- block executed for each pipeline (signature: Proc(Pipeline, String))
+    def render_pipelines(*args, **kwargs)
       template.pipelines.each_with_index do |pipeline, index|
-        result = render_pipeline(pipeline, *args[index..], **kwargs)
-        context = context.sub(pipeline.urtext, result)
+        yield pipeline, render_pipeline(pipeline, *args[index..], **kwargs)
       end
-
-      context
     end
 
     # Renders a single pipeline
@@ -70,53 +62,51 @@ module Fmt
     # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
     # @rbs return: String
     def render_pipeline(pipeline, *args, **kwargs)
-      result = ""
+      result = nil
 
       pipeline.macros.each do |macro|
-        result = case macro
-        in name: Sigils::FORMAT_METHOD
-          case [args, kwargs]
-          in [], {} then invoke_formatter(macro)
-          in [], {**} => kwargs then invoke_formatter(macro, **kwargs)
-          in [*], {} then invoke_formatter(macro, *args)
-          in [*], {**} => kwargs then invoke_formatter(macro, *args, **kwargs)
-          end
-        else invoke_macro(result, macro)
-        end
+        result = invoke_macro(result, macro, *args, **kwargs)
       end
 
       result
     end
 
-    # Invokes native Ruby string formatting
-    # @rbs macro: Macro                 -- macro to use (source, arguments, etc.)
-    # @rbs args: Array[Object]          -- positional arguments (user provided)
-    # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
-    # @rbs return: String
-    def invoke_formatter(macro, *args, **kwargs)
-      callable = Fmt.registry[[Kernel, macro.name]]
-      context = macro.arguments.args[0]
-      context.instance_exec(*args, **kwargs, &callable)
-    rescue => error
-      raise_format_error(macro, *args, cause: error, **kwargs)
-    end
-
     # Invokes a macro
     # @rbs context: Object              -- self in callable (Proc)
     # @rbs macro: Macro                 -- macro to use (source, arguments, etc.)
+    # @rbs args: Array[Object]          -- positional arguments (user provided)
+    # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
     # @rbs return: Object               -- result
-    def invoke_macro(context, macro)
+    def invoke_macro(context, macro, *args, **kwargs)
       callable = Fmt.registry[[context.class, macro.name]] || Fmt.registry[[Object, macro.name]]
-      raise Error, "[#{context.class.name} | Object, #{macro.name}] is not a registered formatter!" unless callable
 
-      args = macro.arguments.args
-      kwargs = macro.arguments.kwargs
-
-      context.instance_exec(*args, **kwargs, &callable)
+      case callable
+      in nil
+        if kwargs.key? macro.name
+          kwargs[macro.name]
+        else
+          quietly do
+            context.instance_exec { sprintf(macro.urtext, *args, **kwargs) }
+          end
+        end
+      else
+        context.instance_exec(*macro.arguments.args, **macro.arguments.kwargs, &callable)
+      end
     rescue => error
       args ||= []
       kwargs ||= {}
       raise_format_error(macro, *args, cause: error, **kwargs)
+    end
+
+    # Suppresses verbose output for the duration of the block
+    # @rbs block: Proc -- block to execute
+    # @rbs return: void
+    def quietly
+      verbose = $VERBOSE
+      $VERBOSE = nil
+      yield
+    ensure
+      $VERBOSE = verbose
     end
 
     # Raises an invocation error if/when Proc invocations fail

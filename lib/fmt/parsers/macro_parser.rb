@@ -24,9 +24,7 @@ module Fmt
     # Extracts components for building the AST (Abstract Syntax Tree)
     # @rbs return: Hash[Symbol, Object] -- extracted components
     def extract
-      code = urtext
-      code = "#{Sigils::FORMAT_METHOD}('#{urtext}')" if native_format_string?(urtext)
-
+      code = urtext.delete_prefix(Sigils::FORMAT_PREFIX)
       tokens = tokenize(code)
       method = tokens.find(&:method_name?)&.value&.to_sym
 
@@ -46,7 +44,7 @@ module Fmt
     # @rbs arguments_tokens: Array[Token] -- arguments tokens
     # @rbs return: Node -- AST (Abstract Syntax Tree)
     def transform(method:, arguments_tokens:)
-      method = Node.new(:name, [method], urtext: urtext, source: method)
+      method = Node.new(:name, [method], urtext: urtext, source: method.to_s)
       arguments = ArgumentsParser.new(arguments_tokens).parse
       source = "#{method.source}#{arguments.source}"
       children = [method, arguments].reject(&:empty?)
@@ -101,13 +99,6 @@ module Fmt
       return false unless tokens.any? { _1.method_name? }
       return false if arguments_started?(tokens) && !arguments_finished?(tokens)
       true
-    end
-
-    # Indicates if a value is a Ruby native format string
-    # @rbs value: String -- value to check
-    # @rbs return: bool
-    def native_format_string?(value)
-      value.start_with? Sigils::FORMAT_PREFIX
     end
   end
 end

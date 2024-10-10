@@ -20,24 +20,17 @@ module Fmt
 
     private
 
-    # Escapes a string for use in a regular expression
-    # @rbs value: String -- string to escape
-    # @rbs return: String -- escaped string
-    def esc: (String value) -> String
-
     # Renders all template embeds
-    # @rbs context: String              -- starting context
     # @rbs args: Array[Object]          -- positional arguments (user provided)
     # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
-    # @rbs &block: Proc                 -- block to execute after rendering embeds (signature: Proc(String, *args, **kwargs))
-    def render_embeds: (String context, *untyped args, **untyped kwargs) -> untyped
+    # @rbs &block: Proc                 -- block executed for each embed (signature: Proc(Embed, String))
+    def render_embeds: (*untyped args, **untyped kwargs) -> untyped
 
     # Renders all template pipelines
-    # @rbs context: String              -- starting context
     # @rbs args: Array[Object]          -- positional arguments (user provided)
     # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
-    # @rbs return: String
-    def render_pipelines: (String context, *untyped args, **untyped kwargs) -> String
+    # @rbs block: Proc                  -- block executed for each pipeline (signature: Proc(Pipeline, String))
+    def render_pipelines: (*untyped args, **untyped kwargs) -> untyped
 
     # Renders a single pipeline
     # @rbs pipeline: Pipeline           -- pipeline to render
@@ -46,18 +39,18 @@ module Fmt
     # @rbs return: String
     def render_pipeline: (Pipeline pipeline, *untyped args, **untyped kwargs) -> String
 
-    # Invokes native Ruby string formatting
-    # @rbs macro: Macro                 -- macro to use (source, arguments, etc.)
-    # @rbs args: Array[Object]          -- positional arguments (user provided)
-    # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
-    # @rbs return: String
-    def invoke_formatter: (Macro macro, *untyped args, **untyped kwargs) -> String
-
     # Invokes a macro
     # @rbs context: Object              -- self in callable (Proc)
     # @rbs macro: Macro                 -- macro to use (source, arguments, etc.)
+    # @rbs args: Array[Object]          -- positional arguments (user provided)
+    # @rbs kwargs: Hash[Symbol, Object] -- keyword arguments (user provided)
     # @rbs return: Object               -- result
-    def invoke_macro: (Object context, Macro macro) -> Object
+    def invoke_macro: (Object context, Macro macro, *untyped args, **untyped kwargs) -> Object
+
+    # Suppresses verbose output for the duration of the block
+    # @rbs block: Proc -- block to execute
+    # @rbs return: void
+    def quietly: () -> void
 
     # Raises an invocation error if/when Proc invocations fail
     # @rbs macro: Macro                 -- macro that failed

@@ -51,10 +51,5 @@ module Fmt
     # @rbs tokens: Array[Token] -- tokens to check
     # @rbs return: bool
     def finished?: (Array[Token] tokens) -> bool
-
-    # Indicates if a value is a Ruby native format string
-    # @rbs value: String -- value to check
-    # @rbs return: bool
-    def native_format_string?: (String value) -> bool
   end
 end

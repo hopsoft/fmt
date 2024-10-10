@@ -25,12 +25,6 @@ module Fmt
 
     # Transforms extracted components into an AST (Abstract Syntax Tree)
     # @rbs return: Node -- AST (Abstract Syntax Tree)
-    def transform: (**untyped) -> Node
-
-    private
-
-    # Returns the template urtext
-    # @rbs return: String
-    def template_urtext: () -> String
+    def transform: (source: untyped) -> Node
   end
 end
