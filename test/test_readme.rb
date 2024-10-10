@@ -72,7 +72,7 @@ module Fmt
         }}|>bold
       T
 
-      expected = "Multiline:\n\e[31mRed\e[0m \e[1m\n  \e[34mBlue\e[0m \n    \e[32mGreen\e[0m"
+      expected = "Multiline:\n\e[31mRed\e[0m \n  \e[34mBlue\e[0m \n    \e[32m\e[1mGreen\e[0m\n"
       actual = Fmt(template, one: "Red", two: "Blue", three: "Green")
       assert_equal expected, actual
     end

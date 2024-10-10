@@ -59,7 +59,7 @@ module Fmt
           }}
         }}|>bold
       S
-      assert_equal "\e[31mRed\e[0m \e[1m\n  \e[34mBlue\e[0m \n    \e[32mGreen\e[0m", Fmt(string, a: "Red", b: "Blue", c: "Green")
+      assert_equal "\e[31mRed\e[0m \n  \e[34mBlue\e[0m \n    \e[32m\e[1mGreen\e[0m\n", Fmt(string, a: "Red", b: "Blue", c: "Green")
     end
   end
 end
