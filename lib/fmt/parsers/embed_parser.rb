@@ -6,7 +6,7 @@ module Fmt
   # Parses embeds from a string and builds an AST (Abstract Syntax Tree)
   class EmbedParser < Parser
     # Constructor
-    # @rbs urtext: String -- original source code (minus embed prefix and suffix)
+    # @rbs urtext: String -- original source code
     # @rbs key: Symbol -- key for embed
     # @rbs placeholder: String -- placeholder for embed
     def initialize(urtext = "", key:, placeholder:)
