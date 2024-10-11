@@ -30,4 +30,21 @@ jobs:
         run: bundle install
 
       - name: Run tests
-        run: bundle exec rake
+        run: |
+          output=$(bundle exec rake 2>&1)
+          echo "test_output<<EOF" >> $GITHUB_OUTPUT
+          echo "$output" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Display test output
+        run: |
+          echo "${{ steps.run_tests.outputs.test_output }}"
+        if: always()
+
+      - name: Check test results
+        run: |
+          if [[ "${{ steps.run_tests.outcome }}" == "failure" ]]; then
+            echo "Tests failed"
+            exit 1
+          fi
