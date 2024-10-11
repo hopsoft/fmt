@@ -1,4 +1,13 @@
 <p align="center">
+  <a href="https://rubygems.org/gems/fmt">
+    <img alt="GEM Version" src="https://img.shields.io/gem/v/fmt">
+  </a>
+  <a href="https://rubygems.org/gems/fmt">
+    <img alt="GEM Downloads" src="https://img.shields.io/gem/dt/fmt">
+  </a>
+  <a href="https://github.com/hopsoft/fmt/actions">
+    <img alt="Tests" src="https://github.com/hopsoft/fmt/actions/workflows/tests.yml/badge.svg" />
+  </a>
   <a href="http://blog.codinghorror.com/the-best-code-is-no-code-at-all/">
     <img alt="Lines of Code" src="https://img.shields.io/badge/loc-1050-47d299.svg" />
   </a>
