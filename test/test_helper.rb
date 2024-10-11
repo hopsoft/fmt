@@ -40,6 +40,11 @@ Minitest.after_run do
         end
       end
     end
+
+    times = BENCHMARKS.keys[1..] # first test is slower due to resource loading (skip for avgeraging)
+    average = (times.sum / times.size).round(2)
+    print Rainbow("Average per/test ").gold
+    puts Rainbow("(#{average}ms)").gold.bold
   end
 end
 
