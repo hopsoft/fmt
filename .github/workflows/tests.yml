@@ -8,11 +8,10 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       TERM: xterm-256color
       BM: "true"
-      FORCE_COLOR: "1"
     strategy:
       matrix:
         ruby-version: ["3.3"]
@@ -30,21 +29,4 @@ jobs:
         run: bundle install
 
       - name: Run tests
-        run: |
-          output=$(bundle exec rake 2>&1)
-          echo "test_output<<EOF" >> $GITHUB_OUTPUT
-          echo "$output" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-        continue-on-error: true
-
-      - name: Display test output
-        run: |
-          echo "${{ steps.run_tests.outputs.test_output }}"
-        if: always()
-
-      - name: Check test results
-        run: |
-          if [[ "${{ steps.run_tests.outcome }}" == "failure" ]]; then
-            echo "Tests failed"
-            exit 1
-          fi
+        run: bundle exec rake
