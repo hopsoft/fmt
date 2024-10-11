@@ -12,6 +12,7 @@ jobs:
     env:
       TERM: xterm-256color
       BM: "true"
+      FORCE_COLOR: "1"
     strategy:
       matrix:
         ruby-version: ["3.3"]

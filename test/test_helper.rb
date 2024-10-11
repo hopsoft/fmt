@@ -13,6 +13,8 @@ require "pry-byebug"
 require "pry-doc"
 require "rainbow"
 
+Rainbow.enabled = true
+
 GC.disable
 AmazingPrint.defaults = {indent: 2, index: false, ruby19_syntax: true}
 AmazingPrint.pry!
