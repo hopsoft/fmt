@@ -6,9 +6,9 @@ module Fmt
   # Parses a template from a string and builds an AST (Abstract Syntax Tree)
   class TemplateParser < Parser
     EMBED_PEEK = %r{(?=#{esc Sigils::EMBED_PREFIX})}o # : Regexp -- detects start of an embed prefix (look ahead)
-    PIPELINE_HEAD = %r{[#{Sigils::FORMAT_PREFIX}]}o # : Regexp -- detects start of a pipeline (i.e. Ruby format string)
-    PIPELINE_PEEK = %r{(?=[#{Sigils::FORMAT_PREFIX}][^#{Sigils::FORMAT_PREFIX}]|\z)}o # : Regexp -- detects start of a pipeline (look ahead)
-    PIPELINE_TAIL = %r{\s|\z}o # : Regexp -- detects end of a pipeline
+    PIPELINE_PEEK = %r{(?=[#{Sigils::FORMAT_PREFIX}][^#{Sigils::FORMAT_PREFIX}])}o # : Regexp -- detects start of a pipeline (look ahead)
+    PERCENT_LITERAL = %r{[#{Sigils::FORMAT_PREFIX}]{2}}o # : Regexp -- detects a percent literal
+    WHITESPACE = %r{\s}o # : Regexp -- detects whitespace
 
     # Constructor
     # @rbs urtext: String -- original source code
@@ -66,48 +66,28 @@ module Fmt
     # Extracts the next embed with the scanner
     # @rbs scanner: StringScanner -- scanner to extract from
     # @rbs return: String? -- extracted embed
-    # def extract_next_embed(scanner)
-    #  return nil unless scanner.skip_until(EMBED_PEEK)
-
-    #  index = scanner.pos
-    #  rindex = index
-    #  stack = 0
-    #  string = scanner.string
-
-    #  while rindex < string.length
-    #    char = string.getbyte(rindex)
-
-    #    case char
-    #    when Sigils::EMBED_PREFIX.ord then stack += 1
-    #    when Sigils::EMBED_SUFFIX.ord then stack -= 1
-    #    end
-
-    #    rindex += 1
-    #    break if stack.zero?
-    #  end
-
-    #  stack.zero? ? string[index...rindex] : nil
-    # end
     def extract_next_embed(scanner)
       return nil unless scanner.skip_until(EMBED_PEEK)
 
-      string = scanner.string
+      head = Sigils::EMBED_PREFIX[0]
+      tail = Sigils::EMBED_SUFFIX[0]
       index = scanner.pos
-      rindex = index
       stack = 0
 
-      while rindex < string.length
-        case string[rindex]
-        in Sigils::EMBED_PREFIX[0] then break if (stack += 1).zero?
-        in Sigils::EMBED_SUFFIX[0] then break if (stack -= 1).zero?
+      until scanner.eos?
+        case scanner.getch
+        in ^head then stack += 1
+        in ^tail then stack -= 1
+        in nil then break
         else # noop
         end
 
-        rindex += 1
+        break if stack.zero?
       end
 
-      scanner.pos = rindex
-      stack.zero? ? string[index...rindex] : nil
+      return nil unless stack.zero?
+
+      scanner.string[index...scanner.pos]
     end
 
     # Extracts embed metadata from the source
@@ -136,12 +116,25 @@ module Fmt
     # @rbs scanner: StringScanner -- scanner to extract from
     # @rbs return: String? -- extracted pipeline
     def extract_next_pipeline(scanner)
-      return nil unless scanner.skip_until(PIPELINE_HEAD)
+      return nil unless scanner.skip_until(PIPELINE_PEEK)
 
       index = scanner.pos
-      rindex = scanner.skip_until(PIPELINE_PEEK) ? scanner.pos : scanner.terminate.pos
-      pipeline = scanner.string[index - 1...rindex].strip
-      pipeline.rpartition(PIPELINE_TAIL).first
+
+      until scanner.eos?
+        if scanner.peek(2).match?(PERCENT_LITERAL)
+          scanner.pos += 2
+          next
+        end
+
+        case [index, scanner.pos, scanner.peek(1)]
+        in [i, pos, Sigils::FORMAT_PREFIX] if i == pos then scanner.pos += 1
+        in [i, pos, Sigils::FORMAT_PREFIX] if i != pos then break
+        in [i, pos, WHITESPACE] if arguments_balanced?(scanner.string[i...pos]) then break
+        else scanner.pos += 1
+        end
+      end
+
+      scanner.string[index...scanner.pos]
     end
 
     # Extracts pipelines from the source
@@ -157,6 +150,14 @@ module Fmt
       end
 
       generator.to_a
+    end
+
+    # Indicates if arguments are balances in the given list of chars
+    # @rbs value: String -- value to check
+    # @rbs return: bool
+    def arguments_balanced?(value)
+      return true if value.nil? || value.empty?
+      value.count(Sigils::ARGS_PREFIX) == value.count(Sigils::ARGS_SUFFIX)
     end
   end
 end

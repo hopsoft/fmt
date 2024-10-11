@@ -13,6 +13,8 @@ require "pry-byebug"
 require "pry-doc"
 require "rainbow"
 
+Rainbow.enabled = true
+
 GC.disable
 AmazingPrint.defaults = {indent: 2, index: false, ruby19_syntax: true}
 AmazingPrint.pry!
@@ -28,6 +30,7 @@ Minitest::Reporters.use! [
 require_relative "../lib/fmt"
 
 BENCHMARKS = {}
+TESTS = []
 
 Minitest.after_run do
   if ENV["BM"]
@@ -40,7 +43,15 @@ Minitest.after_run do
         end
       end
     end
+
+    times = BENCHMARKS.keys[1..] # first test is slower due to resource loading (skip for avgeraging)
+    average = (times.sum / times.size).round(2)
+    print Rainbow("Average per/test ").gold
+    puts Rainbow("(#{average}ms)").gold.bold
+
   end
+
+  exit (TESTS.any? { _1.failures.any? }) ? 1 : 0
 end
 
 module Fmt
@@ -60,6 +71,8 @@ module Fmt
 
         BENCHMARKS[duration_ms] ||= []
         BENCHMARKS[duration_ms] << "#{BENCHMARKS.values.flatten.size + 1}) #{self.class}##{name}"
+
+        TESTS << self
       end
     end
 

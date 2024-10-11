@@ -36,7 +36,7 @@ module Fmt
     def test_0dbfcd
       time = Time.new(2024, 9, 21)
       template = "Date: %<date>.10s|>magenta -- %{msg}|>titleize|>bold"
-      expected = "Date: \e[35m2024-09-21\e[0m \e[1mThis Is Cool\e[0m"
+      expected = "Date: \e[35m2024-09-21\e[0m -- \e[1mThis Is Cool\e[0m"
       actual = Fmt(template, date: time, msg: "this is cool")
       assert_equal expected, actual
     end
@@ -68,11 +68,11 @@ module Fmt
         %{one}|>red {{
           %{two}|>blue {{
             %{three}|>green
-          }}
-        }}|>bold
+          }}|>bold
+        }}
       T
 
-      expected = "Multiline:\n\e[31mRed\e[0m \n  \e[34mBlue\e[0m \n    \e[32m\e[1mGreen\e[0m\n"
+      expected = "Multiline:\n\e[31mRed\e[0m \n  \e[34mBlue\e[0m \e[1m\n    \e[32mGreen\e[0m\n  \e[0m\n\n"
       actual = Fmt(template, one: "Red", two: "Blue", three: "Green")
       assert_equal expected, actual
     end

@@ -5,11 +5,11 @@ module Fmt
   class TemplateParser < Parser
     EMBED_PEEK: ::Regexp
 
-    PIPELINE_HEAD: ::Regexp
-
     PIPELINE_PEEK: ::Regexp
 
-    PIPELINE_TAIL: ::Regexp
+    PERCENT_LITERAL: ::Regexp
+
+    WHITESPACE: ::Regexp
 
     # Constructor
     # @rbs urtext: String -- original source code
@@ -35,9 +35,10 @@ module Fmt
 
     private
 
-    # stack.zero? ? string[index...rindex] : nil
-    # end
-    def extract_next_embed: (untyped scanner) -> untyped
+    # Extracts the next embed with the scanner
+    # @rbs scanner: StringScanner -- scanner to extract from
+    # @rbs return: String? -- extracted embed
+    def extract_next_embed: (StringScanner scanner) -> String?
 
     # Extracts embed metadata from the source
     # @rbs return: Array[Hash] -- extracted embeds
@@ -52,5 +53,10 @@ module Fmt
     # @rbs source: String -- source code to extract pipelines from
     # @rbs return: Array[String] -- extracted pipelines
     def extract_pipelines: (String source) -> Array[String]
+
+    # Indicates if arguments are balances in the given list of chars
+    # @rbs value: String -- value to check
+    # @rbs return: bool
+    def arguments_balanced?: (String value) -> bool
   end
 end

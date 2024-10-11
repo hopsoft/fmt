@@ -1,6 +1,15 @@
 <p align="center">
   <a href="http://blog.codinghorror.com/the-best-code-is-no-code-at-all/">
-    <img alt="Lines of Code" src="https://img.shields.io/badge/loc-1042-47d299.svg" />
+    <img alt="Lines of Code" src="https://img.shields.io/badge/loc-1050-47d299.svg" />
+  </a>
+  <a href="https://rubygems.org/gems/fmt">
+    <img alt="GEM Version" src="https://img.shields.io/gem/v/fmt">
+  </a>
+  <a href="https://rubygems.org/gems/fmt">
+    <img alt="GEM Downloads" src="https://img.shields.io/gem/dt/fmt">
+  </a>
+  <a href="https://github.com/hopsoft/fmt/actions">
+    <img alt="Tests" src="https://github.com/hopsoft/fmt/actions/workflows/tests.yml/badge.svg" />
   </a>
   <a href="https://github.com/testdouble/standard">
     <img alt="Ruby Style" src="https://img.shields.io/badge/style-standard-168AFE?logo=ruby&logoColor=FE1616" />
@@ -21,21 +30,21 @@
 
 ## Table of Contents
 
-  - [Getting Started](#getting-started)
-  - [Usage](#usage)
-    - [Macros](#macros)
-    - [Pipelines](#pipelines)
-    - [Supported Methods](#supported-methods)
-      - [Rainbow GEM](#rainbow-gem)
-    - [Composition](#composition)
-      - [Embedded Templates](#embedded-templates)
-    - [Customizing Fmt](#customizing-fmt)
-  - [Kernel Refinement](#kernel-refinement)
-    - [`fmt(object, *pipeline)`](#fmtobject-pipeline)
-    - [`fmt_print(object, *pipeline)`](#fmt_printobject-pipeline)
-    - [`fmt_puts(object, *pipeline)`](#fmt_putsobject-pipeline)
-  - [Performance](#performance)
-  - [Sponsors](#sponsors)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+  - [Macros](#macros)
+  - [Pipelines](#pipelines)
+  - [Supported Methods](#supported-methods)
+    - [Rainbow GEM](#rainbow-gem)
+  - [Composition](#composition)
+    - [Embedded Templates](#embedded-templates)
+  - [Customizing Fmt](#customizing-fmt)
+- [Kernel Refinement](#kernel-refinement)
+  - [`fmt(object, *pipeline)`](#fmtobject-pipeline)
+  - [`fmt_print(object, *pipeline)`](#fmt_printobject-pipeline)
+  - [`fmt_puts(object, *pipeline)`](#fmt_putsobject-pipeline)
+- [Performance](#performance)
+- [Sponsors](#sponsors)
 
 <!-- Tocer[finish]: Auto-generated, don't remove. -->
 
@@ -133,7 +142,7 @@ Templates can include multiple format strings with distinct pipelines:
 ```ruby
 template = "Date: %<date>.10s|>magenta -- %{msg}|>titleize|>bold"
 Fmt(template, date: Time.now, msg: "this is cool")
-#=> "Date: \e[35m2024-09-20\e[0m \e[1mThis Is Cool\e[0m"
+#=> "Date: \e[35m2024-09-21\e[0m -- \e[1mThis Is Cool\e[0m"
 ```
 
 #### Embedded Templates
@@ -178,11 +187,11 @@ template = <<~T
   %{one}|>red {{
     %{two}|>blue {{
       %{three}|>green
-    }}
-  }}|>bold
+    }}|>bold
+  }}
 T
 Fmt(template, one: "Red", two: "Blue", three: "Green")
-#=> "Multiline:\n\e[31mRed\e[0m \e[1m\n  \e[34mBlue\e[0m \n    \e[32mGreen\e[0m"
+#=> "Multiline:\n\e[31mRed\e[0m \n  \e[34mBlue\e[0m \e[1m\n    \e[32mGreen\e[0m\n  \e[0m\n\n"
 ```
 
 ### Customizing Fmt
