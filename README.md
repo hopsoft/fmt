@@ -1,4 +1,7 @@
 <p align="center">
+  <a href="http://blog.codinghorror.com/the-best-code-is-no-code-at-all/">
+    <img alt="Lines of Code" src="https://img.shields.io/badge/loc-1050-47d299.svg" />
+  </a>
   <a href="https://rubygems.org/gems/fmt">
     <img alt="GEM Version" src="https://img.shields.io/gem/v/fmt">
   </a>
@@ -7,9 +10,6 @@
   </a>
   <a href="https://github.com/hopsoft/fmt/actions">
     <img alt="Tests" src="https://github.com/hopsoft/fmt/actions/workflows/tests.yml/badge.svg" />
-  </a>
-  <a href="http://blog.codinghorror.com/the-best-code-is-no-code-at-all/">
-    <img alt="Lines of Code" src="https://img.shields.io/badge/loc-1050-47d299.svg" />
   </a>
   <a href="https://github.com/testdouble/standard">
     <img alt="Ruby Style" src="https://img.shields.io/badge/style-standard-168AFE?logo=ruby&logoColor=FE1616" />
