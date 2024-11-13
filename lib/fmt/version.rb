@@ -3,5 +3,5 @@
 # rbs_inline: enabled
 
 module Fmt
-  VERSION = "0.3.4"
+  VERSION = "0.3.5"
 end
