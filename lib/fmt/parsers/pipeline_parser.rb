@@ -8,7 +8,7 @@ module Fmt
     # Constructor
     # @rbs urtext: String -- original source code
     def initialize(urtext = "")
-      @urtext = urtext.to_s
+      @urtext = urtext.to_s.encode(Encoding::UTF_8, invalid: :replace, undef: :replace, replace: "?").scrub
     end
 
     attr_reader :urtext  # : String -- original source code

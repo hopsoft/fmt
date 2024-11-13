@@ -10,7 +10,7 @@ module Fmt
     # @rbs key: Symbol -- key for embed
     # @rbs placeholder: String -- placeholder for embed
     def initialize(urtext = "", key:, placeholder:)
-      @urtext = urtext.to_s
+      @urtext = urtext.to_s.encode(Encoding::UTF_8, invalid: :replace, undef: :replace, replace: "?").scrub
       @key = key
       @placeholder = placeholder
     end
