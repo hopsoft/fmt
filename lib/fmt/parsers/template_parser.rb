@@ -118,7 +118,7 @@ module Fmt
     def extract_next_pipeline(scanner)
       return nil unless scanner.skip_until(PIPELINE_PEEK)
 
-      index = scanner.pos
+      index = scanner.charpos
 
       until scanner.eos?
         len = 1
@@ -132,15 +132,15 @@ module Fmt
         len = 0
         val = nil
         val = scanner.peek(len += 1) until val&.valid_encoding?
-        case [index, scanner.pos, val]
-        in [i, pos, Sigils::FORMAT_PREFIX] if i == pos then scanner.pos += len
+        case [index, scanner.charpos, val]
+        in [i, pos, Sigils::FORMAT_PREFIX] if i == pos then scanner.getch
         in [i, pos, Sigils::FORMAT_PREFIX] if i != pos then break
         in [i, pos, WHITESPACE] if arguments_balanced?(scanner.string[i...pos]) then break
-        else scanner.pos += len
+        else scanner.getch
         end
       end
 
-      scanner.string[index...scanner.pos]
+      scanner.string[index...scanner.charpos]
     end
 
     # Extracts pipelines from the source
