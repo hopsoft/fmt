@@ -5,15 +5,15 @@
 module Fmt
   # Parses a template from a string and builds an AST (Abstract Syntax Tree)
   class TemplateParser < Parser
-    EMBED_PEEK = %r{(?=#{esc Sigils::EMBED_PREFIX})}o # : Regexp -- detects start of an embed prefix (look ahead)
-    PIPELINE_PEEK = %r{(?=[#{Sigils::FORMAT_PREFIX}][^#{Sigils::FORMAT_PREFIX}])}o # : Regexp -- detects start of a pipeline (look ahead)
-    PERCENT_LITERAL = %r{[#{Sigils::FORMAT_PREFIX}]{2}}o # : Regexp -- detects a percent literal
-    WHITESPACE = %r{\s}o # : Regexp -- detects whitespace
+    EMBED_PEEK = %r{(?=#{esc Sigils::EMBED_PREFIX})}ou # : Regexp -- detects start of an embed prefix (look ahead)
+    PIPELINE_PEEK = %r{(?=[#{Sigils::FORMAT_PREFIX}][^#{Sigils::FORMAT_PREFIX}])}ou # : Regexp -- detects start of a pipeline (look ahead)
+    PERCENT_LITERAL = %r{[#{Sigils::FORMAT_PREFIX}]{2}}ou # : Regexp -- detects a percent literal
+    WHITESPACE = %r{\s}ou # : Regexp -- detects whitespace
 
     # Constructor
     # @rbs urtext: String -- original source code
     def initialize(urtext = "")
-      @urtext = urtext.to_s
+      @urtext = urtext.to_s.encode(Encoding::UTF_8, invalid: :replace, undef: :replace, replace: "?")
     end
 
     attr_reader :urtext  # : String -- original source code
@@ -121,16 +121,22 @@ module Fmt
       index = scanner.pos
 
       until scanner.eos?
-        if scanner.peek(2).match?(PERCENT_LITERAL)
-          scanner.pos += 2
+        len = 1
+        val = nil
+        val = scanner.peek(len += 1) until val&.valid_encoding?
+        if val&.match? PERCENT_LITERAL
+          scanner.pos += len
           next
         end
 
-        case [index, scanner.pos, scanner.peek(1)]
-        in [i, pos, Sigils::FORMAT_PREFIX] if i == pos then scanner.pos += 1
+        len = 0
+        val = nil
+        val = scanner.peek(len += 1) until val&.valid_encoding?
+        case [index, scanner.pos, val]
+        in [i, pos, Sigils::FORMAT_PREFIX] if i == pos then scanner.pos += len
         in [i, pos, Sigils::FORMAT_PREFIX] if i != pos then break
         in [i, pos, WHITESPACE] if arguments_balanced?(scanner.string[i...pos]) then break
-        else scanner.pos += 1
+        else scanner.pos += len
         end
       end
 
